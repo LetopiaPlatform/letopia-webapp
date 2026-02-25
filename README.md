@@ -1,73 +1,94 @@
-# React + TypeScript + Vite
+# Letopia Web App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend for the Letopia learning platform, built with React + TypeScript.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React 19** + **TypeScript 5.9** (strict mode)
+- **Vite 7** — build tool
+- **Tailwind CSS v4** + **shadcn/ui** — styling & components
+- **React Router v7** — routing
+- **TanStack Query** — server state / caching
+- **React Hook Form** + **Zod** — forms & validation
+- **Axios** — HTTP client
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Prerequisites
 
-## Expanding the ESLint configuration
+- Node.js 20+
+- npm 10+
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Setup
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+git clone <repo-url>
+cd letopia-webapp
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Copy the environment template and fill in your values:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cp environments/.env.example environments/.env.development
 ```
+
+### Run
+
+```bash
+npm run dev          # starts dev server at http://localhost:5173
+```
+
+### Build
+
+```bash
+npm run build            # development build
+npm run build:staging    # staging build
+npm run build:prod       # production build
+npm run preview          # preview built output locally
+```
+
+### Other Commands
+
+```bash
+npm run lint             # run ESLint
+npm run type-check       # TypeScript check without emitting
+```
+
+## Project Structure
+
+```
+src/
+├── api/              # Axios client & API service functions
+├── types/            # TypeScript interfaces (mirrors backend DTOs)
+├── hooks/            # TanStack Query hooks
+├── context/          # React Context (auth)
+├── components/
+│   ├── ui/           # shadcn/ui primitives (auto-generated)
+│   ├── layout/       # App shell (header, sidebar, footer)
+│   └── shared/       # Reusable app-specific components
+├── pages/            # Page components (one per route)
+│   ├── auth/
+│   ├── communities/
+│   └── profile/
+├── lib/              # Utilities & constants
+├── App.tsx           # Root: providers + router
+└── main.tsx          # Entry point
+```
+
+## Environment Variables
+
+Env files live in `environments/`. Vite loads them via `envDir` in `vite.config.ts`.
+
+| Variable | Description |
+|----------|-------------|
+| `VITE_API_BASE_URL` | Backend API base URL |
+| `VITE_GOOGLE_CLIENT_ID` | Google OAuth client ID |
+| `VITE_CDN_URL` | CDN URL for uploaded files (production) |
+
+## Team Rules
+
+1. **Pages never call axios directly** — use `hooks/` → `api/`
+2. **No business logic in components** — components render, hooks manage data
+3. **No `any` type** — strict mode is enforced
+4. **Env variables must start with `VITE_`**

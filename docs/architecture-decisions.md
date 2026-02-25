@@ -1,4 +1,4 @@
-- Framework: Vite + React 18: Fast builds, simple config, begineer friendly
+- Framework: Vite + React 19: Fast builds, simple config, begineer friendly
 - Language: TypeScript (strict): Catches bugs early, self-documenting
 - Routing: React Router v7: Standard, well-documented
 - State / Server Cache: TanStack Query (React Query): Handles caching, loading, errors 
@@ -17,8 +17,6 @@ letopia-frontend/
 ├── package.json
 ├── tsconfig.json
 ├── vite.config.ts
-├── tailwind.config.ts
-├── postcss.config.js
 │
 ├── public/
 │   ├── favicon.ico
