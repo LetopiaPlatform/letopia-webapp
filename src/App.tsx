@@ -2,6 +2,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from '@/components/ui/sonner';
+import { AuthProvider } from './context/AuthProvider';
+import AppRoutes from './routes';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,12 +19,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <div className="flex min-h-screen items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold">Letopia</h1>
-            <p className="mt-2 text-muted-foreground">Setup complete</p>
-          </div>
-        </div>
+        <AuthProvider>
+          <AppRoutes />
+        </AuthProvider>
       </BrowserRouter>
       <Toaster />
       <ReactQueryDevtools initialIsOpen={false} />
