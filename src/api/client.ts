@@ -34,11 +34,11 @@ apiClient.interceptors.response.use(
 
     // 400 → validation error, let the form handle it (no toast)
     // 401 on /auth/* → wrong credentials, let the form handle it (no toast)
-    if (status === 400 || (status === 401 && isAuthEndpoint)) {
+    if (status === 400 || status === 409 || (status === 401 && isAuthEndpoint)) {
       return Promise.reject(error);
     }
 
-    // Everything else → toast (403, 404, 409, 500, network, timeout)
+    // Everything else → toast (403, 404, 500, network, timeout)
     toast.error(getErrorMessage(error));
     return Promise.reject(error);
   }

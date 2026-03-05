@@ -1,4 +1,4 @@
-import type { AxiosResponse } from 'axios';
+import type { AxiosError, AxiosResponse } from 'axios';
 import { isAxiosError } from 'axios';
 import type { ApiResponse } from '@/types/api.types';
 import { ERROR_MESSAGES } from './constants';
@@ -92,4 +92,8 @@ export function getFieldErrors(error: unknown): Record<string, string> | null {
  */
 export function isValidationError(error: unknown): boolean {
   return isAxiosError(error) && error.response?.status === 400;
+}
+
+export function getErrorStatus(error: unknown): number | null {
+  return (error as AxiosError)?.response?.status ?? null;
 }
