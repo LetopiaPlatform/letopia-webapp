@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from 'react-router-dom';
 import { userLoginSchema, type LoginFormData } from '@/lib/validators';
 import { useLogin } from '@/hooks/useAuth';
-import { getFieldErrors } from '@/lib/api-utils';
+import { getErrorStatus, getFieldErrors } from '@/lib/api-utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AuthLayout from '@/components/ui/Authlayout';
@@ -30,6 +30,8 @@ export default function LoginPage() {
           Object.entries(fieldErrors).forEach(([field, message]) => {
             setError(field as keyof LoginFormData, { message });
           });
+        } else if (getErrorStatus(error) === 401) {
+          setError('root', { message: 'Invalid email or password' });
         } else {
           setError('root', { message: (error as Error).message });
         }

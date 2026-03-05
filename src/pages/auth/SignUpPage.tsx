@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from 'react-router-dom';
 import { userSignUpSchema, type SignUpFormData } from '@/lib/validators';
 import { useSignup } from '@/hooks/useAuth';
-import { getFieldErrors } from '@/lib/api-utils';
+import { getErrorStatus, getFieldErrors } from '@/lib/api-utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AuthLayout from '@/components/ui/Authlayout';
@@ -30,6 +30,8 @@ export default function SignUpPage() {
           Object.entries(fieldErrors).forEach(([field, message]) => {
             setError(field as keyof SignUpFormData, { message });
           });
+        } else if (getErrorStatus(error) === 409) {
+          setError('email', { message: 'An account with this email already exists' });
         } else {
           setError('root', { message: (error as Error).message });
         }
