@@ -14,5 +14,12 @@ export default defineConfig({
   },
   server: {
     sourcemapIgnoreList: (sourcePath) => sourcePath.includes('node_modules'),
+    proxy: {
+      '/api': {
+        target: 'https://letopia-staging-aachg0bkh4f4e7h3.polandcentral-01.azurewebsites.net',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '/api/v1'),
+      },
+    },
   },
 });
