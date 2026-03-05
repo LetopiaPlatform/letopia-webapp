@@ -1,7 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
 import { ProtectedRoute } from './components/shared/ProtectedRoute';
-import LoginPage from './pages/auth/LoginPage';
-import SignUpPage from './pages/auth/SignUpPage';
 
 function HomePage() {
   return (
@@ -18,6 +16,15 @@ function NotFoundPage() {
       <p>Page not found</p>
     </div>
   );
+}
+
+// Placeholder until PR 2 (feature/auth-pages) is merged
+function LoginPage() {
+  return <div>Login Page - Coming in PR 2</div>;
+}
+
+function SignUpPage() {
+  return <div>SignUp Page - Coming in PR 2</div>;
 }
 
 export default function AppRoutes() {
