@@ -3,6 +3,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from '@/components/ui/sonner';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { AuthProvider } from './context/AuthContext';
+import { LoginPage } from '@/pages/auth/LoginPage';
+import { RegisterPage } from '@/pages/auth/RegisterPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,16 +21,18 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <Routes>
-          <Route element={<AppLayout />}>
-            <Route index element={<div className="p-6">Home</div>} />
-            <Route path="communities" element={<div className="p-6">Communities</div>} />
-            <Route path="projects" element={<div className="p-6">Projects</div>} />
-            <Route path="roadmaps" element={<div className="p-6">Roadmaps</div>} />
-          </Route>
-          <Route path="login" element={<div className="p-6">Login</div>} />
-          <Route path="register" element={<div className="p-6">Register</div>} />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            <Route element={<AppLayout />}>
+              <Route index element={<div className="p-6">Home</div>} />
+              <Route path="communities" element={<div className="p-6">Communities</div>} />
+              <Route path="projects" element={<div className="p-6">Projects</div>} />
+              <Route path="roadmaps" element={<div className="p-6">Roadmaps</div>} />
+              <Route path="login" element={<LoginPage />} />
+              <Route path="register" element={<RegisterPage />} />
+            </Route>
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
       <Toaster />
       <ReactQueryDevtools initialIsOpen={false} />
