@@ -50,7 +50,7 @@ export function Navbar() {
                 <button className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring">
                   <Avatar>
                     <AvatarImage src={undefined} alt={user?.fullName} />
-                    <AvatarFallback className="bg-[#834496] text-[#EEE9FF] text-caption font-semibold">
+                    <AvatarFallback className="bg-[#834496] text-white text-caption font-semibold">
                       {user?.fullName
                         ?.split(' ')
                         .map((n) => n[0])
@@ -140,7 +140,7 @@ export function Navbar() {
                 <div className="flex items-center gap-3 px-3 py-2">
                   <Avatar size="sm">
                     <AvatarImage src={undefined} alt={user?.fullName} />
-                    <AvatarFallback className="bg-[#834496] text-[#EEE9FF] text-[10px] font-semibold">
+                    <AvatarFallback className="bg-[#834496] text-white text-[10px] font-semibold">
                       {user?.fullName
                         ?.split(' ')
                         .map((n) => n[0])
