@@ -14,5 +14,6 @@ export default defineConfig({
   },
   server: {
     sourcemapIgnoreList: (sourcePath) => sourcePath.includes('node_modules'),
+    port: 5174,
   },
 });
