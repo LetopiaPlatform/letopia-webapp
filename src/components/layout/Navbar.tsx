@@ -2,9 +2,17 @@ import { useState } from 'react';
 import { NAV_LINKS } from '@/lib/constants';
 import { Logo } from '../shared/Logo';
 import { Link, NavLink } from 'react-router-dom';
-import { Button } from '../ui/button';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, User, LogOut } from 'lucide-react';
 import { useAuthContext } from '@/context/AuthContext';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -37,12 +45,43 @@ export function Navbar() {
         {/* Desktop auth actions */}
         <div className="hidden lg:flex items-center gap-4">
           {isAuthenticated ? (
-            <>
-              <span className="text-body font-semibold text-foreground">{user?.fullName}</span>
-              <Button variant="outline" className="rounded-xl" onClick={logout}>
-                Logout
-              </Button>
-            </>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                  <Avatar>
+                    <AvatarImage src={undefined} alt={user?.fullName} />
+                    <AvatarFallback className="bg-[#834496] text-[#EEE9FF] text-caption font-semibold">
+                      {user?.fullName
+                        ?.split(' ')
+                        .map((n) => n[0])
+                        .join('')
+                        .toUpperCase()
+                        .slice(0, 2)}
+                    </AvatarFallback>
+                  </Avatar>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuLabel className="text-body font-semibold">
+                  {user?.fullName}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/profile" className="cursor-pointer">
+                    <User className="size-4" />
+                    Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={logout}
+                  className="cursor-pointer text-destructive focus:text-destructive"
+                >
+                  <LogOut className="size-4" />
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
             <>
               <Link
@@ -98,19 +137,38 @@ export function Navbar() {
           <div className="flex flex-col gap-3 border-t border-border pt-4">
             {isAuthenticated ? (
               <>
-                <span className="px-3 py-2 text-body font-semibold text-foreground">
-                  {user?.fullName}
-                </span>
-                <Button
-                  variant="outline"
-                  className="rounded-xl"
+                <div className="flex items-center gap-3 px-3 py-2">
+                  <Avatar size="sm">
+                    <AvatarImage src={undefined} alt={user?.fullName} />
+                    <AvatarFallback className="bg-[#834496] text-[#EEE9FF] text-[10px] font-semibold">
+                      {user?.fullName
+                        ?.split(' ')
+                        .map((n) => n[0])
+                        .join('')
+                        .toUpperCase()
+                        .slice(0, 2)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-body font-semibold text-foreground">{user?.fullName}</span>
+                </div>
+                <Link
+                  to="/profile"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-body font-semibold text-[#6E6A7C] hover:text-foreground hover:bg-accent transition-colors"
+                >
+                  <User className="size-4" />
+                  Profile
+                </Link>
+                <button
                   onClick={() => {
                     logout();
                     setMobileMenuOpen(false);
                   }}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-body font-semibold text-destructive hover:bg-accent transition-colors cursor-pointer"
                 >
+                  <LogOut className="size-4" />
                   Logout
-                </Button>
+                </button>
               </>
             ) : (
               <>
