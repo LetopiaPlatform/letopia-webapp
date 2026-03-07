@@ -10,3 +10,10 @@ export const ERROR_MESSAGES = {
   DEFAULT: 'Something went wrong',
   REQUEST_FAILED: 'Request failed',
 } as const;
+
+export const NAV_LINKS = [
+  { label: 'Home', href: '/' },
+  { label: 'Communities', href: '/communities' },
+  { label: 'Projects', href: '/projects' },
+  { label: 'Roadmaps', href: '/roadmaps' },
+] as const;
