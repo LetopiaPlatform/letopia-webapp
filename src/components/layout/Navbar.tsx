@@ -4,9 +4,11 @@ import { Logo } from '../shared/Logo';
 import { Link, NavLink } from 'react-router-dom';
 import { Button } from '../ui/button';
 import { Menu, X } from 'lucide-react';
+import { useAuthContext } from '@/context/AuthContext';
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, isAuthenticated, logout } = useAuthContext();
 
   return (
     <header className="bg-[#FDFDFD] border-b border-border">
@@ -34,15 +36,29 @@ export function Navbar() {
 
         {/* Desktop auth actions */}
         <div className="hidden lg:flex items-center gap-4">
-          <Link
-            to="/login"
-            className="text-body font-semibold text-foreground hover:text-foreground/80 transition-colors"
-          >
-            Sign In
-          </Link>
-          <Button asChild className="rounded-xl bg-brand-500 px-6 hover:bg-brand-600">
-            <Link to="/register">Register</Link>
-          </Button>
+          {isAuthenticated ? (
+            <>
+              <span className="text-body font-semibold text-foreground">{user?.fullName}</span>
+              <Button variant="outline" className="rounded-xl" onClick={logout}>
+                Logout
+              </Button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="text-body font-semibold text-foreground hover:text-foreground/80 transition-colors"
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/register"
+                className="inline-flex items-center justify-center rounded-xl bg-[#834496] hover:bg-[#6f3a80] px-6 h-11 text-body font-semibold text-[#EEE9FF] transition-colors"
+              >
+                Register
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile menu toggle */}
@@ -80,18 +96,40 @@ export function Navbar() {
             ))}
           </ul>
           <div className="flex flex-col gap-3 border-t border-border pt-4">
-            <Link
-              to="/login"
-              onClick={() => setMobileMenuOpen(false)}
-              className="rounded-lg px-3 py-2 text-center text-body font-semibold text-foreground hover:bg-accent transition-colors"
-            >
-              Sign In
-            </Link>
-            <Button asChild className="rounded-xl bg-brand-500 hover:bg-brand-600">
-              <Link to="/register" onClick={() => setMobileMenuOpen(false)}>
-                Register
-              </Link>
-            </Button>
+            {isAuthenticated ? (
+              <>
+                <span className="px-3 py-2 text-body font-semibold text-foreground">
+                  {user?.fullName}
+                </span>
+                <Button
+                  variant="outline"
+                  className="rounded-xl"
+                  onClick={() => {
+                    logout();
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="rounded-lg px-3 py-2 text-center text-body font-semibold text-foreground hover:bg-accent transition-colors"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/register"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="inline-flex items-center justify-center rounded-xl bg-[#834496] hover:bg-[#6f3a80] px-6 h-11 text-body font-semibold text-[#EEE9FF] transition-colors"
+                >
+                  Register
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}
