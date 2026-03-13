@@ -36,7 +36,7 @@ export const communitiesApi = {
     }
     data.rules?.forEach((rule) => formData.append('rules', rule));
 
-    return apiClient.post('/communities', formData, {
+    return apiClient.post<ApiResponse<CommunityDetail>>('/communities', formData, {
       headers: { 'Content-Type': undefined },
     });
   },
