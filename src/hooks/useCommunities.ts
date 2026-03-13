@@ -1,5 +1,5 @@
 import { communitiesApi } from '@/api/communities.api';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type {
   CommunityListParams,
   CreateCommunityRequest,
@@ -39,10 +39,12 @@ export function useCommunityMembers(id: string, params: PaginatedQuery) {
 }
 
 export function useJoinCommunity() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => communitiesApi.join(id),
     onSuccess: () => {
       toast.success('Joined community successfully!');
+      queryClient.invalidateQueries({ queryKey: ['communities'] });
     },
     onError: (error: AxiosError<ApiResponse<null>>) => {
       const message = error.response?.data?.message ?? 'Failed to join community';
@@ -52,11 +54,14 @@ export function useJoinCommunity() {
 }
 
 export function useLeaveCommunity() {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
+
   return useMutation({
     mutationFn: (id: string) => communitiesApi.leave(id),
     onSuccess: () => {
       toast.success('Left community successfully');
+      queryClient.invalidateQueries({ queryKey: ['communities'] });
       navigate('/communities');
     },
     onError: (error: AxiosError<ApiResponse<null>>) => {
@@ -67,6 +72,7 @@ export function useLeaveCommunity() {
 }
 
 export function useCreateCommunity() {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   return useMutation({
@@ -75,6 +81,7 @@ export function useCreateCommunity() {
     onSuccess: (response) => {
       if (response.data) {
         toast.success('Community created successfully!');
+        queryClient.invalidateQueries({ queryKey: ['communities'] });
         navigate(`/communities/${response.data.slug}`);
       }
     },
@@ -86,6 +93,7 @@ export function useCreateCommunity() {
 }
 
 export function useUpdateCommunity() {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   return useMutation({
@@ -94,6 +102,7 @@ export function useUpdateCommunity() {
     onSuccess: (response) => {
       if (response.data) {
         toast.success('Community updated successfully!');
+        queryClient.invalidateQueries({ queryKey: ['communities'] });
         navigate(`/communities/${response.data.slug}`);
       }
     },
