@@ -2,14 +2,16 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 import { loginSchema, type LoginFormData } from '@/lib/validators';
-import { useLogin } from '@/hooks/useAuth';
+import { useLogin, useGoogleLogin } from '@/hooks/useAuth';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
 export function LoginPage() {
   const { mutate: login, isPending } = useLogin();
+  const { mutate: googleLogin, isPending: isGooglePending } = useGoogleLogin();
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -83,10 +85,40 @@ export function LoginPage() {
             </div>
           </div>
 
-          <Button type="submit" variant="brand" disabled={isPending} className="w-full">
+          <Button
+            type="submit"
+            variant="brand"
+            disabled={isPending || isGooglePending}
+            className="w-full"
+          >
             {isPending ? 'Signing in...' : 'Log in'}
           </Button>
         </form>
+
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+          </div>
+        </div>
+
+        <div className="flex justify-center">
+          <GoogleLogin
+            onSuccess={(response) => {
+              if (response.credential) {
+                googleLogin(response.credential);
+              }
+            }}
+            onError={() => {
+              // toast handled by mutation onError
+            }}
+            size="large"
+            width="400"
+            text="continue_with"
+          />
+        </div>
 
         <p className="text-center text-body text-muted-foreground">
           Don&apos;t have an account?{' '}

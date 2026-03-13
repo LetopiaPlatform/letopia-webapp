@@ -2,14 +2,16 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 import { signUpSchema, type SignUpFormData } from '@/lib/validators';
-import { useSignUp } from '@/hooks/useAuth';
+import { useSignUp, useGoogleLogin } from '@/hooks/useAuth';
 import { Eye, EyeOff, Lock, Mail, Phone, User } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
 export function RegisterPage() {
   const { mutate: signUp, isPending } = useSignUp();
+  const { mutate: googleLogin, isPending: isGooglePending } = useGoogleLogin();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -163,12 +165,37 @@ export function RegisterPage() {
           <Button
             type="submit"
             variant="brand"
-            disabled={isPending || !agreedToTerms}
+            disabled={isPending || !agreedToTerms || isGooglePending}
             className="w-full"
           >
             {isPending ? 'Creating account...' : 'Sign up'}
           </Button>
         </form>
+
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+          </div>
+        </div>
+
+        <div className="flex justify-center">
+          <GoogleLogin
+            onSuccess={(response) => {
+              if (response.credential) {
+                googleLogin(response.credential);
+              }
+            }}
+            onError={() => {
+              // toast handled by mutation onError
+            }}
+            size="large"
+            width="400"
+            text="signup_with"
+          />
+        </div>
 
         <p className="text-center text-body text-muted-foreground">
           Already have an account?{' '}
