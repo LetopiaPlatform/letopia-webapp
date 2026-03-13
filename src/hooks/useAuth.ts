@@ -17,12 +17,34 @@ export function useLogin() {
       if (response.data) {
         login(response.data);
         toast.success('Welcome back!');
-        navigate('/'); // Redirect to home page
+        navigate('/');
       }
     },
     onError: (error: AxiosError<ApiResponse<null>>) => {
       const message =
         error.response?.data?.errors?.[0] ?? error.response?.data?.message ?? 'Login failed';
+      toast.error(message);
+    },
+  });
+}
+
+export function useGoogleLogin() {
+  const { login } = useAuthContext();
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: (idToken: string) =>
+      authApi.googleLogin({ idToken }).then((response) => response.data),
+    onSuccess: (response) => {
+      if (response.data) {
+        login(response.data);
+        toast.success('Welcome!');
+        navigate('/');
+      }
+    },
+    onError: (error: AxiosError<ApiResponse<null>>) => {
+      const message =
+        error.response?.data?.errors?.[0] ?? error.response?.data?.message ?? 'Google login failed';
       toast.error(message);
     },
   });

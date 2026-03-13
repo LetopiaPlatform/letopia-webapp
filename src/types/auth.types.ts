@@ -4,6 +4,11 @@ export interface LoginRequest {
   password: string;
 }
 
+// ─── Google Login ────────────────────────────────────────────
+export interface GoogleLoginRequest {
+  idToken: string;
+}
+
 // ─── Sign Up ─────────────────────────────────────────────────
 export interface SignUpRequest {
   email: string;
@@ -30,4 +35,5 @@ export interface AuthUser {
   email: string;
   fullName: string;
   role: string;
+  avatarUrl: string;
 }
