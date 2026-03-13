@@ -36,7 +36,9 @@ export const communitiesApi = {
     }
     data.rules?.forEach((rule) => formData.append('rules', rule));
 
-    return apiClient.post<ApiResponse<CommunityDetail>>('/communities', formData);
+    return apiClient.post('/communities', formData, {
+      headers: { 'Content-Type': undefined },
+    });
   },
 
   update: (id: string, data: UpdateCommunityRequest) => {
@@ -47,6 +49,8 @@ export const communitiesApi = {
     if (data.coverImage) formData.append('coverImage', data.coverImage);
     data.rules?.forEach((rule) => formData.append('rules', rule));
 
-    return apiClient.put<ApiResponse<CommunityDetail>>(`/communities/${id}`, formData);
+    return apiClient.put<ApiResponse<CommunityDetail>>(`/communities/${id}`, formData, {
+      headers: { 'Content-Type': undefined },
+    });
   },
 };
