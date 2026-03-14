@@ -12,6 +12,8 @@ const buttonVariants = cva(
         default: 'bg-primary text-primary-foreground hover:bg-primary/90',
         brand:
           'bg-[#834496] text-[#EEE9FF] rounded-xl hover:bg-[#6f3a80] disabled:bg-[#D4D2D5] disabled:text-white disabled:cursor-not-allowed disabled:opacity-100',
+        'brand-secondary':
+          'bg-[#E8DEF8] text-[#6A3B7D] rounded-xl hover:bg-[#D9CCE8] disabled:bg-[#D4D2D5] disabled:text-[#9E9E9E] disabled:cursor-not-allowed disabled:opacity-100',
         destructive:
           'bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
         outline:
@@ -54,16 +56,21 @@ function Button({
     asChild?: boolean;
   }) {
   const Comp = asChild ? Slot.Root : 'button';
-  const isBrand = variant === 'brand';
+  const isBrand = variant === 'brand' || variant === 'brand-secondary';
 
   if (isBrand && !asChild) {
+    const isSecondary = variant === 'brand-secondary';
+    const textColor = isSecondary ? 'text-[#6A3B7D]' : 'text-[#EEE9FF]';
+    const fillColor = props.disabled ? '#D4D2D5' : isSecondary ? '#E8DEF8' : '#834496';
+    const disabledTextColor = isSecondary ? 'disabled:text-[#9E9E9E]' : 'disabled:text-white';
+
     return (
       <button
         data-slot="button"
         data-variant={variant}
         data-size={size}
         className={cn(
-          'group relative inline-flex items-center justify-center text-body font-semibold text-[#EEE9FF] h-11 px-6 cursor-pointer transition-colors disabled:cursor-not-allowed disabled:text-white',
+          `group relative inline-flex items-center justify-center text-body font-semibold ${textColor} h-11 px-6 cursor-pointer transition-colors disabled:cursor-not-allowed ${disabledTextColor}`,
           className
         )}
         {...props}
@@ -76,11 +83,11 @@ function Button({
         >
           <path
             d={CURVED_PATH}
-            fill={props.disabled ? '#D4D2D5' : '#834496'}
+            fill={fillColor}
             className="transition-colors group-hover:opacity-90"
           />
         </svg>
-        <span className="relative z-10">{children}</span>
+        <span className="relative z-10 inline-flex items-center gap-2">{children}</span>
       </button>
     );
   }
