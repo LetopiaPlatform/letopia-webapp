@@ -6,7 +6,7 @@ export interface LoginRequest {
 
 // ─── Google Login ────────────────────────────────────────────
 export interface GoogleLoginRequest {
-  idToken: string;
+  accessToken: string;
 }
 
 // ─── Sign Up ─────────────────────────────────────────────────

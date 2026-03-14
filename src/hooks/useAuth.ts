@@ -33,12 +33,12 @@ export function useGoogleLogin() {
   const navigate = useNavigate();
 
   return useMutation({
-    mutationFn: (idToken: string) =>
-      authApi.googleLogin({ idToken }).then((response) => response.data),
+    mutationFn: (accessToken: string) =>
+      authApi.googleLogin({ accessToken }).then((response) => response.data),
     onSuccess: (response) => {
       if (response.data) {
         login(response.data);
-        toast.success('Welcome!');
+        toast.success('Welcome back!');
         navigate('/');
       }
     },
