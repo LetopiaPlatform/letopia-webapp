@@ -214,3 +214,13 @@ export const AUTH_STRINGS = {
   },
   DIVIDER: 'Or',
 } as const;
+export const FILTER_OPTIONS = [
+  { value: 'communities', label: 'Communities', href: '/communities' },
+  { value: 'projects', label: 'Projects', href: '/projects' },
+];
+
+export const SORT_OPTIONS = [
+  { value: 'members', label: 'Most Popular', icon: '/icons/favourite.svg' },
+  { value: 'newest', label: 'Latest Communities', icon: '/icons/arrow-reload-vertical.svg' },
+  { value: 'name', label: 'Alphabetically', icon: '/icons/arrange-by-letters-a-z.svg' },
+];
