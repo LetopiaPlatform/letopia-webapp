@@ -56,7 +56,7 @@ export const SearchInput = ({
       <Input
         aria-label="Search"
         placeholder={placeholder}
-        className="px-9 py-5 lg:py-6 bg-white rounded-xl placeholder:text-sidebar-ring text-sm md:text-md lg:text-lg"
+        className="px-9 py-5 lg:py-6 bg-white rounded-xl placeholder:text-sidebar-ring text-sm md:text-md"
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />
