@@ -193,4 +193,11 @@ body {
       background-color 600000s 0s,
       color 600000s 0s;
   }
+
+  /* Hide browser's native password reveal toggle (Edge/Chrome) */
+  input::-ms-reveal,
+  input::-ms-clear,
+  input::-webkit-credentials-auto-fill-button {
+    display: none;
+  }
 }

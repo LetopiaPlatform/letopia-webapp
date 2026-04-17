@@ -39,7 +39,7 @@ export function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-98px)]">
+    <div className="flex min-h-[calc(100vh-70px)]">
       {/* Left side — Illustration (hidden on mobile) */}
       <div className="hidden lg:flex lg:w-1/2 items-end justify-center pb-8">
         <img
@@ -57,9 +57,9 @@ export function RegisterPage() {
             'linear-gradient(90deg, rgba(255, 255, 255, 0.2) 0%, rgba(131, 68, 150, 0.3) 100%)',
         }}
       >
-        <div className="w-full max-w-lg space-y-8 px-6">
+        <div className="w-full max-w-xl space-y-4 px-6">
           {/* Header */}
-          <div className="text-center space-y-4">
+          <div className="text-center space-y-2">
             <h1 className="text-[40px] font-bold text-foreground">{AUTH_STRINGS.REGISTER.TITLE}</h1>
             <p className="text-base text-muted-foreground/75">{AUTH_STRINGS.REGISTER.SUBTITLE}</p>
           </div>
@@ -157,7 +157,7 @@ export function RegisterPage() {
                     onClick={() => setShowPassword(!showPassword)}
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
-                    {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
+                    {showPassword ? <Eye className="size-5" /> : <EyeOff className="size-5" />}
                   </button>
                 </div>
                 {errors.password && (
@@ -189,9 +189,9 @@ export function RegisterPage() {
                     aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
                   >
                     {showConfirmPassword ? (
-                      <EyeOff className="size-5" />
-                    ) : (
                       <Eye className="size-5" />
+                    ) : (
+                      <EyeOff className="size-5" />
                     )}
                   </button>
                 </div>
