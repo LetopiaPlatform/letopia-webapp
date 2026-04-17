@@ -41,9 +41,6 @@ const buttonVariants = cva(
   }
 );
 
-const CURVED_PATH =
-  'M 12 6 A 12 12 0 0 0 0 18 L 0 26 A 12 12 0 0 0 12 38 Q 171.5 44 331 38 A 12 12 0 0 0 343 26 L 343 18 A 12 12 0 0 0 331 6 Q 171.5 0 12 6 Z';
-
 function Button({
   className,
   variant = 'default',
@@ -56,41 +53,6 @@ function Button({
     asChild?: boolean;
   }) {
   const Comp = asChild ? Slot.Root : 'button';
-  const isBrand = variant === 'brand' || variant === 'brand-secondary';
-
-  if (isBrand && !asChild) {
-    const isSecondary = variant === 'brand-secondary';
-    const textColor = isSecondary ? 'text-[#6A3B7D]' : 'text-[#EEE9FF]';
-    const fillColor = props.disabled ? '#D4D2D5' : isSecondary ? '#E8DEF8' : '#834496';
-    const disabledTextColor = isSecondary ? 'disabled:text-[#9E9E9E]' : 'disabled:text-white';
-
-    return (
-      <button
-        data-slot="button"
-        data-variant={variant}
-        data-size={size}
-        className={cn(
-          `group relative inline-flex items-center justify-center text-body font-semibold ${textColor} h-11 px-6 cursor-pointer transition-colors disabled:cursor-not-allowed ${disabledTextColor}`,
-          className
-        )}
-        {...props}
-      >
-        <svg
-          className="absolute inset-0 w-full h-full"
-          viewBox="0 0 343 44"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <path
-            d={CURVED_PATH}
-            fill={fillColor}
-            className="transition-colors group-hover:opacity-90"
-          />
-        </svg>
-        <span className="relative z-10 inline-flex items-center gap-2">{children}</span>
-      </button>
-    );
-  }
 
   return (
     <Comp

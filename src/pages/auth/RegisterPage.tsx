@@ -8,6 +8,7 @@ import { useSignUp, useGoogleLogin } from '@/hooks/useAuth';
 import { Eye, EyeOff, Lock, Mail, Phone, User } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { AUTH_ASSETS, AUTH_STRINGS } from '@/lib/constants';
 
 export function RegisterPage() {
   const { mutate: signUp, isPending } = useSignUp();
@@ -38,165 +39,188 @@ export function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-98px)] items-center justify-center px-4 py-8">
-      <div className="w-full max-w-md space-y-8">
-        <div className="text-center">
-          <h1 className="text-h1 font-bold text-foreground">Create account</h1>
-          <p className="mt-2 text-body text-muted-foreground">Join Letopia and start learning</p>
-        </div>
+    <div className="flex min-h-[calc(100vh-98px)]">
+      {/* Left side — Illustration (hidden on mobile) */}
+      <div className="hidden lg:flex lg:w-1/2 items-end justify-center pb-8">
+        <img
+          src={AUTH_ASSETS.REGISTER_ILLUSTRATION}
+          alt="Team collaboration illustration"
+          className="max-w-[90%] max-h-[626px] object-contain"
+        />
+      </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* Full Name */}
-          <div className="space-y-2">
-            <div className="relative">
-              <User className="absolute left-3 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
-              <Input
-                id="fullName"
-                placeholder="Full name"
-                className="rounded-xl bg-muted/50 border-0 pl-10 h-12"
-                {...register('fullName')}
-                aria-invalid={!!errors.fullName}
-              />
+      {/* Right side — Form with gradient */}
+      <div
+        className="w-full lg:w-1/2 flex items-center justify-center rounded-l-3xl px-4 py-8"
+        style={{
+          background:
+            'linear-gradient(90deg, rgba(255, 255, 255, 0.2) 0%, rgba(131, 68, 150, 0.3) 100%)',
+        }}
+      >
+        <div className="w-full max-w-lg space-y-8 px-6">
+          {/* Header */}
+          <div className="text-center space-y-4">
+            <h1 className="text-[40px] font-bold text-foreground">{AUTH_STRINGS.REGISTER.TITLE}</h1>
+            <p className="text-base text-muted-foreground/75">{AUTH_STRINGS.REGISTER.SUBTITLE}</p>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div className="space-y-1">
+              {/* Full Name */}
+              <div className="space-y-1">
+                <div className="relative">
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
+                  <Input
+                    id="fullName"
+                    placeholder="Full Name"
+                    className="h-14 rounded-lg border-0 border-b border-muted-foreground/30 bg-transparent pl-12 shadow-none focus-visible:ring-0 focus-visible:border-brand-500"
+                    {...register('fullName')}
+                    aria-invalid={!!errors.fullName}
+                  />
+                </div>
+                {errors.fullName && (
+                  <p className="text-caption text-destructive">{errors.fullName.message}</p>
+                )}
+              </div>
+
+              {/* Phone Number */}
+              <div className="space-y-1">
+                <div className="relative">
+                  <Phone className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
+                  <Input
+                    id="phoneNumber"
+                    placeholder="Phone Number"
+                    className="h-14 rounded-lg border-0 border-b border-muted-foreground/30 bg-transparent pl-12 shadow-none focus-visible:ring-0 focus-visible:border-brand-500"
+                    {...register('phoneNumber')}
+                    aria-invalid={!!errors.phoneNumber}
+                  />
+                </div>
+                {errors.phoneNumber && (
+                  <p className="text-caption text-destructive">{errors.phoneNumber.message}</p>
+                )}
+              </div>
+
+              {/* Email */}
+              <div className="space-y-1">
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="Email"
+                    className="h-14 rounded-lg border-0 border-b border-muted-foreground/30 bg-transparent pl-12 shadow-none focus-visible:ring-0 focus-visible:border-brand-500"
+                    {...register('email')}
+                    aria-invalid={!!errors.email}
+                  />
+                </div>
+                {errors.email && (
+                  <p className="text-caption text-destructive">{errors.email.message}</p>
+                )}
+              </div>
+
+              {/* Password */}
+              <div className="space-y-1">
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
+                  <Input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Password"
+                    className="h-14 rounded-lg border-0 border-b border-muted-foreground/30 bg-transparent pl-12 pr-12 shadow-none focus-visible:ring-0 focus-visible:border-brand-500"
+                    {...register('password')}
+                    aria-invalid={!!errors.password}
+                  />
+                  <button
+                    type="button"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
+                  </button>
+                </div>
+                {errors.password && (
+                  <p className="text-caption text-destructive">{errors.password.message}</p>
+                )}
+              </div>
+
+              {/* Confirm Password */}
+              <div className="space-y-1">
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    placeholder="Confirm Password"
+                    className="h-14 rounded-lg border-0 border-b border-muted-foreground/30 bg-transparent pl-12 pr-12 shadow-none focus-visible:ring-0 focus-visible:border-brand-500"
+                    {...register('confirmPassword')}
+                    aria-invalid={!!errors.confirmPassword}
+                  />
+                  <button
+                    type="button"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="size-5" />
+                    ) : (
+                      <Eye className="size-5" />
+                    )}
+                  </button>
+                </div>
+                {errors.confirmPassword && (
+                  <p className="text-caption text-destructive">{errors.confirmPassword.message}</p>
+                )}
+              </div>
             </div>
-            {errors.fullName && (
-              <p className="text-caption text-destructive">{errors.fullName.message}</p>
-            )}
-          </div>
 
-          {/* Phone Number */}
-          <div className="space-y-2">
-            <div className="relative">
-              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
-              <Input
-                id="phoneNumber"
-                placeholder="Phone Number"
-                className="rounded-xl bg-muted/50 border-0 pl-10 h-12"
-                {...register('phoneNumber')}
-                aria-invalid={!!errors.phoneNumber}
+            {/* Terms checkbox */}
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={agreedToTerms}
+                onChange={(e) => setAgreedToTerms(e.target.checked)}
+                className="size-5 rounded border-border accent-brand-500"
               />
-            </div>
-            {errors.phoneNumber && (
-              <p className="text-caption text-destructive">{errors.phoneNumber.message}</p>
-            )}
+              <span className="text-sm text-foreground">
+                {AUTH_STRINGS.REGISTER.TERMS_PREFIX}{' '}
+                <Link to="/terms" className="font-semibold text-brand-500 hover:text-brand-600">
+                  {AUTH_STRINGS.REGISTER.TERMS_LINK}
+                </Link>{' '}
+                {AUTH_STRINGS.REGISTER.TERMS_AND}{' '}
+                <Link to="/privacy" className="font-semibold text-brand-500 hover:text-brand-600">
+                  {AUTH_STRINGS.REGISTER.PRIVACY_LINK}
+                </Link>
+              </span>
+            </label>
+
+            {/* Sign up button */}
+            <Button
+              type="submit"
+              variant="brand"
+              disabled={isPending || !agreedToTerms || isGooglePending}
+              className="w-full h-[54px] rounded-xl text-base"
+            >
+              {isPending ? AUTH_STRINGS.REGISTER.SUBMIT_LOADING : AUTH_STRINGS.REGISTER.SUBMIT}
+            </Button>
+          </form>
+
+          {/* Divider */}
+          <div className="flex items-center gap-4">
+            <div className="h-px flex-1 bg-muted-foreground/30" />
+            <span className="text-base text-muted-foreground">{AUTH_STRINGS.DIVIDER}</span>
+            <div className="h-px flex-1 bg-muted-foreground/30" />
           </div>
 
-          {/* Email */}
-          <div className="space-y-2">
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
-              <Input
-                id="email"
-                type="email"
-                placeholder="Email"
-                className="rounded-xl bg-muted/50 border-0 pl-10 h-12"
-                {...register('email')}
-                aria-invalid={!!errors.email}
-              />
-            </div>
-            {errors.email && (
-              <p className="text-caption text-destructive">{errors.email.message}</p>
-            )}
-          </div>
-
-          {/* Password */}
-          <div className="space-y-2">
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
-              <Input
-                id="password"
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Password"
-                className="rounded-xl bg-muted/50 border-0 pl-10 pr-10 h-12"
-                {...register('password')}
-                aria-invalid={!!errors.password}
-              />
-              <button
-                type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-              >
-                {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
-              </button>
-            </div>
-            {errors.password && (
-              <p className="text-caption text-destructive">{errors.password.message}</p>
-            )}
-          </div>
-
-          {/* Confirm Password */}
-          <div className="space-y-2">
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
-              <Input
-                id="confirmPassword"
-                type={showConfirmPassword ? 'text' : 'password'}
-                placeholder="Confirm Password"
-                className="rounded-xl bg-muted/50 border-0 pl-10 pr-10 h-12"
-                {...register('confirmPassword')}
-                aria-invalid={!!errors.confirmPassword}
-              />
-              <button
-                type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
-              >
-                {showConfirmPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
-              </button>
-            </div>
-            {errors.confirmPassword && (
-              <p className="text-caption text-destructive">{errors.confirmPassword.message}</p>
-            )}
-          </div>
-
-          {/* Terms checkbox */}
-          <label className="flex items-start gap-3 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={agreedToTerms}
-              onChange={(e) => setAgreedToTerms(e.target.checked)}
-              className="mt-1 size-4 rounded border-border accent-brand-500"
-            />
-            <span className="text-caption text-muted-foreground">
-              I&apos;ve read and agree with the{' '}
-              <Link to="/terms" className="text-brand-500 hover:text-brand-600">
-                Terms and Conditions
-              </Link>{' '}
-              and the{' '}
-              <Link to="/privacy" className="text-brand-500 hover:text-brand-600">
-                Privacy Policy
-              </Link>
-              .
-            </span>
-          </label>
-
-          <Button
-            type="submit"
-            variant="brand"
-            disabled={isPending || !agreedToTerms || isGooglePending}
-            className="w-full"
-          >
-            {isPending ? 'Creating account...' : 'Sign up'}
-          </Button>
-        </form>
-
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
-          </div>
-        </div>
-
-        <div className="flex justify-center">
+          {/* Google sign up */}
           <Button
             type="button"
-            variant="brand-secondary"
+            variant="outline"
             onClick={() => handleGoogleLogin()}
             disabled={isPending || isGooglePending}
-            className="w-full"
+            className="w-full h-[54px] rounded-xl bg-white border-0 shadow-sm text-base font-semibold text-foreground hover:bg-gray-50"
           >
             <svg viewBox="0 0 24 24" className="size-5" aria-hidden="true">
               <path
@@ -216,16 +240,17 @@ export function RegisterPage() {
                 fill="#EA4335"
               />
             </svg>
-            Sign up with Google
+            {AUTH_STRINGS.REGISTER.GOOGLE_BUTTON}
           </Button>
-        </div>
 
-        <p className="text-center text-body text-muted-foreground">
-          Already have an account?{' '}
-          <Link to="/login" className="font-semibold text-brand-500 hover:text-brand-600">
-            Login
-          </Link>
-        </p>
+          {/* Login link */}
+          <p className="text-center text-sm text-muted-foreground">
+            {AUTH_STRINGS.REGISTER.LOGIN_PROMPT}{' '}
+            <Link to="/login" className="font-semibold text-brand-500 hover:text-brand-600">
+              {AUTH_STRINGS.REGISTER.LOGIN_LINK}
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
