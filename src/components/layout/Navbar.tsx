@@ -61,16 +61,6 @@ export function Navbar() {
                   />
 
                   {/* Selected filter chip */}
-                  {activeFilter && (
-                    <button
-                      type="button"
-                      onClick={() => setActiveFilter(null)}
-                      className="flex items-center gap-1 rounded-[14px] border border-[#824892] px-2 py-1 text-xs text-[#824892] shrink-0"
-                    >
-                      <XIcon className="size-3.5" />
-                      <span>{activeFilter}</span>
-                    </button>
-                  )}
 
                   <input
                     ref={searchInputRef}
@@ -86,6 +76,17 @@ export function Navbar() {
                     }
                     className="flex-1 bg-transparent text-sm font-normal text-[#24252c] placeholder:text-[#DBD5DE] outline-none"
                   />
+
+                  {activeFilter && (
+                    <button
+                      type="button"
+                      onClick={() => setActiveFilter(null)}
+                      className="flex items-center gap-1 rounded-[14px] border border-[#824892] px-2 py-1 text-xs text-[#824892] shrink-0"
+                    >
+                      <XIcon className="size-3.5" />
+                      <span>{activeFilter}</span>
+                    </button>
+                  )}
 
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -257,17 +258,6 @@ export function Navbar() {
                     }`}
                   />
 
-                  {activeFilter && (
-                    <button
-                      type="button"
-                      onClick={() => setActiveFilter(null)}
-                      className="flex items-center gap-1 rounded-[14px] border border-[#824892] px-2 py-1 text-xs text-[#824892] shrink-0"
-                    >
-                      <XIcon className="size-3.5" />
-                      <span>{activeFilter}</span>
-                    </button>
-                  )}
-
                   <input
                     type="text"
                     value={searchQuery}
@@ -281,6 +271,17 @@ export function Navbar() {
                     }
                     className="flex-1 bg-transparent text-sm font-normal text-[#24252c] placeholder:text-[#DBD5DE] outline-none"
                   />
+
+                  {activeFilter && (
+                    <button
+                      type="button"
+                      onClick={() => setActiveFilter(null)}
+                      className="flex items-center gap-1 rounded-[14px] border border-[#824892] px-2 py-1 text-xs text-[#824892] shrink-0"
+                    >
+                      <XIcon className="size-3.5" />
+                      <span>{activeFilter}</span>
+                    </button>
+                  )}
 
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
