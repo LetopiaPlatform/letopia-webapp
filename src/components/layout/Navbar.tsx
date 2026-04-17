@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { NAV_LINKS } from '@/lib/constants';
+import { useRef, useState } from 'react';
+import { NAV_LINKS, NAV_ICONS } from '@/lib/constants';
 import { Logo } from '../shared/Logo';
 import { Link, NavLink } from 'react-router-dom';
-import { Menu, X, User, LogOut } from 'lucide-react';
+import { Menu, X as XIcon, User, LogOut } from 'lucide-react';
 import { useAuthContext } from '@/context/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -14,37 +14,167 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
+const SEARCH_FILTERS = ['Communities', 'Projects', 'Members'] as const;
+type SearchFilter = (typeof SEARCH_FILTERS)[number];
+
+// Placeholder mock results — replace with real API later
+const MOCK_RESULTS: Record<SearchFilter, string[]> = {
+  Communities: ['UI/UX Design', 'Graphic Design', 'Designers'],
+  Projects: ['Portfolio Website', 'E-commerce App', 'Design System'],
+  Members: ['Mohamed Raafat', 'Ahmed Ali', 'Sara Hassan'],
+};
+
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, isAuthenticated, logout } = useAuthContext();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeFilter, setActiveFilter] = useState<SearchFilter | null>(null);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   return (
-    <header className="bg-[#FDFDFD] border-b border-border">
-      <nav className="mx-auto flex h-24.5 max-w-7xl items-center justify-between px-6">
-        {/* Logo */}
-        <Logo className="h-14.5 w-auto" />
+    <header>
+      {/* ── nav container — h-[70px], px-[83px] on desktop ── */}
+      <nav className="mx-auto flex h-17.5 max-w-360 items-center justify-between px-6 lg:px-20.75">
+        {/* ── Left: Logo + Search bar (search only when logged in) ── */}
+        <div className="flex items-center gap-6">
+          <Logo className="w-25" />
 
-        {/* Desktop nav links */}
-        <ul className="hidden lg:flex items-center gap-8">
+          {/* Search bar — only when authenticated, desktop only */}
+          {isAuthenticated && (
+            <div className="hidden lg:block relative">
+              <div
+                className={`flex w-101.5 items-center rounded-[14px] border bg-white p-4 transition-colors ${
+                  isSearchFocused ? 'border-[#824892]' : 'border-[#DBD5DE]'
+                }`}
+              >
+                <div className="flex flex-1 items-center gap-2">
+                  <img
+                    src={NAV_ICONS.SEARCH}
+                    alt=""
+                    aria-hidden="true"
+                    className={`size-6 transition-all ${
+                      isSearchFocused || activeFilter
+                        ? 'brightness-0 invert-28 sepia-60 saturate-700 hue-rotate-260'
+                        : ''
+                    }`}
+                  />
+
+                  {/* Selected filter chip */}
+                  {activeFilter && (
+                    <button
+                      type="button"
+                      onClick={() => setActiveFilter(null)}
+                      className="flex items-center gap-1 rounded-[14px] border border-[#824892] px-2 py-1 text-xs text-[#824892] shrink-0"
+                    >
+                      <XIcon className="size-3.5" />
+                      <span>{activeFilter}</span>
+                    </button>
+                  )}
+
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onFocus={() => setIsSearchFocused(true)}
+                    onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+                    placeholder={
+                      activeFilter
+                        ? `Search ${activeFilter}...`
+                        : 'Search for Communities, Projects...'
+                    }
+                    className="flex-1 bg-transparent text-sm font-normal text-[#24252c] placeholder:text-[#DBD5DE] outline-none"
+                  />
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button type="button" className="outline-none shrink-0">
+                        <img
+                          src={NAV_ICONS.FILTER}
+                          alt="Filter"
+                          className="size-6 cursor-pointer"
+                        />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="end"
+                      sideOffset={24}
+                      className="rounded-[14px] border border-[#a39ba6] bg-white p-4 gap-4 min-w-35"
+                    >
+                      {SEARCH_FILTERS.map((filter) => (
+                        <DropdownMenuItem
+                          key={filter}
+                          onClick={() => {
+                            setActiveFilter(filter);
+                            searchInputRef.current?.focus();
+                          }}
+                          className="cursor-pointer text-sm text-[#24252c] px-0 py-0 hover:text-[#824892] focus:text-[#824892] hover:bg-transparent focus:bg-transparent"
+                        >
+                          {filter}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+
+              {/* Search results dropdown */}
+              {isSearchFocused && searchQuery.length > 0 && (
+                <div className="absolute top-full left-0 mt-2 w-101.5 rounded-[14px] border border-[#DBD5DE] bg-white p-4 shadow-sm z-50">
+                  <div className="flex flex-col gap-4">
+                    {(activeFilter
+                      ? MOCK_RESULTS[activeFilter]
+                      : Object.values(MOCK_RESULTS).flat()
+                    )
+                      .filter((item) => item.toLowerCase().includes(searchQuery.toLowerCase()))
+                      .slice(0, 5)
+                      .map((result) => (
+                        <button
+                          key={result}
+                          type="button"
+                          className="text-left text-sm text-[#24252c] hover:text-black transition-colors"
+                          onClick={() => {
+                            setSearchQuery(result);
+                            setIsSearchFocused(false);
+                          }}
+                        >
+                          {result}
+                        </button>
+                      ))}
+                    {(activeFilter
+                      ? MOCK_RESULTS[activeFilter]
+                      : Object.values(MOCK_RESULTS).flat()
+                    ).filter((item) => item.toLowerCase().includes(searchQuery.toLowerCase()))
+                      .length === 0 && <p className="text-sm text-[#DBD5DE]">No results found</p>}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+        {/* ── Desktop nav links — gap-10 (40px), icons when logged in ── */}
+        <ul className="hidden lg:flex items-center gap-10">
           {NAV_LINKS.map((link) => (
             <li key={link.href}>
               <NavLink
                 to={link.href}
                 className={({ isActive }) =>
-                  `text-body font-semibold transition-colors ${
-                    isActive ? 'text-foreground' : 'text-[#6E6A7C] hover:text-foreground'
+                  `flex items-center gap-2 text-base font-medium transition-colors ${
+                    isActive ? 'font-semibold text-black' : 'text-[#261a2b] hover:text-black'
                   }`
                 }
               >
-                {link.label}
+                <img src={link.icon} alt="" aria-hidden="true" className="size-5" />
+                <span>{link.label}</span>
               </NavLink>
             </li>
           ))}
         </ul>
-
-        {/* Desktop auth actions */}
-        <div className="hidden lg:flex items-center gap-4">
+        {/* ── Right side: Auth actions ── */}
+        <div className="hidden lg:flex items-center">
           {isAuthenticated ? (
+            /* Avatar dropdown — unchanged */
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring">
@@ -83,23 +213,15 @@ export function Navbar() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <>
-              <Link
-                to="/login"
-                className="text-body font-semibold text-foreground hover:text-foreground/80 transition-colors"
-              >
-                Sign In
-              </Link>
-              <Link
-                to="/register"
-                className="inline-flex items-center justify-center rounded-xl bg-[#834496] hover:bg-[#6f3a80] px-6 h-11 text-body font-semibold text-[#EEE9FF] transition-colors"
-              >
-                Register
-              </Link>
-            </>
+            /* Single "Log in" button — w-[146px] h-[50px] rounded-[14px] bg-[#824892] */
+            <Link
+              to="/login"
+              className="inline-flex items-center justify-center w-36.5 h-12.5 rounded-[14px] bg-[#824892] hover:bg-[#6f3a80] text-lg font-medium text-[#FDFDFD] transition-colors"
+            >
+              Log in
+            </Link>
           )}
         </div>
-
         {/* Mobile menu toggle */}
         <button
           type="button"
@@ -108,13 +230,121 @@ export function Navbar() {
           aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={mobileMenuOpen}
         >
-          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          {mobileMenuOpen ? <XIcon size={24} /> : <Menu size={24} />}
         </button>
       </nav>
 
-      {/* Mobile menu */}
+      {/* ── Mobile menu ── */}
       {mobileMenuOpen && (
         <div className="lg:hidden border-t border-border bg-[#FDFDFD] px-6 pb-4">
+          {/* Mobile search — only when logged in */}
+          {isAuthenticated && (
+            <div className="relative my-3">
+              <div
+                className={`flex items-center rounded-[14px] border bg-white p-4 transition-colors ${
+                  isSearchFocused ? 'border-[#824892]' : 'border-[#DBD5DE]'
+                }`}
+              >
+                <div className="flex flex-1 items-center gap-2">
+                  <img
+                    src={NAV_ICONS.SEARCH}
+                    alt=""
+                    aria-hidden="true"
+                    className={`size-6 transition-all ${
+                      isSearchFocused || activeFilter
+                        ? 'brightness-0 invert-28 sepia-60 saturate-700 hue-rotate-260'
+                        : ''
+                    }`}
+                  />
+
+                  {activeFilter && (
+                    <button
+                      type="button"
+                      onClick={() => setActiveFilter(null)}
+                      className="flex items-center gap-1 rounded-[14px] border border-[#824892] px-2 py-1 text-xs text-[#824892] shrink-0"
+                    >
+                      <XIcon className="size-3.5" />
+                      <span>{activeFilter}</span>
+                    </button>
+                  )}
+
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onFocus={() => setIsSearchFocused(true)}
+                    onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+                    placeholder={
+                      activeFilter
+                        ? `Search ${activeFilter}...`
+                        : 'Search for Communities, Projects...'
+                    }
+                    className="flex-1 bg-transparent text-sm font-normal text-[#24252c] placeholder:text-[#DBD5DE] outline-none"
+                  />
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button type="button" className="outline-none shrink-0">
+                        <img
+                          src={NAV_ICONS.FILTER}
+                          alt="Filter"
+                          className="size-6 cursor-pointer"
+                        />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="end"
+                      sideOffset={24}
+                      className="rounded-[14px] border border-[#a39ba6] bg-white p-4 gap-4 min-w-35"
+                    >
+                      {SEARCH_FILTERS.map((filter) => (
+                        <DropdownMenuItem
+                          key={filter}
+                          onClick={() => setActiveFilter(filter)}
+                          className="cursor-pointer text-sm text-[#24252c] px-0 py-0 hover:text-[#824892] focus:text-[#824892] hover:bg-transparent focus:bg-transparent"
+                        >
+                          {filter}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+
+              {isSearchFocused && searchQuery.length > 0 && (
+                <div className="absolute top-full left-0 right-0 mt-2 rounded-[14px] border border-[#DBD5DE] bg-white p-4 shadow-sm z-50">
+                  <div className="flex flex-col gap-4">
+                    {(activeFilter
+                      ? MOCK_RESULTS[activeFilter]
+                      : Object.values(MOCK_RESULTS).flat()
+                    )
+                      .filter((item) => item.toLowerCase().includes(searchQuery.toLowerCase()))
+                      .slice(0, 5)
+                      .map((result) => (
+                        <button
+                          key={result}
+                          type="button"
+                          className="text-left text-sm text-[#24252c] hover:text-black transition-colors"
+                          onClick={() => {
+                            setSearchQuery(result);
+                            setIsSearchFocused(false);
+                          }}
+                        >
+                          {result}
+                        </button>
+                      ))}
+                    {(activeFilter
+                      ? MOCK_RESULTS[activeFilter]
+                      : Object.values(MOCK_RESULTS).flat()
+                    ).filter((item) => item.toLowerCase().includes(searchQuery.toLowerCase()))
+                      .length === 0 && <p className="text-sm text-[#DBD5DE]">No results found</p>}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Mobile nav links — always show icons */}
           <ul className="flex flex-col gap-2 py-4">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
@@ -122,18 +352,21 @@ export function Navbar() {
                   to={link.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className={({ isActive }) =>
-                    `block rounded-lg px-3 py-2 text-body font-semibold transition-colors ${
+                    `flex items-center gap-2 rounded-lg px-3 py-2 text-body font-semibold transition-colors ${
                       isActive
-                        ? 'text-foreground bg-accent'
-                        : 'text-[#6E6A7C] hover:text-foreground hover:bg-accent'
+                        ? 'text-black bg-accent'
+                        : 'text-[#24252c] hover:text-black hover:bg-accent'
                     }`
                   }
                 >
+                  <img src={link.icon} alt="" aria-hidden="true" className="size-5" />
                   {link.label}
                 </NavLink>
               </li>
             ))}
           </ul>
+
+          {/* Mobile auth section */}
           <div className="flex flex-col gap-3 border-t border-border pt-4">
             {isAuthenticated ? (
               <>
@@ -154,7 +387,7 @@ export function Navbar() {
                 <Link
                   to="/profile"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-body font-semibold text-[#6E6A7C] hover:text-foreground hover:bg-accent transition-colors"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-body font-semibold text-[#24252c] hover:text-black hover:bg-accent transition-colors"
                 >
                   <User className="size-4" />
                   Profile
@@ -171,22 +404,14 @@ export function Navbar() {
                 </button>
               </>
             ) : (
-              <>
-                <Link
-                  to="/login"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-lg px-3 py-2 text-center text-body font-semibold text-foreground hover:bg-accent transition-colors"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  to="/register"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="inline-flex items-center justify-center rounded-xl bg-[#834496] hover:bg-[#6f3a80] px-6 h-11 text-body font-semibold text-[#EEE9FF] transition-colors"
-                >
-                  Register
-                </Link>
-              </>
+              /* Single "Log in" button for mobile too */
+              <Link
+                to="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="inline-flex items-center justify-center rounded-[14px] bg-[#824892] hover:bg-[#6f3a80] h-12.5 text-lg font-medium text-[#FDFDFD] transition-colors"
+              >
+                Log in
+              </Link>
             )}
           </div>
         </div>

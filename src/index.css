@@ -180,4 +180,17 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Neutralize Chrome/Edge autofill background so inputs stay transparent */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: var(--foreground);
+    caret-color: var(--foreground);
+    transition:
+      background-color 600000s 0s,
+      color 600000s 0s;
+  }
 }
