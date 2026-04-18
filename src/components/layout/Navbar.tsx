@@ -34,17 +34,17 @@ export function Navbar() {
 
   return (
     <header>
-      {/* ── nav container — h-[70px], px-[83px] on desktop ── */}
-      <nav className="mx-auto flex h-17.5 max-w-360 items-center justify-between px-6 lg:px-20.75">
+      {/* ── nav container — h-[72px], px-[83px] on desktop ── */}
+      <nav className="mx-auto flex h-18 max-w-360 items-center justify-between bg-white/90 px-6 backdrop-blur-md lg:px-10 xl:px-20.75">
         {/* ── Left: Logo + Search bar (search only when logged in) ── */}
         <div className="flex items-center gap-6">
-          <Logo className="w-25" />
+          <Logo className="w-25 shrink-0" />
 
           {/* Search bar — only when authenticated, desktop only */}
           {isAuthenticated && (
             <div className="hidden lg:block relative">
               <div
-                className={`flex w-101.5 items-center rounded-[14px] border bg-white p-4 transition-colors ${
+                className={`flex lg:w-60 xl:w-101.5 items-center rounded-xl border bg-white p-4 transition-colors overflow-hidden ${
                   isSearchFocused ? 'border-[#824892]' : 'border-[#DBD5DE]'
                 }`}
               >
@@ -74,7 +74,7 @@ export function Navbar() {
                         ? `Search ${activeFilter}...`
                         : 'Search for Communities, Projects...'
                     }
-                    className="flex-1 bg-transparent text-sm font-normal text-[#24252c] placeholder:text-[#DBD5DE] outline-none"
+                    className="min-w-0 flex-1 bg-transparent text-sm font-normal text-[#24252c] placeholder:text-[#DBD5DE] outline-none truncate"
                   />
 
                   {activeFilter && (
@@ -84,7 +84,7 @@ export function Navbar() {
                       className="flex items-center gap-1 rounded-[14px] border border-[#824892] px-2 py-1 text-xs text-[#824892] shrink-0"
                     >
                       <XIcon className="size-3.5" />
-                      <span>{activeFilter}</span>
+                      <span className="hidden xl:inline">{activeFilter}</span>
                     </button>
                   )}
 
@@ -122,7 +122,7 @@ export function Navbar() {
 
               {/* Search results dropdown */}
               {isSearchFocused && searchQuery.length > 0 && (
-                <div className="absolute top-full left-0 mt-2 w-101.5 rounded-[14px] border border-[#DBD5DE] bg-white p-4 shadow-sm z-50">
+                <div className="absolute top-full left-0 mt-2 lg:w-60 xl:w-101.5 rounded-[14px] border border-[#DBD5DE] bg-white p-4 shadow-sm z-50">
                   <div className="flex flex-col gap-4">
                     {(activeFilter
                       ? MOCK_RESULTS[activeFilter]
@@ -155,14 +155,14 @@ export function Navbar() {
           )}
         </div>
         {/* ── Desktop nav links — gap-10 (40px), icons when logged in ── */}
-        <ul className="hidden lg:flex items-center gap-10">
+        <ul className="hidden lg:flex items-center lg:gap-6 xl:gap-10 shrink-0">
           {NAV_LINKS.map((link) => (
             <li key={link.href}>
               <NavLink
                 to={link.href}
                 className={({ isActive }) =>
                   `flex items-center gap-2 text-base font-medium transition-colors ${
-                    isActive ? 'font-semibold text-black' : 'text-[#261a2b] hover:text-black'
+                    isActive ? 'font-semibold text-black' : 'text-[#24252C] hover:text-black'
                   }`
                 }
               >
@@ -173,13 +173,13 @@ export function Navbar() {
           ))}
         </ul>
         {/* ── Right side: Auth actions ── */}
-        <div className="hidden lg:flex items-center">
+        <div className="hidden lg:flex items-center shrink-0">
           {isAuthenticated ? (
             /* Avatar dropdown — unchanged */
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                  <Avatar>
+                  <Avatar className="size-12">
                     <AvatarImage src={user?.avatarUrl} alt={user?.fullName} />
                     <AvatarFallback className="bg-[#834496] text-white text-caption font-semibold">
                       {user?.fullName

@@ -38,7 +38,7 @@ export function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-70px)]">
+    <div className="flex min-h-[calc(100vh-72px)]">
       {/* Left side — Illustration (hidden on mobile) */}
       <div className="hidden lg:flex lg:w-1/2 items-end justify-center pb-8">
         <img
