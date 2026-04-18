@@ -7,7 +7,7 @@ interface LogoProps {
 export function Logo({ className }: LogoProps) {
   return (
     <Link to="/" aria-label="Letopia home">
-      <img src="/assets/logo.svg" alt="" className={className} />
+      <span className={`font-bold text-2xl text-[#824892] ${className ?? ''}`}>LeTopia</span>
     </Link>
   );
 }

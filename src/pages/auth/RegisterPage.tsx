@@ -40,8 +40,8 @@ export function RegisterPage() {
 
   return (
     <div className="flex min-h-[calc(100vh-72px)]">
-      {/* Left side — Illustration (hidden on mobile) */}
-      <div className="hidden lg:flex lg:w-1/2 items-end justify-center pb-8">
+      {/* Left side — Illustration (hidden below xl) */}
+      <div className="hidden xl:flex xl:w-1/2 items-end justify-center pb-8">
         <img
           src={AUTH_ASSETS.REGISTER_ILLUSTRATION}
           alt="Team collaboration illustration"
@@ -51,7 +51,7 @@ export function RegisterPage() {
 
       {/* Right side — Form with gradient */}
       <div
-        className="w-full lg:w-1/2 flex items-center justify-center rounded-l-3xl px-4 py-8"
+        className="w-full xl:w-1/2 flex items-center justify-center rounded-l-3xl px-4 py-8"
         style={{
           background:
             'linear-gradient(90deg, rgba(255, 255, 255, 0.2) 0%, rgba(131, 68, 150, 0.3) 100%)',

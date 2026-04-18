@@ -70,7 +70,7 @@ export function SearchBar({ className }: SearchBarProps) {
               aria-label={`Remove ${activeFilter} filter`}
             >
               <XIcon className="size-3.5" />
-              <span>{activeFilter}</span>
+              <span className="hidden sm:inline">{activeFilter}</span>
             </button>
           )}
 
