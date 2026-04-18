@@ -5,10 +5,10 @@ import { Link } from 'react-router-dom';
 import { useGoogleLogin as useGoogleOAuth } from '@react-oauth/google';
 import { loginSchema, type LoginFormData } from '@/lib/validators';
 import { useLogin, useGoogleLogin } from '@/hooks/useAuth';
-import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { AUTH_ASSETS, AUTH_STRINGS } from '@/lib/constants';
+import { AUTH_ASSETS, AUTH_ICONS, AUTH_STRINGS } from '@/lib/constants';
 
 export function LoginPage() {
   const { mutate: login, isPending } = useLogin();
@@ -38,13 +38,13 @@ export function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-98px)]">
+    <div className="flex min-h-[calc(100vh-72px)]">
       {/* Left side — Illustration (hidden on mobile) */}
       <div className="hidden lg:flex lg:w-1/2 items-end justify-center pb-8">
         <img
           src={AUTH_ASSETS.LOGIN_ILLUSTRATION}
           alt="Student studying illustration"
-          className="max-w-[90%] max-h-[624px] object-contain"
+          className="max-w-[90%] max-h-156 object-contain"
         />
       </div>
 
@@ -56,20 +56,25 @@ export function LoginPage() {
             'linear-gradient(90deg, rgba(255, 255, 255, 0.2) 0%, rgba(131, 68, 150, 0.3) 100%)',
         }}
       >
-        <div className="w-full max-w-lg space-y-10 px-6">
+        <div className="w-full max-w-lg space-y-4 px-6">
           {/* Header */}
-          <div className="text-center space-y-4">
+          <div className="text-center space-y-2">
             <h1 className="text-[40px] font-bold text-foreground">{AUTH_STRINGS.LOGIN.TITLE}</h1>
             <p className="text-base text-muted-foreground/75">{AUTH_STRINGS.LOGIN.SUBTITLE}</p>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div className="space-y-1">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+            <div className="space-y-10">
               {/* Email */}
               <div className="space-y-1">
                 <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
+                  <img
+                    src={AUTH_ICONS.EMAIL}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 size-5"
+                  />
                   <Input
                     id="email"
                     type="email"
@@ -87,7 +92,12 @@ export function LoginPage() {
               {/* Password */}
               <div className="space-y-1">
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
+                  <img
+                    src={AUTH_ICONS.PASSWORD}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 size-5"
+                  />
                   <Input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
@@ -102,7 +112,7 @@ export function LoginPage() {
                     onClick={() => setShowPassword(!showPassword)}
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
-                    {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
+                    {showPassword ? <Eye className="size-5" /> : <EyeOff className="size-5" />}
                   </button>
                 </div>
                 {errors.password && (
@@ -118,7 +128,7 @@ export function LoginPage() {
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="size-5 rounded border-border accent-brand-500"
+                  className="size-5 appearance-none rounded-lg border border-[#824892] bg-transparent cursor-pointer relative checked:after:absolute checked:after:inset-0 checked:after:flex checked:after:items-center checked:after:justify-center checked:after:text-[#824892] checked:after:text-sm checked:after:font-bold checked:after:content-['✓']"
                 />
                 <span className="text-sm text-foreground">{AUTH_STRINGS.LOGIN.REMEMBER_ME}</span>
               </label>
@@ -135,7 +145,7 @@ export function LoginPage() {
               type="submit"
               variant="brand"
               disabled={isPending || isGooglePending}
-              className="w-full h-[54px] rounded-xl text-base"
+              className="w-full h-13.5 rounded-xl text-base"
             >
               {isPending ? AUTH_STRINGS.LOGIN.SUBMIT_LOADING : AUTH_STRINGS.LOGIN.SUBMIT}
             </Button>
@@ -154,7 +164,7 @@ export function LoginPage() {
             variant="outline"
             onClick={() => handleGoogleLogin()}
             disabled={isPending || isGooglePending}
-            className="w-full h-[54px] rounded-xl bg-white border-0 shadow-sm text-base font-semibold text-foreground hover:bg-gray-50"
+            className="w-full h-13.5 rounded-xl bg-white border-0 shadow-sm text-base font-semibold text-foreground hover:bg-gray-50"
           >
             <svg viewBox="0 0 24 24" className="size-5" aria-hidden="true">
               <path

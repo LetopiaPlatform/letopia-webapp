@@ -12,11 +12,23 @@ export const ERROR_MESSAGES = {
 } as const;
 
 export const NAV_LINKS = [
-  { label: 'Home', href: '/' },
-  { label: 'Communities', href: '/communities' },
-  { label: 'Projects', href: '/projects' },
-  { label: 'Roadmaps', href: '/roadmaps' },
+  { label: 'Home', href: '/', icon: '/assets/home.svg' },
+  { label: 'Communities', href: '/communities', icon: '/assets/communities.svg' },
+  { label: 'Projects', href: '/projects', icon: '/assets/projects.svg' },
+  { label: 'Roadmaps', href: '/roadmaps', icon: '/assets/roadmaps.svg' },
 ] as const;
+
+export const NAV_ICONS = {
+  SEARCH: '/assets/search.svg',
+  FILTER: '/assets/filter.svg',
+} as const;
+
+export const AUTH_ICONS = {
+  USER: '/assets/user.svg',
+  PHONE: '/assets/phone.svg',
+  EMAIL: '/assets/email.svg',
+  PASSWORD: '/assets/password.svg',
+} as const;
 
 // ── Auth pages ─────────────────────────────────────────────────
 export const AUTH_ASSETS = {
