@@ -7,6 +7,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { AuthProvider } from './context/AuthContext';
 import { LoginPage } from '@/pages/auth/LoginPage';
 import { RegisterPage } from '@/pages/auth/RegisterPage';
+import { HomePage } from '@/pages/HomePage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,7 +27,7 @@ function App() {
           <AuthProvider>
             <Routes>
               <Route element={<AppLayout />}>
-                <Route index element={<div className="p-6">Home</div>} />
+                <Route index element={<HomePage />} />
                 <Route path="communities" element={<div className="p-6">Communities</div>} />
                 <Route path="projects" element={<div className="p-6">Projects</div>} />
                 <Route path="roadmaps" element={<div className="p-6">Roadmaps</div>} />
