@@ -24,10 +24,10 @@ export function Navbar() {
   return (
     <header>
       <nav className="mx-auto flex h-18 max-w-360 items-center justify-between bg-white/60 px-6 backdrop-blur-xl backdrop-saturate-150 lg:px-10 xl:px-20.75">
-        <Logo className="w-25 shrink-0" />
+        <Logo className="w-25 shrink-0 hidden sm:block" />
 
         {/* Search bar — visible at all sizes, responsive width */}
-        <SearchBar className="flex-1 mx-4 lg:mx-6 lg:max-w-60 xl:max-w-101.5" />
+        <SearchBar className="flex-1 mx-2 sm:mx-4 lg:mx-6 lg:max-w-60 xl:max-w-101.5" />
 
         <DesktopNav />
 

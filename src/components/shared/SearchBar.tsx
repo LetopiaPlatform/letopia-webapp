@@ -33,7 +33,7 @@ export function SearchBar({ className }: SearchBarProps) {
   return (
     <div className={`relative ${className ?? ''}`}>
       <div
-        className={`flex items-center rounded-xl border bg-white p-4 transition-colors ${
+        className={`flex items-center rounded-xl border bg-white p-3 sm:p-4 transition-colors ${
           isSearchFocused ? 'border-[#824892]' : 'border-[#DBD5DE]'
         }`}
       >
