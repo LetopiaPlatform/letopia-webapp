@@ -43,3 +43,36 @@ export const signUpSchema = z
   });
 
 export type SignUpFormData = z.infer<typeof signUpSchema>;
+
+// ─── Forgot Password ─────────────────────────────────────────
+// Mirrors: ForgotPasswordDtoValidator in backend
+export const forgotPasswordSchema = z.object({
+  email: z
+    .string()
+    .min(1, 'Email is required')
+    .email('Invalid email format')
+    .max(256, 'Email cannot exceed 256 characters'),
+});
+
+export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
+
+// ─── Reset Password ──────────────────────────────────────────
+// Mirrors: ResetPasswordDtoValidator in backend
+export const resetPasswordSchema = z
+  .object({
+    newPassword: z
+      .string()
+      .min(8, 'Password must be at least 8 characters')
+      .max(100, 'Password cannot exceed 100 characters')
+      .regex(/[A-Z]/, 'Must contain at least one uppercase letter')
+      .regex(/[a-z]/, 'Must contain at least one lowercase letter')
+      .regex(/[0-9]/, 'Must contain at least one number')
+      .regex(/[\W_]/, 'Must contain at least one special character'),
+    confirmPassword: z.string().min(1, 'Confirm password is required'),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  });
+
+export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
