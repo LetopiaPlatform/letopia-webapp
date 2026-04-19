@@ -9,6 +9,9 @@ import { LoginPage } from '@/pages/auth/LoginPage';
 import { RegisterPage } from '@/pages/auth/RegisterPage';
 import { HomePage } from '@/pages/HomePage';
 import { VerifyEmailPage } from '@/pages/auth/VerifyEmailPage';
+import { ForgotPasswordPage } from '@/pages/auth/ForgotPasswordPage';
+import { VerifyResetCodePage } from '@/pages/auth/VerifyResetCodePage';
+import { SetPasswordPage } from '@/pages/auth/SetPasswordPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,6 +38,9 @@ function App() {
                 <Route path="login" element={<LoginPage />} />
                 <Route path="register" element={<RegisterPage />} />
                 <Route path="verify-email" element={<VerifyEmailPage />} />
+                <Route path="forgot-password" element={<ForgotPasswordPage />} />
+                <Route path="verify-reset-code" element={<VerifyResetCodePage />} />
+                <Route path="reset-password" element={<SetPasswordPage />} />
               </Route>
             </Routes>
           </AuthProvider>
