@@ -24,7 +24,7 @@ export function Navbar() {
   return (
     <header>
       <nav className="mx-auto flex h-18 max-w-360 items-center justify-between bg-white/60 px-6 backdrop-blur-xl backdrop-saturate-150 lg:px-10 xl:px-20.75">
-        <Logo className="w-25 shrink-0 hidden sm:block" />
+        <Logo className="w-25 shrink-0 hidden sm:block z-100" />
 
         {/* Search bar — only when authenticated */}
         {isAuthenticated && (
