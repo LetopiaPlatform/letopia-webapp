@@ -47,3 +47,15 @@ export interface VerifyEmailRequest {
   email: string;
   code: string;
 }
+
+// ─── Forgot / Reset Password ─────────────────────────────────
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest {
+  email: string;
+  code: string;
+  newPassword: string;
+  confirmPassword: string;
+}

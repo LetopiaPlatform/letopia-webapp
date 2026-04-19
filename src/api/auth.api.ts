@@ -1,7 +1,9 @@
 import type {
   AuthResponse,
+  ForgotPasswordRequest,
   GoogleLoginRequest,
   LoginRequest,
+  ResetPasswordRequest,
   SendCodeRequest,
   SignUpRequest,
   VerifyEmailRequest,
@@ -21,4 +23,10 @@ export const authApi = {
 
   verifyEmail: (data: VerifyEmailRequest) =>
     apiClient.post<ApiResponse<AuthResponse>>('/auth/verify-email', data),
+
+  forgotPassword: (data: ForgotPasswordRequest) =>
+    apiClient.post<ApiResponse<null>>('/auth/forgot-password', data),
+
+  resetPassword: (data: ResetPasswordRequest) =>
+    apiClient.post<ApiResponse<null>>('/auth/reset-password', data),
 };
