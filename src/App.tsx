@@ -4,6 +4,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Toaster } from '@/components/ui/sonner';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { FeatureGate } from '@/components/shared/FeatureGate';
 import { AuthProvider } from './context/AuthContext';
 import { LoginPage } from '@/pages/auth/LoginPage';
 import { RegisterPage } from '@/pages/auth/RegisterPage';
@@ -12,6 +13,8 @@ import { VerifyEmailPage } from '@/pages/auth/VerifyEmailPage';
 import { ForgotPasswordPage } from '@/pages/auth/ForgotPasswordPage';
 import { VerifyResetCodePage } from '@/pages/auth/VerifyResetCodePage';
 import { SetPasswordPage } from '@/pages/auth/SetPasswordPage';
+import { ProfilePage } from '@/pages/profile/ProfilePage';
+import { SettingsPage } from './pages/profile/SettingsPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,15 +35,38 @@ function App() {
             <Routes>
               <Route element={<AppLayout />}>
                 <Route index element={<HomePage />} />
-                <Route path="communities" element={<div className="p-6">Communities</div>} />
-                <Route path="projects" element={<div className="p-6">Projects</div>} />
-                <Route path="roadmaps" element={<div className="p-6">Roadmaps</div>} />
+                <Route
+                  path="communities"
+                  element={
+                    <FeatureGate feature="communitiesPage">
+                      <div className="p-6">Communities</div>
+                    </FeatureGate>
+                  }
+                />
+                <Route
+                  path="projects"
+                  element={
+                    <FeatureGate feature="projectsPage">
+                      <div className="p-6">Projects</div>
+                    </FeatureGate>
+                  }
+                />
+                <Route
+                  path="roadmaps"
+                  element={
+                    <FeatureGate feature="roadmapsPage">
+                      <div className="p-6">Roadmaps</div>
+                    </FeatureGate>
+                  }
+                />
                 <Route path="login" element={<LoginPage />} />
                 <Route path="register" element={<RegisterPage />} />
                 <Route path="verify-email" element={<VerifyEmailPage />} />
                 <Route path="forgot-password" element={<ForgotPasswordPage />} />
                 <Route path="verify-reset-code" element={<VerifyResetCodePage />} />
                 <Route path="reset-password" element={<SetPasswordPage />} />
+                <Route path="profile" element={<ProfilePage />} />
+                <Route path="settings" element={<SettingsPage />} />
               </Route>
             </Routes>
           </AuthProvider>

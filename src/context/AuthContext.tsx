@@ -17,6 +17,7 @@ interface AuthContextValue {
   isAuthenticated: boolean;
   login: (response: AuthResponse) => void;
   logout: () => void;
+  updateUser: (patch: Partial<AuthUser>) => void;
 }
 
 // ─── Create the context ──────────────────────────────────────
@@ -57,6 +58,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     navigate('/login');
   }, [navigate]);
 
+  // Called after a profile update so navbar/avatar stay in sync
+  const updateUser = useCallback((patch: Partial<AuthUser>) => {
+    setUser((prev) => {
+      if (!prev) return prev;
+      const next = { ...prev, ...patch };
+      localStorage.setItem(USER_KEY, JSON.stringify(next));
+      return next;
+    });
+  }, []);
+
   // Listen for token removal from Axios interceptor (401 handler)
   useEffect(() => {
     const handleStorageChange = () => {
@@ -73,8 +84,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Memoize to prevent unnecessary re-renders
   const value = useMemo(
-    () => ({ user, token, isAuthenticated, login, logout }),
-    [user, token, isAuthenticated, login, logout]
+    () => ({ user, token, isAuthenticated, login, logout, updateUser }),
+    [user, token, isAuthenticated, login, logout, updateUser]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
