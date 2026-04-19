@@ -8,6 +8,7 @@ import { AuthProvider } from './context/AuthContext';
 import { LoginPage } from '@/pages/auth/LoginPage';
 import { RegisterPage } from '@/pages/auth/RegisterPage';
 import { HomePage } from '@/pages/HomePage';
+import { VerifyEmailPage } from '@/pages/auth/VerifyEmailPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,6 +34,7 @@ function App() {
                 <Route path="roadmaps" element={<div className="p-6">Roadmaps</div>} />
                 <Route path="login" element={<LoginPage />} />
                 <Route path="register" element={<RegisterPage />} />
+                <Route path="verify-email" element={<VerifyEmailPage />} />
               </Route>
             </Routes>
           </AuthProvider>
