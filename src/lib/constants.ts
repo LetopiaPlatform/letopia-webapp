@@ -70,5 +70,33 @@ export const AUTH_STRINGS = {
     SUBMIT: 'Verify',
     SUBMIT_LOADING: 'Verifying...',
   },
+  FORGOT_PASSWORD: {
+    TITLE: 'Forgot your password?',
+    SUBTITLE: "Don't worry, happens to all of us. Enter your email below to recover your password",
+    BACK_LINK: 'Back to login',
+    EMAIL_PLACEHOLDER: 'Email',
+    SUBMIT: 'Send',
+    SUBMIT_LOADING: 'Sending...',
+    REGISTER_PROMPT: "Don't have an account?",
+    REGISTER_LINK: 'Sign up',
+  },
+  VERIFY_RESET_CODE: {
+    TITLE: 'Check your Email',
+    SUBTITLE: 'A password reset code has been sent to your email.',
+    BACK_LINK: 'Back to login',
+    RESEND_PROMPT: "Didn't receive a code?",
+    RESEND_LINK: 'Resend',
+    SUBMIT: 'Verify',
+    SUBMIT_LOADING: 'Verifying...',
+  },
+  SET_PASSWORD: {
+    TITLE: 'Set a Password',
+    SUBTITLE:
+      'Your previous password has been reseted. Please set a new password for your account.',
+    NEW_PASSWORD_PLACEHOLDER: 'New Password',
+    CONFIRM_PASSWORD_PLACEHOLDER: 'Confirm New Password',
+    SUBMIT: 'Reset password',
+    SUBMIT_LOADING: 'Resetting...',
+  },
   DIVIDER: 'Or',
 } as const;
