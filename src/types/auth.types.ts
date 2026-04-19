@@ -37,3 +37,13 @@ export interface AuthUser {
   role: string;
   avatarUrl: string;
 }
+
+export interface SendCodeRequest {
+  email: string;
+  purpose: 'EmailVerification' | 'PasswordRest';
+}
+
+export interface VerifyEmailRequest {
+  email: string;
+  code: string;
+}

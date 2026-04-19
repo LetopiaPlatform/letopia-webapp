@@ -61,5 +61,14 @@ export const AUTH_STRINGS = {
     REGISTER_PROMPT: "Don't have an account?",
     REGISTER_LINK: 'Sign up',
   },
+  VERIFY_EMAIL: {
+    TITLE: 'Check your Email',
+    SUBTITLE: 'An authentication code has been sent to your email.',
+    BACK_LINK: 'Back to Login',
+    RESEND_PROMPT: "Didn't receive a code?",
+    RESEND_LINK: 'Resend',
+    SUBMIT: 'Verify',
+    SUBMIT_LOADING: 'Verifying...',
+  },
   DIVIDER: 'Or',
 } as const;
