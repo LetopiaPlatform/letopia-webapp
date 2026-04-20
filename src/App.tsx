@@ -17,6 +17,8 @@ import { ProfilePage } from '@/pages/profile/ProfilePage';
 import { SettingsPage } from './pages/profile/SettingsPage';
 import { CommunitiesPage } from './pages/communities/CommunitiesPage';
 import { CommunityDetailPage } from './pages/communities/CommunityDetailPage';
+import { CreateCommunityPage } from './pages/communities/CreateCommunityPage';
+import { ProtectedRoute } from './components/shared/ProtectedRoute';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -45,6 +47,15 @@ function App() {
                     </FeatureGate>
                   }
                 />
+                <Route
+                  element={
+                    <FeatureGate feature="communitiesPage">
+                      <ProtectedRoute />
+                    </FeatureGate>
+                  }
+                >
+                  <Route path="communities/create" element={<CreateCommunityPage />} />
+                </Route>
                 <Route
                   path="communities/:slug"
                   element={
