@@ -10,6 +10,7 @@ export function useCurrentUser() {
     queryKey: ['users', 'me'],
     queryFn: () => usersApi.getMe().then((res) => res.data),
     enabled: isAuthenticated,
+    staleTime: 60_000,
   });
 }
 

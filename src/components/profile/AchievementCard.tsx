@@ -19,11 +19,11 @@ export function AchievementCard({ achievement }: AchievementCardProps) {
   return (
     <div
       className={cn(
-        'flex items-center gap-4 rounded-2xl p-6 shadow-[0px_2px_4px_0px_rgba(0,0,0,0.13)]',
+        'flex items-center gap-3 rounded-2xl p-4 shadow-[0px_2px_4px_0px_rgba(0,0,0,0.13)] sm:gap-4 sm:p-6',
         isUnlocked ? 'bg-[#F2EEF3]' : 'bg-white'
       )}
     >
-      <div className="flex h-28 w-36 shrink-0 items-center justify-center">
+      <div className="flex h-20 w-20 shrink-0 items-center justify-center sm:h-28 sm:w-36">
         <img
           src={achievement.image}
           alt=""

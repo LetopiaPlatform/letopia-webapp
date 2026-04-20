@@ -20,7 +20,6 @@ type TabKey = 'overview' | 'projects' | 'achievement';
 export function ProfilePage() {
   const { isAuthenticated, user: authUser, updateUser } = useAuthContext();
   const { data: meResponse, isLoading } = useCurrentUser();
-  const { data: communitiesResponse } = useMyCommunities();
   const updateProfile = useUpdateProfile();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabKey>('overview');
@@ -29,11 +28,15 @@ export function ProfilePage() {
   if (!isAuthenticated) return <Navigate to="/login" replace />;
 
   const user = meResponse?.data;
-  const communities = communitiesResponse?.data ?? [];
   // TODO(backend): role is not on UserProfileResponse; fall back to auth context user.
   const role = authUser?.role ?? 'Member';
+  // Use authUser data immediately for the header while full profile loads
+  const displayName = user?.fullName ?? authUser?.fullName ?? '';
+  const displayAvatar = user?.avatarUrl ?? authUser?.avatarUrl ?? undefined;
+  const displayEmail = user?.email ?? authUser?.email ?? '';
+  const profileReady = !isLoading && !!user;
 
-  if (isLoading || !user) {
+  if (!displayName) {
     return (
       <div className="mx-auto max-w-360 px-6 py-10 lg:px-10 xl:px-20.75">
         <div className="h-64 animate-pulse rounded-3xl bg-white/40" />
@@ -42,9 +45,9 @@ export function ProfilePage() {
   }
 
   return (
-    <div className="mx-auto max-w-360 px-6 py-8 lg:px-10 xl:px-20.75 space-y-6">
+    <div className="mx-auto max-w-360 overflow-x-hidden px-6 py-8 lg:px-10 xl:px-20.75 space-y-6">
       {/* ── Header card OR edit form ───────────────────────────── */}
-      {isEditing ? (
+      {isEditing && user ? (
         <EditProfileForm
           user={user}
           fallbackAvatarUrl={authUser?.avatarUrl}
@@ -76,12 +79,9 @@ export function ProfilePage() {
             {/* Avatar */}
             <div className="shrink-0">
               <Avatar className="size-28 ring-4 ring-[#824892]/20">
-                <AvatarImage
-                  src={user.avatarUrl ?? authUser?.avatarUrl ?? undefined}
-                  alt={user.fullName}
-                />
+                <AvatarImage src={displayAvatar} alt={displayName} />
                 <AvatarFallback className="bg-[#824892] text-white text-2xl font-semibold">
-                  {getInitials(user.fullName)}
+                  {getInitials(displayName)}
                 </AvatarFallback>
               </Avatar>
             </div>
@@ -90,9 +90,7 @@ export function ProfilePage() {
             <div className="flex-1 min-w-0">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                  <h1 className="text-3xl font-semibold text-[#1A1A1A] truncate">
-                    {user.fullName}
-                  </h1>
+                  <h1 className="text-3xl font-semibold text-[#1A1A1A] truncate">{displayName}</h1>
                   <p className="mt-1 text-sm text-[#6B7280]">
                     {role} {PROFILE_STRINGS.ROLE_SUFFIX}
                   </p>
@@ -111,6 +109,7 @@ export function ProfilePage() {
                     size="sm"
                     className="gap-2 bg-[#824892] hover:bg-[#6f3a80]"
                     onClick={() => setIsEditing(true)}
+                    disabled={!profileReady}
                   >
                     <img
                       src={PROFILE_ICONS.EDIT_USER}
@@ -123,7 +122,7 @@ export function ProfilePage() {
               </div>
 
               {/* Bio */}
-              {user.bio && (
+              {user?.bio && (
                 <p className="mt-4 text-sm text-[#4B5563] leading-relaxed">{user.bio}</p>
               )}
 
@@ -131,12 +130,12 @@ export function ProfilePage() {
               <div className="mt-4 grid grid-cols-1 gap-x-8 gap-y-4 text-sm text-[#4B5563] sm:grid-cols-2">
                 <div className="flex items-center gap-2">
                   <img src={PROFILE_ICONS.EMAIL} alt="" className="size-4" />
-                  <span className="truncate">{user.email}</span>
+                  <span className="truncate">{displayEmail}</span>
                 </div>
-                {user.phoneNumber && (
+                {user?.phoneNumber && (
                   <div className="flex items-center gap-2">
                     <Phone className="size-4 text-[#824892]" />
-                    <span>{user.phoneNumber}</span>
+                    <span>{user?.phoneNumber}</span>
                   </div>
                 )}
                 {/* TODO(backend): location not on User entity */}
@@ -149,7 +148,7 @@ export function ProfilePage() {
               {/* Social buttons — TODO(backend): social fields not on User entity */}
               <div className="mt-4 flex flex-wrap gap-2">
                 <a
-                  href={`mailto:${user.email}`}
+                  href={`mailto:${displayEmail}`}
                   className="inline-flex items-center gap-2 rounded-lg bg-[#E11D48] px-3 py-2 text-xs font-medium text-white hover:opacity-90"
                 >
                   <img src={PROFILE_ICONS.EMAIL} alt="" className="size-3.5 invert brightness-0" />
@@ -227,7 +226,7 @@ export function ProfilePage() {
 
       {/* ── Tabs ───────────────────────────────────────────────── */}
       <section className="mb-4!">
-        <div className="inline-flex h-11 items-center gap-1 rounded-2xl bg-[#F3EBF4] p-1">
+        <div className="grid grid-cols-3 gap-1 rounded-2xl bg-[#F3EBF4] p-1 sm:inline-flex sm:w-auto">
           {(
             [
               ['overview', PROFILE_STRINGS.TABS.OVERVIEW, PROFILE_ICONS.DASHBOARD],
@@ -239,12 +238,12 @@ export function ProfilePage() {
               key={key}
               onClick={() => setActiveTab(key)}
               className={cn(
-                'flex h-9 items-center gap-1 rounded-2xl px-6 text-base font-medium leading-5 text-[#1A1A1A] transition-colors',
+                'flex h-9 items-center justify-center gap-1 rounded-2xl px-1 text-xs font-medium leading-5 text-[#1A1A1A] transition-colors xs:px-2 xs:text-sm sm:px-6 sm:text-base',
                 activeTab === key ? 'bg-white shadow-sm' : 'hover:bg-white/40'
               )}
             >
-              <img src={icon} alt="" className="size-4.5" />
-              {label}
+              <img src={icon} alt="" className="size-4.5 shrink-0" />
+              <span className="hidden xs:inline">{label}</span>
             </button>
           ))}
         </div>
@@ -263,41 +262,7 @@ export function ProfilePage() {
             </div>
           </div>
 
-          {/* My Communities — real data */}
-          <div className="rounded-3xl bg-white p-6 shadow-sm">
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-semibold text-[#1A1A1A]">
-                {PROFILE_STRINGS.SECTIONS.MY_COMMUNITIES} (Coming Soon)
-              </h3>
-              <span className="text-xs text-[#6B7280]">{communities.length}</span>
-            </div>
-            <ul className="mt-4 space-y-3">
-              {communities.length === 0 && (
-                <li className="text-sm text-[#6B7280]">{PROFILE_STRINGS.EMPTY.NO_COMMUNITIES}</li>
-              )}
-              {communities.map(({ community }) => (
-                <li
-                  key={community.id}
-                  className="flex h-20 items-center gap-3 rounded-[10px] bg-zinc-100 p-3 outline-[0.8px] -outline-offset-[0.8px] outline-gray-200"
-                >
-                  <Avatar className="size-12 shrink-0">
-                    <AvatarImage src={community.iconUrl ?? undefined} alt={community.name} />
-                    <AvatarFallback className="bg-[#824892]/10 text-[#824892] text-xs font-semibold">
-                      {getInitials(community.name)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex min-w-0 flex-1 flex-col">
-                    <p className="truncate text-base font-medium leading-6 text-[#1A1A1A]">
-                      {community.name}
-                    </p>
-                    <p className="text-sm font-normal leading-5 text-[#6B7280]">
-                      {formatCount(community.memberCount)} members
-                    </p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <CommunitiesSection />
         </div>
       )}
 
@@ -324,6 +289,58 @@ export function ProfilePage() {
             </div>
           </div>
         </FeatureGate>
+      )}
+    </div>
+  );
+}
+
+function CommunitiesSection() {
+  const { data: communitiesResponse, isLoading } = useMyCommunities();
+  const communities = communitiesResponse?.data ?? [];
+
+  return (
+    <div className="rounded-3xl bg-white p-6 shadow-sm">
+      <div className="flex items-center justify-between gap-3">
+        <h3 className="min-w-0 text-base font-semibold text-[#1A1A1A]">
+          {PROFILE_STRINGS.SECTIONS.MY_COMMUNITIES} (Coming Soon)
+        </h3>
+        {!isLoading && (
+          <span className="shrink-0 text-xs text-[#6B7280]">{communities.length}</span>
+        )}
+      </div>
+      {isLoading ? (
+        <div className="mt-4 space-y-3">
+          {[1, 2].map((i) => (
+            <div key={i} className="h-20 animate-pulse rounded-[10px] bg-zinc-100" />
+          ))}
+        </div>
+      ) : (
+        <ul className="mt-4 space-y-3">
+          {communities.length === 0 && (
+            <li className="text-sm text-[#6B7280]">{PROFILE_STRINGS.EMPTY.NO_COMMUNITIES}</li>
+          )}
+          {communities.map(({ community }) => (
+            <li
+              key={community.id}
+              className="flex h-20 items-center gap-3 rounded-[10px] bg-zinc-100 p-3 outline-[0.8px] -outline-offset-[0.8px] outline-gray-200"
+            >
+              <Avatar className="size-12 shrink-0">
+                <AvatarImage src={community.iconUrl ?? undefined} alt={community.name} />
+                <AvatarFallback className="bg-[#824892]/10 text-[#824892] text-xs font-semibold">
+                  {getInitials(community.name)}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex min-w-0 flex-1 flex-col">
+                <p className="truncate text-base font-medium leading-6 text-[#1A1A1A]">
+                  {community.name}
+                </p>
+                <p className="text-sm font-normal leading-5 text-[#6B7280]">
+                  {formatCount(community.memberCount)} members
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );
