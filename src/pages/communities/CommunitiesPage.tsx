@@ -3,7 +3,7 @@ import { CommunitiesList } from '@/components/CommunitiesList';
 import { useCategoriesList } from '@/hooks/useCategories';
 import { useState } from 'react';
 import { CategoryTabs } from '@/components/CategoryTabs';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { SortDropdown } from '@/components/SortDropdown';
 import { SubCategoryFilter } from '@/components/SubCategoryFilter';
 
@@ -12,17 +12,19 @@ export function CommunitiesPage() {
   const search = searchParams.get('search') ?? '';
   const sortBy = searchParams.get('sortBy') ?? 'newest';
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedSubCategories, setSelectedSubCategories] = useState<string[]>([]);
+  const { data, isLoading } = useCategoriesList('community');
+  const categories = data?.data ?? [];
+
   const handleSortChange = (value: string) => {
     setSearchParams((prev) => {
       prev.set('sortBy', value);
       return prev;
     });
   };
-
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedSubCategories, setSelectedSubCategories] = useState<string[]>([]);
-  const { data, isLoading } = useCategoriesList('community');
-  const categories = data?.data ?? [];
 
   const selectedCategoryObj = categories.find((c) => c.slug === selectedCategory);
   const handleCategorySelect = (slug: string | null) => {
@@ -33,6 +35,10 @@ export function CommunitiesPage() {
     setSelectedSubCategories((prev) =>
       prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]
     );
+  };
+
+  const handleSelectCommunity = (slug: string) => {
+    navigate(`/communities/${slug}`, { state: { backgroundLocation: location } });
   };
   return (
     <div className="">
@@ -62,6 +68,7 @@ export function CommunitiesPage() {
               subCategorySlugs={selectedSubCategories}
               sortBy={sortBy}
               category={selectedCategoryObj}
+              onSelectCommunity={handleSelectCommunity}
             />
           </div>
         </div>

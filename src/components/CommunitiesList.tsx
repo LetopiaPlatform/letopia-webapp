@@ -25,6 +25,7 @@ interface CommunitiesListProps {
   subCategorySlugs?: string[];
   search?: string;
   sortBy?: string;
+  onSelectCommunity?: (slug: string) => void;
 }
 
 export function CommunitiesList({
@@ -32,6 +33,7 @@ export function CommunitiesList({
   subCategorySlugs,
   search,
   sortBy,
+  onSelectCommunity,
 }: CommunitiesListProps) {
   const [page, setPage] = useState(1);
 
@@ -107,7 +109,7 @@ export function CommunitiesList({
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 2xl:gap-10">
           {communities.map((community) => (
-            <CommunityCard key={community.id} community={community} />
+            <CommunityCard key={community.id} community={community} onSelect={onSelectCommunity} />
           ))}
         </div>
       )}

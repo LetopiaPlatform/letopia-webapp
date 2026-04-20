@@ -23,7 +23,7 @@ export const communitiesApi = {
         Object.entries(p).forEach(([key, value]) => {
           if (Array.isArray(value)) {
             value.forEach((v) => searchParams.append(key, v));
-          } else if (value !== undefined && value !== null) {
+          } else if (value !== undefined && value !== null && value !== '') {
             searchParams.append(key, String(value));
           }
         });

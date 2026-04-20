@@ -17,10 +17,11 @@ export function useCommunitiesList(params: CommunityListParams) {
   });
 }
 
-export function useCommunityBySlug(slug: string) {
+export function useCommunityBySlug(slug: string, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: ['communities', slug],
     queryFn: () => communitiesApi.getBySlug(slug).then((res) => res.data),
+    enabled: options?.enabled,
   });
 }
 

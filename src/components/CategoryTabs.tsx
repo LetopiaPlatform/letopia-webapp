@@ -55,7 +55,7 @@ export function CategoryTabs({
             <img
               src={category.iconUrl}
               alt=""
-              className="size-4 object-contain"
+              className="w-4.5 h-4.5 shrink-0 object-contain"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
               }}
@@ -64,7 +64,7 @@ export function CategoryTabs({
             <img
               src="/icons/category-icon.svg"
               alt=""
-              className="size-4 object-contain rotate-15"
+              className="w-4.5 h-4.5 shrink-0 object-contain"
             />
           )}
           {category.name}

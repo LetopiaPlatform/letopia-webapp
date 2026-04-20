@@ -2,7 +2,6 @@ import type { CommunitySummary } from '@/types/community.types';
 import { formatNumberCount } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Plus, Lock, Loader2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from './ui/card';
 import { cn } from '@/lib/utils';
 import { useJoinCommunity } from '@/hooks/useCommunities';
@@ -10,18 +9,27 @@ import { useState } from 'react';
 
 type CommunityCardProps = {
   community: CommunitySummary;
+  onSelect?: (slug: string) => void;
 };
 
-function CommunityCard({ community }: CommunityCardProps) {
+function CommunityCard({ community, onSelect }: CommunityCardProps) {
   const { mutate: join, isPending } = useJoinCommunity();
   const [imgError, setImgError] = useState(false);
 
+  const handleCardClick = () => {
+    if (onSelect) {
+      onSelect(community.slug);
+    }
+  };
+
   return (
     <Card
+      onClick={handleCardClick}
       className={cn(
         'p-0 gap-0 w-full',
-        'overflow-hidden rounded-2xl shadow-lg cursor-default',
-        'transition-all duration-200 hover:-translate-y-1 hover:shadow-xl'
+        'overflow-hidden rounded-2xl shadow-lg',
+        'transition-all duration-200 hover:-translate-y-1 hover:shadow-xl',
+        onSelect && 'cursor-pointer'
       )}
     >
       {/* Community Cover */}
@@ -38,17 +46,13 @@ function CommunityCard({ community }: CommunityCardProps) {
 
       <div className="w-full rounded-t-2xl z-1 space-y-1.5 py-3.5 bg-background shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
         <CardHeader>
-          <CardTitle className="text-xl font-semibold truncate">
-            <Link to={`/communities/${community.slug}`} className="hover:text-brand-800">
-              {community.name}
-            </Link>
-          </CardTitle>
+          <CardTitle className="text-xl font-semibold truncate">{community.name}</CardTitle>
 
           <div className="flex gap-1.5 text-md font-medium text-zinc-500">
             <img
               src={community.iconUrl ?? '/icons/category-icon.svg'}
               alt={community.categoryName}
-              className="w-4 rotate-15"
+              className="w-4.5 h-4.5 shrink-0"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
               }}
@@ -82,7 +86,10 @@ function CommunityCard({ community }: CommunityCardProps) {
             disabled={isPending}
             aria-label={community.isPrivate ? `Request` : `Join`}
             className="text-md font-medium text-foreground shadow-none rounded-lg border-stone-300 has-[>svg]:px-6 h-9 cursor-pointer"
-            onClick={() => join(community.id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              join(community.id);
+            }}
           >
             {isPending ? (
               <Loader2 size={12} className="animate-spin" />
