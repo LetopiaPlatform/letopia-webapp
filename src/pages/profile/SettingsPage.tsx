@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '@/context/AuthContext';
 import { cn } from '@/lib/utils';
 import {
@@ -18,6 +18,7 @@ type PrivacyToggleKey = Exclude<keyof PrivacyPrefs, 'profileVisibility'>;
 
 export function SettingsPage() {
   const { isAuthenticated } = useAuthContext();
+  const navigate = useNavigate();
   const [notifications, setNotifications] = useState<NotificationPrefs>(DEFAULT_NOTIFICATIONS);
   const [privacy, setPrivacy] = useState<PrivacyPrefs>(DEFAULT_PRIVACY);
 
@@ -34,7 +35,16 @@ export function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-8 lg:px-10 space-y-6">
-      <h1 className="text-2xl font-bold text-[#1A1A1A]">{SETTINGS_STRINGS.PAGE_TITLE}</h1>
+      <div className="flex items-center gap-1">
+        <button
+          type="button"
+          onClick={() => navigate('/profile')}
+          className="flex size-9 items-center justify-center rounded-xl transition-colors hover:bg-[#F3EBF4]"
+        >
+          <img src="/assets/chevron_back.svg" alt="Back" className="size-6" />
+        </button>
+        <h1 className="text-2xl font-bold text-[#1A1A1A]">{SETTINGS_STRINGS.PAGE_TITLE}</h1>
+      </div>
 
       {/* Notifications */}
       <section className="rounded-3xl bg-white px-4 py-6 shadow-sm sm:px-8">
@@ -137,10 +147,8 @@ function VisibilityOption({ label, active, onSelect }: VisibilityOptionProps) {
       onClick={onSelect}
       aria-pressed={active}
       className={cn(
-        'flex-1 basis-0 min-w-0 h-11 rounded-xl px-2 text-xs font-medium whitespace-nowrap transition-colors sm:px-6 sm:text-sm',
-        active
-          ? 'bg-[#824892] text-white'
-          : 'bg-[#F3EBF4] text-[#824892] ring-1 ring-inset ring-[#824892]/30 hover:bg-[#ebd9ef]'
+        'flex-1 basis-0 min-w-0 h-11 rounded-xl px-2 text-xs font-medium whitespace-nowrap transition-colors outline-none ring-0 sm:px-6 sm:text-sm',
+        active ? 'bg-[#824892] text-white' : 'bg-[#F3EBF4] text-[#824892] hover:bg-[#ebd9ef]'
       )}
     >
       {label}

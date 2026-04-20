@@ -243,6 +243,7 @@ export function EditProfileForm({
               align="end"
               side="bottom"
               sideOffset={8}
+              collisionPadding={16}
               className="w-48 rounded-2xl p-4 flex flex-col gap-4"
             >
               {SOCIAL_OPTIONS.map(({ type, label, icon }) => (
@@ -412,13 +413,13 @@ function Section({
 }) {
   return (
     <section>
-      <div className="mb-3 flex items-center justify-between">
-        <h3 className="flex items-center gap-1.5 text-sm font-semibold text-[#1A1A1A]">
-          {iconSrc && <img src={iconSrc} alt="" className="size-4" />}
-          {title}
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <h3 className="flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-0.5 text-sm font-semibold text-[#1A1A1A]">
+          {iconSrc && <img src={iconSrc} alt="" className="size-4 shrink-0" />}
+          <span>{title}</span>
           {hint && <span className="text-xs font-normal text-[#9CA3AF]">({hint})</span>}
         </h3>
-        {action}
+        {action && <div className="shrink-0">{action}</div>}
       </div>
       {children}
     </section>
