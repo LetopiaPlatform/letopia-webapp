@@ -16,7 +16,20 @@ export const communitiesApi = {
   getMyCommunities: () => apiClient.get<ApiResponse<JoinedCommunitySummary[]>>(`/communities/me`),
 
   list: (params: CommunityListParams) =>
-    apiClient.get<ApiResponse<PaginatedResult<CommunitySummary>>>(`/communities`, { params }),
+    apiClient.get<ApiResponse<PaginatedResult<CommunitySummary>>>('/communities', {
+      params,
+      paramsSerializer: (p) => {
+        const searchParams = new URLSearchParams();
+        Object.entries(p).forEach(([key, value]) => {
+          if (Array.isArray(value)) {
+            value.forEach((v) => searchParams.append(key, v));
+          } else if (value !== undefined && value !== null) {
+            searchParams.append(key, String(value));
+          }
+        });
+        return searchParams.toString();
+      },
+    }),
 
   getMembers: (id: string, params: PaginatedQuery) =>
     apiClient.get<ApiResponse<PaginatedResult<Member>>>(`/communities/${id}/members`, { params }),

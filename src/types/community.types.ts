@@ -30,6 +30,9 @@ export interface CommunitySummary {
   postCount: number;
   isPrivate: boolean;
   createdAt: string;
+  subCategoryName: string;
+  subCategorySlug: string;
+  mainCategoryId: string;
 }
 
 export interface CommunityDetail extends CommunitySummary {
@@ -72,6 +75,7 @@ export interface UpdateCommunityRequest {
 
 export interface CommunityListParams extends PaginatedQuery {
   category?: string;
+  subCategorySlugs?: string[];
   search?: string;
   sortBy?: string;
 }
