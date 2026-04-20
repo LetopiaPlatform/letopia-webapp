@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useGoogleLogin as useGoogleOAuth } from '@react-oauth/google';
 import { signUpSchema, type SignUpFormData } from '@/lib/validators';
 import { useSignUp, useGoogleLogin } from '@/hooks/useAuth';
@@ -37,8 +37,6 @@ export function RegisterPage() {
   const onSubmit = (data: SignUpFormData) => {
     signUp(data);
   };
-
-  const location = useLocation();
 
   return (
     <div className="flex min-h-[calc(100vh-72px)]">
@@ -273,7 +271,7 @@ export function RegisterPage() {
           {/* Login link */}
           <p className="text-center text-sm text-muted-foreground">
             {AUTH_STRINGS.REGISTER.LOGIN_PROMPT}{' '}
-            <Link to="/login" state={{ redirectTo: location.state?.redirectTo }} className="font-semibold text-brand-500 hover:text-brand-600">
+            <Link to="/login" className="font-semibold text-brand-500 hover:text-brand-600">
               {AUTH_STRINGS.REGISTER.LOGIN_LINK}
             </Link>
           </p>
