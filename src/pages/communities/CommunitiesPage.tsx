@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { CategoryTabs } from '@/components/CategoryTabs';
 import { useSearchParams } from 'react-router-dom';
 import { SortDropdown } from '@/components/SortDropdown';
+import { SubCategoryFilter } from '@/components/SubCategoryFilter';
 
 export function CommunitiesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -19,11 +20,20 @@ export function CommunitiesPage() {
   };
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedSubCategories, setSelectedSubCategories] = useState<string[]>([]);
   const { data, isLoading } = useCategoriesList('community');
   const categories = data?.data ?? [];
 
   const selectedCategoryObj = categories.find((c) => c.slug === selectedCategory);
-
+  const handleCategorySelect = (slug: string | null) => {
+    setSelectedCategory(slug);
+    setSelectedSubCategories([]);
+  };
+  const handleSubCategoryToggle = (slug: string) => {
+    setSelectedSubCategories((prev) =>
+      prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]
+    );
+  };
   return (
     <div className="">
       <HeroSection isLoading={isLoading} />
@@ -32,14 +42,27 @@ export function CommunitiesPage() {
           <CategoryTabs
             categories={categories}
             selected={selectedCategory}
-            onSelect={setSelectedCategory}
+            onSelect={handleCategorySelect}
             isLoading={isLoading}
           />
+          {selectedCategoryObj?.childCategories &&
+            selectedCategoryObj.childCategories.length > 0 && (
+              <SubCategoryFilter
+                subCategories={selectedCategoryObj.childCategories}
+                selected={selectedSubCategories}
+                onToggle={handleSubCategoryToggle}
+              />
+            )}
           <div className="space-y-4">
             <div className="flex justify-end">
               <SortDropdown value={sortBy} onChange={handleSortChange} isLoading={isLoading} />
             </div>
-            <CommunitiesList search={search} sortBy={sortBy} category={selectedCategoryObj} />
+            <CommunitiesList
+              search={search}
+              subCategorySlugs={selectedSubCategories}
+              sortBy={sortBy}
+              category={selectedCategoryObj}
+            />
           </div>
         </div>
       </div>

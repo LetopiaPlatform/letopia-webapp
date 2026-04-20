@@ -53,7 +53,12 @@ function CommunityCard({ community }: CommunityCardProps) {
                 e.currentTarget.style.display = 'none';
               }}
             />
-            <p>{community.categoryName}</p>
+            <p>
+              {community.categoryName}
+              {community.subCategoryName && (
+                <span className="text-zinc-400"> . {community.subCategoryName}</span>
+              )}
+            </p>
           </div>
         </CardHeader>
 

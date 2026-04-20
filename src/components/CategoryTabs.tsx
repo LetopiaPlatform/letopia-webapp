@@ -39,7 +39,7 @@ export function CategoryTabs({
             : 'border-transparent text-muted-foreground hover:text-foreground'
         }`}
       >
-        Discover
+        All Topics
       </button>
       {categories.map((category) => (
         <button

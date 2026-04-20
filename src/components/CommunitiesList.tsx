@@ -22,15 +22,22 @@ const PAGE_SIZE = 12;
 
 interface CommunitiesListProps {
   category?: Category | undefined;
+  subCategorySlugs?: string[];
   search?: string;
   sortBy?: string;
 }
 
-export function CommunitiesList({ category, search, sortBy }: CommunitiesListProps) {
+export function CommunitiesList({
+  category,
+  subCategorySlugs,
+  search,
+  sortBy,
+}: CommunitiesListProps) {
   const [page, setPage] = useState(1);
 
   const { data, isLoading, error, refetch } = useCommunitiesList({
     category: category?.slug,
+    subCategorySlugs: subCategorySlugs?.length ? subCategorySlugs : undefined,
     search,
     sortBy,
     page,
@@ -43,6 +50,11 @@ export function CommunitiesList({ category, search, sortBy }: CommunitiesListPro
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [page]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setPage(1);
+  }, [category?.slug, subCategorySlugs, search, sortBy]);
 
   const { isAuthenticated } = useAuthContext();
   const navigate = useNavigate();
