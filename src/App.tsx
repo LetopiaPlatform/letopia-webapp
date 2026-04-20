@@ -15,6 +15,8 @@ import { VerifyResetCodePage } from '@/pages/auth/VerifyResetCodePage';
 import { SetPasswordPage } from '@/pages/auth/SetPasswordPage';
 import { ProfilePage } from '@/pages/profile/ProfilePage';
 import { SettingsPage } from './pages/profile/SettingsPage';
+import { CommunitiesPage } from './pages/communities/CommunitiesPage';
+import { CommunityDetailPage } from './pages/communities/CommunityDetailPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,7 +41,15 @@ function App() {
                   path="communities"
                   element={
                     <FeatureGate feature="communitiesPage">
-                      <div className="p-6">Communities</div>
+                      <CommunitiesPage />
+                    </FeatureGate>
+                  }
+                />
+                <Route
+                  path="communities/:slug"
+                  element={
+                    <FeatureGate feature="communitiesPage">
+                      <CommunityDetailPage />
                     </FeatureGate>
                   }
                 />
