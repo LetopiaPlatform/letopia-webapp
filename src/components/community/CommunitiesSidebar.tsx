@@ -18,14 +18,14 @@ export function CommunitiesSidebar() {
       <Button
         type="button"
         onClick={() => navigate('/communities/create')}
-        className="h-11 w-full gap-2 rounded-xl bg-[#824892] px-4 text-base font-medium text-[#EFEDF1] hover:bg-[#824892]/90"
+        className="h-11 w-full shrink-0 gap-2 rounded-xl bg-[#824892] px-4 text-base font-medium text-[#EFEDF1] hover:bg-[#824892]/90"
       >
         <Plus className="size-4.5" aria-hidden="true" />
         Create Community
       </Button>
 
-      <div className="flex w-full flex-1 flex-col justify-between">
-        <nav className="flex flex-col gap-6">
+      <div className="flex w-full flex-1 min-h-0 flex-col justify-between">
+        <nav className="flex flex-col gap-6 overflow-y-auto min-h-0">
           <div className="flex flex-col gap-4">
             <button
               type="button"
@@ -43,7 +43,7 @@ export function CommunitiesSidebar() {
             </button>
 
             {communitiesOpen && isAuthenticated && joined.length > 0 && (
-              <ul className="ml-2 flex flex-col gap-4 border-l border-[#EBE6ED] pl-6">
+              <ul className="scrollbar-thin ml-2 flex max-h-[220px] flex-col gap-4 overflow-y-auto border-l border-[#EBE6ED] pl-6">
                 {joined.map(({ community }) => (
                   <li key={community.id}>
                     <NavLink
@@ -83,7 +83,7 @@ export function CommunitiesSidebar() {
         </nav>
 
         {isAuthenticated && user && (
-          <div className="flex items-center gap-4">
+          <div className="flex shrink-0 items-center gap-4">
             <div className="size-14 shrink-0 overflow-hidden rounded-full bg-[#D9D9D9]">
               {user.avatarUrl && (
                 <img

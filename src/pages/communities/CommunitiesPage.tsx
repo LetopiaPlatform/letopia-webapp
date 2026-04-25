@@ -1,10 +1,9 @@
 import { HeroSection } from '@/components/HeroSection';
 import { CommunitiesList } from '@/components/CommunitiesList';
 import { useCategoriesList } from '@/hooks/useCategories';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { CategoryTabs } from '@/components/CategoryTabs';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { SortDropdown } from '@/components/SortDropdown';
 import { SubCategoryFilter } from '@/components/SubCategoryFilter';
 import { CommunitiesSidebar } from '@/components/community/CommunitiesSidebar';
 
@@ -28,6 +27,11 @@ export function CommunitiesPage() {
   };
 
   const selectedCategoryObj = categories.find((c) => c.slug === selectedCategory);
+  const selectedSubCategoryItems = useMemo(
+    () =>
+      selectedCategoryObj?.childCategories?.filter((c) => selectedSubCategories.includes(c.slug)),
+    [selectedCategoryObj?.childCategories, selectedSubCategories]
+  );
   const handleCategorySelect = (slug: string | null) => {
     setSelectedCategory(slug);
     setSelectedSubCategories([]);
@@ -64,18 +68,18 @@ export function CommunitiesPage() {
                   onToggle={handleSubCategoryToggle}
                 />
               )}
-            <div className="space-y-4">
-              <div className="flex justify-end">
-                <SortDropdown value={sortBy} onChange={handleSortChange} isLoading={isLoading} />
-              </div>
-              <CommunitiesList
-                search={search}
-                subCategorySlugs={selectedSubCategories}
-                sortBy={sortBy}
-                category={selectedCategoryObj}
-                onSelectCommunity={handleSelectCommunity}
-              />
-            </div>
+            <CommunitiesList
+              search={search}
+              subCategorySlugs={selectedSubCategories}
+              selectedSubCategoryItems={selectedSubCategoryItems}
+              sortBy={sortBy}
+              onSortChange={handleSortChange}
+              onClearFilters={() => setSelectedSubCategories([])}
+              onRemoveSubCategory={handleSubCategoryToggle}
+              category={selectedCategoryObj}
+              onSelectCommunity={handleSelectCommunity}
+              isLoadingCategories={isLoading}
+            />
           </div>
         </div>
       </div>
