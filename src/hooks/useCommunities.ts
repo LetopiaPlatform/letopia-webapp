@@ -1,12 +1,11 @@
 import { communitiesApi } from '@/api/communities.api';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type {
   CommunityListParams,
   CreateCommunityRequest,
   UpdateCommunityRequest,
 } from '@/types/community.types';
-import type { ApiResponse, PaginatedQuery } from '@/types/api.types';
-import type { AxiosError } from 'axios';
+import type { PaginatedQuery } from '@/types/api.types';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,6 +13,7 @@ export function useCommunitiesList(params: CommunityListParams) {
   return useQuery({
     queryKey: ['communities', params],
     queryFn: () => communitiesApi.list(params).then((res) => res.data),
+    placeholderData: keepPreviousData,
   });
 }
 
@@ -25,10 +25,11 @@ export function useCommunityBySlug(slug: string, options?: { enabled?: boolean }
   });
 }
 
-export function useMyCommunities() {
+export function useMyCommunities(options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: ['communities', 'me'],
     queryFn: () => communitiesApi.getMyCommunities().then((res) => res.data),
+    enabled: options?.enabled,
   });
 }
 
@@ -47,10 +48,6 @@ export function useJoinCommunity() {
       toast.success('Joined community successfully!');
       queryClient.invalidateQueries({ queryKey: ['communities'] });
     },
-    onError: (error: AxiosError<ApiResponse<null>>) => {
-      const message = error.response?.data?.message ?? 'Failed to join community';
-      toast.error(message);
-    },
   });
 }
 
@@ -64,10 +61,6 @@ export function useLeaveCommunity() {
       toast.success('Left community successfully');
       queryClient.invalidateQueries({ queryKey: ['communities'] });
       navigate('/communities');
-    },
-    onError: (error: AxiosError<ApiResponse<null>>) => {
-      const message = error.response?.data?.message ?? 'Failed to leave community';
-      toast.error(message);
     },
   });
 }
@@ -86,10 +79,6 @@ export function useCreateCommunity() {
         navigate(`/communities/${response.data.slug}`);
       }
     },
-    onError: (error: AxiosError<ApiResponse<null>>) => {
-      const message = error.response?.data?.message ?? 'Failed to create community';
-      toast.error(message);
-    },
   });
 }
 
@@ -106,10 +95,6 @@ export function useUpdateCommunity() {
         queryClient.invalidateQueries({ queryKey: ['communities'] });
         navigate(`/communities/${response.data.slug}`);
       }
-    },
-    onError: (error: AxiosError<ApiResponse<null>>) => {
-      const message = error.response?.data?.message ?? 'Failed to update community';
-      toast.error(message);
     },
   });
 }

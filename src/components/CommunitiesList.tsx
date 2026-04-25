@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { useAuthContext } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { cn } from '@/lib/utils';
 import {
   Pagination,
   PaginationContent,
@@ -37,7 +38,7 @@ export function CommunitiesList({
 }: CommunitiesListProps) {
   const [page, setPage] = useState(1);
 
-  const { data, isLoading, error, refetch } = useCommunitiesList({
+  const { data, isLoading, isFetching, error, refetch } = useCommunitiesList({
     category: category?.slug,
     subCategorySlugs: subCategorySlugs?.length ? subCategorySlugs : undefined,
     search,
@@ -107,7 +108,12 @@ export function CommunitiesList({
           </Button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 2xl:gap-10">
+        <div
+          className={cn(
+            'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 2xl:gap-10',
+            isFetching && !isLoading && 'opacity-50 transition-opacity duration-200'
+          )}
+        >
           {communities.map((community) => (
             <CommunityCard key={community.id} community={community} onSelect={onSelectCommunity} />
           ))}
