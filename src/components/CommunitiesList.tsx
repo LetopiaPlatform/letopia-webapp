@@ -117,7 +117,7 @@ export function CommunitiesList({
             <button
               key={sub.slug}
               onClick={() => onRemoveSubCategory?.(sub.slug)}
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#9E9E9E] rounded-full border border-[#9E9E9E] cursor-pointer transition-colors hover:bg-accent/50"
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-communities-text-muted rounded-full border border-communities-text-muted cursor-pointer transition-colors hover:bg-accent/50"
             >
               <X className="size-3.5" />
               {sub.name}
@@ -126,7 +126,7 @@ export function CommunitiesList({
           {hasActiveFilters && onClearFilters && (
             <button
               onClick={onClearFilters}
-              className="inline-flex items-center gap-1 px-4 py-2 text-base font-medium text-[#D91122] cursor-pointer transition-colors hover:text-[#D91122]/80"
+              className="inline-flex items-center gap-1 px-4 py-2 text-base font-medium text-communities-destructive cursor-pointer transition-colors hover:text-communities-destructive/80"
             >
               <X className="size-3.5" />
               Clear All
@@ -138,8 +138,8 @@ export function CommunitiesList({
           {isLoading || isLoadingCategories ? (
             <Skeleton className="h-5 w-40" />
           ) : (
-            <span className="text-base font-medium text-[#656565]">
-              Showing <span className="text-[#824892]">{totalItems}</span>{' '}
+            <span className="text-base font-medium text-communities-text-label">
+              Showing <span className="text-communities-accent">{totalItems}</span>{' '}
               {totalItems === 1 ? 'Community' : 'Communities'}
             </span>
           )}

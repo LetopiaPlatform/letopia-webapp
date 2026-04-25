@@ -18,7 +18,7 @@ export function CommunitiesSidebar() {
       <Button
         type="button"
         onClick={() => navigate('/communities/create')}
-        className="h-11 w-full shrink-0 gap-2 rounded-xl bg-[#824892] px-4 text-base font-medium text-[#EFEDF1] hover:bg-[#824892]/90"
+        className="h-11 w-full shrink-0 gap-2 rounded-xl bg-communities-accent px-4 text-base font-medium text-communities-accent-foreground hover:bg-communities-accent/90"
       >
         <Plus className="size-4.5" aria-hidden="true" />
         Create Community
@@ -30,7 +30,7 @@ export function CommunitiesSidebar() {
             <button
               type="button"
               onClick={() => setCommunitiesOpen((v) => !v)}
-              className="flex h-6 items-center gap-2 text-base font-medium text-[#24252C]"
+              className="flex h-6 items-center gap-2 text-base font-medium text-communities-text"
               aria-expanded={communitiesOpen}
             >
               <Users className="size-5" aria-hidden="true" />
@@ -43,7 +43,7 @@ export function CommunitiesSidebar() {
             </button>
 
             {communitiesOpen && isAuthenticated && joined.length > 0 && (
-              <ul className="scrollbar-thin ml-2 flex max-h-[220px] flex-col gap-4 overflow-y-auto border-l border-[#EBE6ED] pl-6">
+              <ul className="scrollbar-thin ml-2 flex max-h-[220px] flex-col gap-4 overflow-y-auto border-l border-communities-border pl-6">
                 {joined.map(({ community }) => (
                   <li key={community.id}>
                     <NavLink
@@ -51,11 +51,13 @@ export function CommunitiesSidebar() {
                       className={({ isActive }) =>
                         cn(
                           'flex items-center gap-2 text-sm font-normal',
-                          isActive ? 'text-[#24252C]' : 'text-[#494949] hover:text-[#24252C]'
+                          isActive
+                            ? 'text-communities-text'
+                            : 'text-communities-text-secondary hover:text-communities-text'
                         )
                       }
                     >
-                      <span className="size-6 shrink-0 overflow-hidden rounded-full bg-[#D9D9D9]">
+                      <span className="size-6 shrink-0 overflow-hidden rounded-full bg-communities-placeholder">
                         {community.coverImageUrl && (
                           <img
                             src={community.coverImageUrl}
@@ -75,7 +77,7 @@ export function CommunitiesSidebar() {
             )}
 
             {communitiesOpen && isAuthenticated && joined.length === 0 && (
-              <p className="ml-2 border-l border-[#EBE6ED] pl-6 text-sm font-normal text-[#9E9E9E]">
+              <p className="ml-2 border-l border-communities-border pl-6 text-sm font-normal text-communities-text-muted">
                 You haven't joined any community yet.
               </p>
             )}
@@ -84,7 +86,7 @@ export function CommunitiesSidebar() {
 
         {isAuthenticated && user && (
           <div className="flex shrink-0 items-center gap-4">
-            <div className="size-14 shrink-0 overflow-hidden rounded-full bg-[#D9D9D9]">
+            <div className="size-14 shrink-0 overflow-hidden rounded-full bg-communities-placeholder">
               {user.avatarUrl && (
                 <img
                   src={user.avatarUrl}
@@ -97,8 +99,10 @@ export function CommunitiesSidebar() {
               )}
             </div>
             <div className="flex flex-col gap-2">
-              <p className="text-lg font-semibold text-[#24252C]">{user.fullName}</p>
-              <p className="text-sm font-normal text-[#9E9E9E]">{user.role || 'Member'}</p>
+              <p className="text-lg font-semibold text-communities-text">{user.fullName}</p>
+              <p className="text-sm font-normal text-communities-text-muted">
+                {user.role || 'Member'}
+              </p>
             </div>
           </div>
         )}

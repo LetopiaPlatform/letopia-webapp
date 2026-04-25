@@ -52,6 +52,18 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  --communities-accent: #824892;
+  --communities-accent-foreground: #efedf1;
+  --communities-text: #24252c;
+  --communities-text-secondary: #494949;
+  --communities-text-muted: #9e9e9e;
+  --communities-text-label: #656565;
+  --communities-border: #ebe6ed;
+  --communities-chip-border: #e5e7eb;
+  --communities-placeholder: #d9d9d9;
+  --communities-destructive: #d91122;
+  --communities-scrollbar: #d4d4d4;
 }
 
 body {
@@ -149,6 +161,18 @@ body {
   --color-violet-800: #412959;
   --color-violet-900: #322044;
 
+  --color-communities-accent: var(--communities-accent);
+  --color-communities-accent-foreground: var(--communities-accent-foreground);
+  --color-communities-text: var(--communities-text);
+  --color-communities-text-secondary: var(--communities-text-secondary);
+  --color-communities-text-muted: var(--communities-text-muted);
+  --color-communities-text-label: var(--communities-text-label);
+  --color-communities-border: var(--communities-border);
+  --color-communities-chip-border: var(--communities-chip-border);
+  --color-communities-placeholder: var(--communities-placeholder);
+  --color-communities-destructive: var(--communities-destructive);
+  --color-communities-scrollbar: var(--communities-scrollbar);
+
   --font-size-display: 44px;
   --font-size-h1: 33px;
   --font-size-h2: 24px;
@@ -225,7 +249,7 @@ body {
   scrollbar-color: transparent transparent;
 }
 .scrollbar-thin:hover {
-  scrollbar-color: #d4d4d4 transparent;
+  scrollbar-color: var(--communities-scrollbar) transparent;
 }
 .scrollbar-thin::-webkit-scrollbar {
   width: 4px;
@@ -238,7 +262,7 @@ body {
   border-radius: 9999px;
 }
 .scrollbar-thin:hover::-webkit-scrollbar-thumb {
-  background: #d4d4d4;
+  background: var(--communities-scrollbar);
 }
 
 @keyframes drift {
