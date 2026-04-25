@@ -1,6 +1,6 @@
 {
   "features": {
-    "communitiesPage": false,
+    "communitiesPage": true,
     "projectsPage": false,
     "roadmapsPage": false,
     "profileAchievementsTab": false,

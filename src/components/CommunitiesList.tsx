@@ -3,11 +3,14 @@ import type { Category } from '@/types/category.types';
 import CommunityCard from './CommunityCard';
 import { CommunitySkeleton } from '@/components/CardSkeleton';
 import { EmptyState } from '@/components/EmptyState';
-import { AlertCircle, Plus } from 'lucide-react';
+import { AlertCircle, Plus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuthContext } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { cn } from '@/lib/utils';
+import { SortDropdown } from '@/components/SortDropdown';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Pagination,
   PaginationContent,
@@ -22,15 +25,42 @@ const PAGE_SIZE = 12;
 
 interface CommunitiesListProps {
   category?: Category | undefined;
+  subCategorySlugs?: string[];
+  selectedSubCategoryItems?: Category[];
   search?: string;
   sortBy?: string;
+  onSortChange: (value: string) => void;
+  onClearFilters?: () => void;
+  onRemoveSubCategory?: (slug: string) => void;
+  onSelectCommunity?: (slug: string) => void;
+  isLoadingCategories?: boolean;
 }
 
-export function CommunitiesList({ category, search, sortBy }: CommunitiesListProps) {
+export function CommunitiesList({
+  category,
+  subCategorySlugs,
+  selectedSubCategoryItems,
+  search,
+  sortBy,
+  onSortChange,
+  onClearFilters,
+  onRemoveSubCategory,
+  onSelectCommunity,
+  isLoadingCategories,
+}: CommunitiesListProps) {
   const [page, setPage] = useState(1);
 
-  const { data, isLoading, error, refetch } = useCommunitiesList({
+  const subCategoryKey = subCategorySlugs?.join(',') ?? '';
+  const currentFilters = `${category?.slug}|${subCategoryKey}|${search}|${sortBy}`;
+  const [prevFilters, setPrevFilters] = useState(currentFilters);
+  if (currentFilters !== prevFilters) {
+    setPrevFilters(currentFilters);
+    setPage(1);
+  }
+
+  const { data, isLoading, isFetching, error, refetch } = useCommunitiesList({
     category: category?.slug,
+    subCategorySlugs: subCategorySlugs?.length ? subCategorySlugs : undefined,
     search,
     sortBy,
     page,
@@ -39,6 +69,8 @@ export function CommunitiesList({ category, search, sortBy }: CommunitiesListPro
 
   const communities = data?.data?.items ?? [];
   const totalPages = data?.data?.totalPages ?? 0;
+  const totalItems = data?.data?.totalItems ?? 0;
+  const hasActiveFilters = (subCategorySlugs?.length ?? 0) > 0;
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -79,7 +111,46 @@ export function CommunitiesList({ category, search, sortBy }: CommunitiesListPro
       aria-labelledby={category ? `category-heading-${category.slug}` : 'communities-heading'}
       className="w-full flex flex-col gap-5 md:gap-10"
     >
-      {/* Body */}
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-2 flex-wrap">
+          {selectedSubCategoryItems?.map((sub) => (
+            <button
+              key={sub.slug}
+              onClick={() => onRemoveSubCategory?.(sub.slug)}
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#9E9E9E] rounded-full border border-[#9E9E9E] cursor-pointer transition-colors hover:bg-accent/50"
+            >
+              <X className="size-3.5" />
+              {sub.name}
+            </button>
+          ))}
+          {hasActiveFilters && onClearFilters && (
+            <button
+              onClick={onClearFilters}
+              className="inline-flex items-center gap-1 px-4 py-2 text-base font-medium text-[#D91122] cursor-pointer transition-colors hover:text-[#D91122]/80"
+            >
+              <X className="size-3.5" />
+              Clear All
+            </button>
+          )}
+        </div>
+
+        <div className="flex items-center gap-4 shrink-0">
+          {isLoading || isLoadingCategories ? (
+            <Skeleton className="h-5 w-40" />
+          ) : (
+            <span className="text-base font-medium text-[#656565]">
+              Showing <span className="text-[#824892]">{totalItems}</span>{' '}
+              {totalItems === 1 ? 'Community' : 'Communities'}
+            </span>
+          )}
+          <SortDropdown
+            value={sortBy ?? 'newest'}
+            onChange={onSortChange}
+            isLoading={isLoadingCategories}
+          />
+        </div>
+      </div>
+
       {isLoading ? (
         <CommunitySkeleton count={PAGE_SIZE} />
       ) : error ? (
@@ -93,9 +164,14 @@ export function CommunitiesList({ category, search, sortBy }: CommunitiesListPro
           </Button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 2xl:gap-10">
+        <div
+          className={cn(
+            'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 2xl:gap-10',
+            isFetching && !isLoading && 'opacity-50 transition-opacity duration-200'
+          )}
+        >
           {communities.map((community) => (
-            <CommunityCard key={community.id} community={community} />
+            <CommunityCard key={community.id} community={community} onSelect={onSelectCommunity} />
           ))}
         </div>
       )}

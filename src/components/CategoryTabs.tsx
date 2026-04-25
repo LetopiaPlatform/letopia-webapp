@@ -33,13 +33,14 @@ export function CategoryTabs({
     <div className="flex gap-2 overflow-x-auto px-3 md:px-8 border-b">
       <button
         onClick={() => onSelect(null)}
-        className={`py-3 px-4 text-sm whitespace-nowrap border-b-2 transition-colors ${
+        className={`py-3 px-4 text-sm whitespace-nowrap border-b-2 transition-colors flex items-center gap-2 ${
           selected === null
             ? 'border-primary text-primary font-semibold'
             : 'border-transparent text-muted-foreground hover:text-foreground'
         }`}
       >
-        Discover
+        <img src="/icons/all-topics.svg" alt="" className="w-4.5 h-4.5 shrink-0 object-contain" />
+        All Topics
       </button>
       {categories.map((category) => (
         <button
@@ -51,20 +52,14 @@ export function CategoryTabs({
               : 'border-transparent text-muted-foreground hover:text-foreground'
           }`}
         >
-          {category.iconUrl ? (
+          {category.iconUrl && (
             <img
               src={category.iconUrl}
               alt=""
-              className="size-4 object-contain"
+              className="w-4.5 h-4.5 shrink-0 object-contain"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
               }}
-            />
-          ) : (
-            <img
-              src="/icons/category-icon.svg"
-              alt=""
-              className="size-4 object-contain rotate-15"
             />
           )}
           {category.name}

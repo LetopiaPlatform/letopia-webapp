@@ -4,4 +4,6 @@ export interface Category {
   slug: string;
   iconUrl: string | null;
   type: string;
+  parentCategoryId: string | null;
+  childCategories: Category[] | null;
 }

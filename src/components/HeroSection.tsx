@@ -78,7 +78,7 @@ export function HeroSection({ isLoading }: HeroSectionProps) {
           <Button
             variant="default"
             onClick={handleCreateCommunity}
-            className="has-[>svg]:px-5 sm:has-[>svg]:px-7  py-5 md:py-6 rounded-xl text-white text-base sm:text-lg font-normal cursor-pointer"
+            className="lg:hidden has-[>svg]:px-5 sm:has-[>svg]:px-7  py-5 md:py-6 rounded-xl text-white text-base sm:text-lg font-normal cursor-pointer"
           >
             <Plus className="size-4 sm:size-5" /> create community
           </Button>
