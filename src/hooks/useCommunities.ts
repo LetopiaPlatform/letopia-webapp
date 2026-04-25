@@ -67,7 +67,6 @@ export function useLeaveCommunity() {
 
 export function useCreateCommunity() {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: (data: CreateCommunityRequest) =>
@@ -76,7 +75,6 @@ export function useCreateCommunity() {
       if (response.data) {
         toast.success('Community created successfully!');
         queryClient.invalidateQueries({ queryKey: ['communities'] });
-        navigate(`/communities/${response.data.slug}`);
       }
     },
   });

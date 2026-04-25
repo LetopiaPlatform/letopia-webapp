@@ -20,6 +20,7 @@ import {
   PaginationNext,
   PaginationEllipsis,
 } from '@/components/ui/pagination';
+import { CreateCommunityDialog } from './community/CreateCommunityDialog';
 
 const PAGE_SIZE = 12;
 
@@ -76,13 +77,14 @@ export function CommunitiesList({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [page]);
 
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { isAuthenticated } = useAuthContext();
   const navigate = useNavigate();
   const handleCreateCommunity = () => {
     if (isAuthenticated) {
-      navigate('/communities/create');
+      setIsDialogOpen(true);
     } else {
-      navigate('/login', { state: { redirectTo: '/communities/create' } });
+      navigate('/login', { state: { redirectTo: '/communities' } });
     }
   };
 
@@ -90,19 +92,24 @@ export function CommunitiesList({
     if (search) {
       return (
         <EmptyState
+          image={'/assets/emptyState.svg'}
           title="No communities found"
           description={`No result for '${search}' ${category ? `in ${category.name}` : ''}`}
         />
       );
     }
     return (
-      <EmptyState
-        title="No communities yet"
-        description="Be the first to create a community and bring people together."
-        actionLabel="Create Community"
-        actionIcon={<Plus className="size-4 sm:size-5" />}
-        onAction={handleCreateCommunity}
-      />
+      <>
+        <EmptyState
+          image={'/assets/emptyState.svg'}
+          title="No communities yet"
+          description="Be the first to create a community and bring people together."
+          actionLabel="Create Community"
+          actionIcon={<Plus className="size-4 sm:size-5" />}
+          onAction={handleCreateCommunity}
+        />
+        <CreateCommunityDialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)} />
+      </>
     );
   }
 
