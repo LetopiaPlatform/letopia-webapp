@@ -42,6 +42,10 @@ export function CommunitiesPage() {
     );
   };
 
+  const handleClearSubCategories = () => {
+    setSelectedSubCategories([]);
+  };
+
   const handleSelectCommunity = (slug: string) => {
     navigate(`/communities/${slug}`, { state: { backgroundLocation: location } });
   };
@@ -54,20 +58,23 @@ export function CommunitiesPage() {
         <HeroSection isLoading={isLoading} />
         <div className="px-5 md:px-8 2xl:px-15 mb-10">
           <div className="flex flex-col gap-5 md:gap-8 lg:gap-10">
+            <div className="flex flex-col gap-5">
             <CategoryTabs
-              categories={categories}
-              selected={selectedCategory}
-              onSelect={handleCategorySelect}
-              isLoading={isLoading}
-            />
-            {selectedCategoryObj?.childCategories &&
-              selectedCategoryObj.childCategories.length > 0 && (
-                <SubCategoryFilter
-                  subCategories={selectedCategoryObj.childCategories}
-                  selected={selectedSubCategories}
-                  onToggle={handleSubCategoryToggle}
+                categories={categories}
+                selected={selectedCategory}
+                onSelect={handleCategorySelect}
+                isLoading={isLoading}
+              />
+              {selectedCategoryObj?.childCategories &&
+                selectedCategoryObj.childCategories.length > 0 && (
+                  <SubCategoryFilter
+                    subCategories={selectedCategoryObj.childCategories}
+                    selected={selectedSubCategories}
+                    onToggle={handleSubCategoryToggle}
+                    onClearAll={handleClearSubCategories}
                 />
-              )}
+                )}
+          </div>
             <CommunitiesList
               search={search}
               subCategorySlugs={selectedSubCategories}
