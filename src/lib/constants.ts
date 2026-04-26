@@ -224,3 +224,16 @@ export const SORT_OPTIONS = [
   { value: 'newest', label: 'Latest Communities', icon: '/icons/arrow-reload-vertical.svg' },
   { value: 'name', label: 'Alphabetically', icon: '/icons/arrange-by-letters-a-z.svg' },
 ];
+
+export const PRIVACY_OPTIONS = [
+  {
+    label: 'Public',
+    icon: '/icons/public.svg',
+    value: false,
+  },
+  {
+    label: 'Private',
+    icon: '/icons/private.svg',
+    value: true,
+  },
+] as const;

@@ -76,3 +76,47 @@ export const resetPasswordSchema = z
   });
 
 export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
+
+// Create Community //
+export const createCommunitySchema = z.object({
+  categoryId: z.string().min(1, 'Sub-category is required'),
+  isPrivate: z.boolean().default(false),
+  name: z
+    .string()
+    .trim()
+    .min(1, 'Community name is required')
+    .min(2, 'Name must be at least 2 characters')
+    .max(100, 'Name cannot exceed 100 characters'),
+  description: z
+    .string()
+    .trim()
+    .min(1, 'Description is required')
+    .min(10, 'Description must be at least 10 characters')
+    .max(2000, 'Description cannot exceed 2000 characters'),
+  rules: z
+    .array(
+      z
+        .string()
+        .trim()
+        .min(1, 'Rule cannot be empty')
+        .min(5, 'Rule must be at least 5 characters')
+        .max(500, 'Rule cannot exceed 500 characters')
+    )
+    .max(20, 'Cannot have more than 20 rules')
+    .optional()
+    .default([])
+    .transform((rules) => rules.filter((rule) => rule.trim().length > 0)),
+
+  coverImage: z
+    .instanceof(File)
+    .refine((file) => file.size <= 5 * 1024 * 1024, 'Cover image must be at most 5 MB')
+    .refine((file) => {
+      const ext = /\.[^.]+$/.exec(file.name)?.[0]?.toLowerCase();
+      return ['.jpg', '.jpeg', '.png', '.webp'].includes(ext || '');
+    }, 'Cover image must be a .jpg, .jpeg, .png, or .webp file')
+    .optional(),
+});
+
+export type CreateCommunityFormData = z.input<typeof createCommunitySchema>;
+
+export type CreateCommunitySubmitData = z.infer<typeof createCommunitySchema>;
