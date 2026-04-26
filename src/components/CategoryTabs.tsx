@@ -21,16 +21,27 @@ export function CategoryTabs({
 }: CategoryTabsProps) {
   if (isLoading) {
     return (
-      <div className={cn('flex gap-3 overflow-x-auto px-3 md:px-8 border-b pb-px', className)}>
+      <div
+        className={cn(
+          'flex gap-1 overflow-x-auto px-3 md:px-8 border-b pb-px scrollbar-hide',
+          className
+        )}
+      >
         {Array.from({ length: count }).map((_, i) => (
-          <Skeleton key={i} className="h-6 w-20 rounded-full my-2 shrink-0" />
+          <div key={i} className="flex items-center gap-1 py-3 px-4 shrink-0 animate-pulse">
+            <Skeleton className="w-5 h-5 rounded-full shrink-0" />
+            <Skeleton
+              className="h-5 w-25 rounded-full"
+              style={{ width: `${[56, 72, 64, 80, 60, 68, 76, 52][i % 8]}px` }}
+            />
+          </div>
         ))}
       </div>
     );
   }
 
   return (
-    <div className="flex gap-2 overflow-x-auto px-3 md:px-8 border-b">
+    <div className="flex gap-2 overflow-x-auto px-3 md:px-8 scrollbar-hide">
       <button
         onClick={() => onSelect(null)}
         className={`py-3 px-4 text-sm whitespace-nowrap border-b-2 transition-colors flex items-center gap-2 ${

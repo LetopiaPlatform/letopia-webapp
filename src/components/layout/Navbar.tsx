@@ -22,8 +22,8 @@ export function Navbar() {
   const { user, isAuthenticated, logout } = useAuthContext();
 
   return (
-    <header>
-      <nav className="mx-auto flex h-18 max-w-360 items-center justify-between bg-white/60 px-6 backdrop-blur-xl backdrop-saturate-150 lg:px-10 xl:px-20.75">
+    <header className="fixed top-0 left-0 z-50 w-full bg-white/60 px-6 backdrop-blur-xl backdrop-saturate-150 lg:px-10 xl:px-20.75 shadow-sm">
+      <nav className="mx-auto flex h-18 max-w-360 items-center justify-between ">
         <Logo className="w-25 shrink-0 hidden sm:block z-100" />
 
         {/* Search bar — only when authenticated */}

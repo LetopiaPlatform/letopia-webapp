@@ -35,17 +35,25 @@ export function HeroSection({ isLoading }: HeroSectionProps) {
 
   if (isLoading) {
     return (
-      <div className="relative w-full h-auto mt-20 py-6 px-4 sm:px-8 md:py-3 lg:py-4 md:px-25 xl:h-110 mb-5">
+      <div className="xl:h-90 px-2 md:px-25 mt-20 mb-5 border-b">
         <div className="w-full flex flex-col md:flex-row justify-around items-center gap-6">
           {/* Illustration skeleton */}
-          <Skeleton className="w-40 md:w-60 xl:w-80 aspect-square rounded-2xl shrink-0" />
-
+          <div className="relative w-50 md:w-60 aspect-square shrink-0 flex items-center justify-center">
+            <Skeleton className="w-full h-[90%] rounded-2xl opacity-40" />
+          </div>
           {/* Content skeleton */}
           <div className="flex flex-col items-center gap-4 w-full max-w-xl px-4 md:px-0">
-            <Skeleton className="h-6 sm:h-7 w-3/4 rounded-full" />
-            <Skeleton className="h-4 sm:h-5 w-full" />
-            <Skeleton className="h-4 sm:h-5 w-5/6" />
-            <Skeleton className="h-9 sm:h-10 w-36 sm:w-40 rounded-full" />
+            <div className="flex flex-col items-center gap-2 w-full">
+              <Skeleton className="h-7 sm:h-8  w-1/2 rounded-full opacity-40" />
+            </div>
+
+            <div className="flex flex-col items-center gap-2 w-full">
+              <Skeleton className="h-4 sm:h-5 w-full rounded-full" />
+              <Skeleton className="h-4 sm:h-5 w-full" />
+              <Skeleton className="h-4 sm:h-5 w-2/3" />
+            </div>
+
+            <Skeleton className="h-10 sm:h-11 w-44  rounded-full" />
           </div>
         </div>
       </div>
@@ -54,7 +62,7 @@ export function HeroSection({ isLoading }: HeroSectionProps) {
 
   return (
     <>
-      <div className="relative overflow-x-hidden w-full h-auto xl:h-110 mt-18 py-6 px-2 md:py-3 lg:py-4 md:px-25 shadow-md mb-5">
+      <div className="relative w-full xl:h-110 mt-18 py-6 px-2 md:py-3 lg:py-4 md:px-25 shadow-md mb-5">
         {/* background */}
         <div className="absolute inset-0 overflow-hidden">
           {ELLIPSES.map((ellipse, index) => (
