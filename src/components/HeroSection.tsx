@@ -35,7 +35,7 @@ export function HeroSection({ isLoading }: HeroSectionProps) {
 
   if (isLoading) {
     return (
-      <div className="xl:h-90 px-2 md:px-25 mt-20 mb-5 border-b">
+      <div className="xl:h-90 py-6 px-2 md:px-25 mt-20 mb-5 border-b">
         <div className="w-full flex flex-col md:flex-row justify-around items-center gap-6">
           {/* Illustration skeleton */}
           <div className="relative w-50 md:w-60 aspect-square shrink-0 flex items-center justify-center">
@@ -91,7 +91,7 @@ export function HeroSection({ isLoading }: HeroSectionProps) {
             <Button
               variant="default"
               onClick={handleCreateCommunity}
-              className="lg:hidden has-[>svg]:px-5 sm:has-[>svg]:px-7  py-5 md:py-6 rounded-xl text-white text-base sm:text-lg font-normal cursor-pointer"
+              className="has-[>svg]:px-5 sm:has-[>svg]:px-7  py-5 md:py-6 rounded-xl text-white text-base sm:text-lg font-normal cursor-pointer"
             >
               <Plus className="size-4 sm:size-5" /> create community
             </Button>

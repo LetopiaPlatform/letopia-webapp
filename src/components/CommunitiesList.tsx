@@ -118,22 +118,24 @@ export function CommunitiesList({
       aria-labelledby={category ? `category-heading-${category.slug}` : 'communities-heading'}
       className="w-full flex flex-col gap-5 md:gap-10"
     >
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-2 flex-wrap">
-          {selectedSubCategoryItems?.map((sub) => (
-            <button
-              key={sub.slug}
-              onClick={() => onRemoveSubCategory?.(sub.slug)}
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#9E9E9E] rounded-full border border-[#9E9E9E] cursor-pointer transition-colors hover:bg-accent/50"
-            >
-              <X className="size-3.5" />
-              {sub.name}
-            </button>
-          ))}
+      <div className="flex flex-col items-center gap-4 md:justify-between">
+        <div className="w-full min-w-0 flex items-center gap-2">
+          <div className="flex items-center gap-2  overflow-x-auto min-w-0 flex-1 scrollbar-hide">
+            {selectedSubCategoryItems?.map((sub) => (
+              <button
+                key={sub.slug}
+                onClick={() => onRemoveSubCategory?.(sub.slug)}
+                className="shrink-0 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-foreground/50 rounded-full border border-foreground/20 cursor-pointer transition-colors hover:bg-accent/50"
+              >
+                <X className="size-3.5" />
+                {sub.name}
+              </button>
+            ))}
+          </div>
           {hasActiveFilters && onClearFilters && (
             <button
               onClick={onClearFilters}
-              className="inline-flex items-center gap-1 px-4 py-2 text-base font-medium text-[#D91122] cursor-pointer transition-colors hover:text-[#D91122]/80"
+              className="shrink-0 inline-flex items-center gap-1 px-4 py-2 text-sm font-medium text-destructive cursor-pointer transition-colors hover:text-destructive/80"
             >
               <X className="size-3.5" />
               Clear All
@@ -141,12 +143,12 @@ export function CommunitiesList({
           )}
         </div>
 
-        <div className="flex items-center gap-4 shrink-0">
+        <div className="flex items-center gap-2 md:gap-4 md:w-full justify-end">
           {isLoading || isLoadingCategories ? (
             <Skeleton className="h-5 w-40" />
           ) : (
-            <span className="text-base font-medium text-[#656565]">
-              Showing <span className="text-[#824892]">{totalItems}</span>{' '}
+            <span className="text-sm md:text-base font-medium text-foreground/70">
+              Showing <span className="text-primary">{totalItems}</span>{' '}
               {totalItems === 1 ? 'Community' : 'Communities'}
             </span>
           )}

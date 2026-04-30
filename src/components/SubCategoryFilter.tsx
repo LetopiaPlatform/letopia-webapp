@@ -11,7 +11,7 @@ interface SubCategoryFilterProps {
 export function SubCategoryFilter({ subCategories, selected, onToggle }: SubCategoryFilterProps) {
   return (
     <div className="w-full">
-      <div className="flex items-center gap-3 overflow-x-auto px-3 md:px-8 pb-px scrollbar-hide md:flex-wrap">
+      <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide md:flex-wrap">
         {subCategories.map((sub) => {
           const isSelected = selected.includes(sub.slug);
           return (
