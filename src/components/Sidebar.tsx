@@ -9,6 +9,7 @@ import {
   SidebarMenuButton,
   SidebarTrigger,
   useSidebar,
+  SidebarFooter,
 } from '@/components/ui/sidebar';
 import { Plus } from 'lucide-react';
 import { useMyCommunities } from '@/hooks/useCommunities';
@@ -21,7 +22,7 @@ function SidebarContentSkeleton() {
   return (
     <>
       <SidebarHeader>
-        <div className="hidden md:flex h-8">
+        <div className="hidden md:flex h-10 items-center px-2">
           <Skeleton className="w-6 h-6 rounded" />
         </div>
         <hr />
@@ -56,6 +57,16 @@ function SidebarContentSkeleton() {
           </SidebarMenu>
         </div>
       </SidebarContent>
+
+      <SidebarFooter className="border-t p-3">
+        <div className="flex items-center gap-3">
+          <Skeleton className="size-12 rounded-full shrink-0" />
+          <div className="flex flex-col gap-1.5 flex-1 group-data-[collapsible=icon]:hidden">
+            <Skeleton className="h-3.5 w-28 rounded-full" />
+            <Skeleton className="h-3 w-16 rounded-full" />
+          </div>
+        </div>
+      </SidebarFooter>
     </>
   );
 }
@@ -73,7 +84,7 @@ export function AppSidebar() {
   };
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { isAuthenticated } = useAuthContext();
+  const { isAuthenticated, user } = useAuthContext();
   const navigate = useNavigate();
 
   const handleCreateCommunity = (e: React.MouseEvent) => {
@@ -88,7 +99,7 @@ export function AppSidebar() {
   if (isLoading) {
     return (
       <>
-        <SidebarTrigger className="fixed top-25 left-3 z-50 [&_svg]:size-5 text-[#999999] md:hidden" />
+        <SidebarTrigger className="fixed top-25 left-3 z-50 [&_svg]:size-6 text-[#999999] md:hidden" />
         <Sidebar collapsible="icon" className="bg-background border-none shadow-md">
           <SidebarContentSkeleton />
         </Sidebar>
@@ -98,14 +109,13 @@ export function AppSidebar() {
 
   return (
     <>
-      <SidebarTrigger className="fixed top-25 left-3 z-50 [&_svg]:size-5 text-[#999999] md:hidden" />
+      <SidebarTrigger className="fixed top-25 left-3 z-50 [&_svg]:size-6 text-foreground/50 md:hidden" />
 
       <Sidebar collapsible="icon" className="bg-background border-none shadow-md">
-        <SidebarHeader>
-          <div className=" hidden md:flex h-8">
-            <SidebarTrigger className="[&_svg]:size-5"></SidebarTrigger>
+        <SidebarHeader className="border-b p-0">
+          <div className="hidden md:flex h-10 items-center px-2">
+            <SidebarTrigger className="[&_svg]:size-6 group-data-[collapsible=icon]:pl-1!"></SidebarTrigger>
           </div>
-          <hr />
         </SidebarHeader>
         <SidebarContent className="px-0">
           {/* My Communities */}
@@ -113,29 +123,34 @@ export function AppSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
-                  <SidebarMenuButton className="flex items-center justify-between py-5 px-3 rounded-none hover:bg-linear-to-r from-brand-200 to-brand-50 transition-all gap-1">
+                  <SidebarMenuButton className="flex items-center justify-between py-5 px-3 rounded-none hover:bg-linear-to-r from-brand-200 to-brand-50 transition-all gap-1 group-data-[collapsible=icon]:pl-3! group-data-[collapsible=icon]:size-auto!">
                     <div className="flex items-center gap-1.5 min-w-0 flex-1 ">
                       <img
                         src="/icons/user-group.svg"
                         alt="Communities"
-                        className="size-5 shrink-0"
+                        className="size-6 shrink-0 min-w-0 min-h-0"
                       />
-                      <span className="font-medium text-sm truncate">Communities</span>
+                      <span className="font-medium text-sm truncate group-data-[collapsible=icon]:hidden">
+                        Communities
+                      </span>
                       <img
                         src="/icons/arrow.svg"
-                        className={`size-5 cursor-pointer shrink-0 transition-transform ${collapsibleOpen ? 'rotate-180' : ''}`}
+                        className={`size-5 cursor-pointer shrink-0 transition-transform group-data-[collapsible=icon]:hidden ${collapsibleOpen ? 'rotate-180' : ''}`}
                       />
                     </div>
-                    <button className="shrink-0 p-0.5" onClick={handleCreateCommunity}>
+                    <div
+                      className="shrink-0 p-0.5 group-data-[collapsible=icon]:hidden"
+                      onClick={handleCreateCommunity}
+                    >
                       <Plus className="size-4 cursor-pointer " />
-                    </button>
+                    </div>
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
               </SidebarMenuItem>
             </SidebarMenu>
 
             <CollapsibleContent className="ml-8 border-l-2 px-3">
-              <SidebarMenu className="max-h-60 overflow-y-auto scrollbar-hide">
+              <SidebarMenu className="max-h-60 overflow-y-auto scrollbar-thin">
                 {!data?.data || data.data.length === 0 ? (
                   <div className="flex flex-col items-center justify-center">
                     <img
@@ -156,7 +171,7 @@ export function AppSidebar() {
                       <SidebarMenuButton asChild className="hover:bg-primary/20">
                         <Link to={`/communities/${item.community.slug}`} className="w-full">
                           <div className="flex items-center gap-1.5 min-w-0 flex-1">
-                            <div className="size-6 rounded-full bg-linear-to-tl from-[#814698] to-[#4C88C1] shrink-0 overflow-y-hidden">
+                            <div className="size-6 rounded-full bg-linear-to-tl from-[#814698] to-[#4C88C1] shrink-0 overflow-hidden">
                               {item.community.coverImageUrl && !imgError.has(item.community.id) ? (
                                 <img
                                   src={item.community.coverImageUrl ?? ''}
@@ -183,6 +198,35 @@ export function AppSidebar() {
             </CollapsibleContent>
           </Collapsible>
         </SidebarContent>
+
+        {isAuthenticated && user && (
+          <SidebarFooter className="border-t p-3">
+            <div className="flex items-center gap-3 ">
+              <div className="size-12 shrink-0 rounded-full p-0.5 bg-linear-to-tl from-primary to-[#4C88C1] group-data-[collapsible=icon]:size-8">
+                <div className="size-full shrink-0 overflow-hidden rounded-full ">
+                  {user.avatarUrl ? (
+                    <img
+                      src={user.avatarUrl}
+                      alt=""
+                      className="size-full object-cover"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                  ) : (
+                    <span className="text-white text-sm font-agbalumo">
+                      {user.fullName?.charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-col gap-0.5 overflow-hidden group-data-[collapsible=icon]:hidden">
+                <p className="text-sm font-semibold truncate">{user.fullName}</p>
+                <p className="text-xs text-muted-foreground">{user.role || 'Member'}</p>
+              </div>
+            </div>
+          </SidebarFooter>
+        )}
       </Sidebar>
 
       <CreateCommunityDialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)} />
