@@ -21,7 +21,7 @@ export function CategoryTabs({
 }: CategoryTabsProps) {
   if (isLoading) {
     return (
-      <div className={cn('flex gap-1 overflow-x-auto border-b pb-px scrollbar-hide', className)}>
+      <div className={cn('flex gap-1 overflow-x-auto pb-px scrollbar-hide', className)}>
         {Array.from({ length: count }).map((_, i) => (
           <div key={i} className="flex items-center gap-1 py-3 px-4 shrink-0 animate-pulse">
             <Skeleton className="w-5 h-5 rounded-full shrink-0" />

@@ -119,7 +119,7 @@ export function CommunitiesList({
       className="w-full flex flex-col gap-5 md:gap-10"
     >
       <div className="flex flex-col items-center gap-4 md:justify-between">
-        <div className="w-full min-w-0 flex items-center gap-2">
+        <div className="w-full min-w-0 flex items-center gap-2  border-t border-foreground/10 pt-5 md:pt-6">
           <div className="flex items-center gap-2  overflow-x-auto min-w-0 flex-1 scrollbar-hide">
             {selectedSubCategoryItems?.map((sub) => (
               <button
@@ -143,7 +143,7 @@ export function CommunitiesList({
           )}
         </div>
 
-        <div className="flex items-center gap-2 md:gap-4 md:w-full justify-end">
+        <div className="flex items-center justify-between md:gap-4 w-full md:justify-end">
           {isLoading || isLoadingCategories ? (
             <Skeleton className="h-5 w-40" />
           ) : (
