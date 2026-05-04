@@ -237,3 +237,41 @@ export const PRIVACY_OPTIONS = [
     value: true,
   },
 ] as const;
+
+export const SIDEBAR_ITEMS = [
+  { id: 'create', icon: '/icons/add-square.svg', activeIcon: '/icons/add-square-active.svg' },
+  {
+    id: 'communities',
+    icon: '/icons/user-multiple-02.svg',
+    activeIcon: '/icons/user-multiple-02-active.svg',
+  },
+  { id: 'tasks', icon: '/icons/task-daily-02.svg', activeIcon: '/icons/task-daily-02-active.svg' },
+  {
+    id: 'saved',
+    icon: '/icons/collections-bookmark.svg',
+    activeIcon: '/icons/collections-bookmark-active.svg',
+  },
+  { id: 'settings', icon: '/icons/settings-01.svg', activeIcon: '/icons/settings-01.svg' },
+] as const;
+
+export const CREATE_OPTIONS = [
+  {
+    id: 'community',
+    title: 'Community',
+    description: 'Engage, share, and grow with like-minded individuals.',
+    requireAuth: true,
+  },
+  {
+    id: 'project',
+    title: 'Project',
+    description: 'Initiate project planning and teamwork.',
+    requireAuth: true,
+  },
+  {
+    id: 'roadmap',
+    title: 'Roadmap',
+    description: 'Use our AI feature to generate a custom roadmap for any topic.',
+    requireAuth: true,
+  },
+] as const;
+export type CreateOptionId = (typeof CREATE_OPTIONS)[number]['id'];
