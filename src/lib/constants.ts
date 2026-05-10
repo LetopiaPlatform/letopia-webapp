@@ -55,6 +55,7 @@ export const PROFILE_ICONS = {
   INTERESTS: '/assets/profile/favorite-circle.svg',
   DASHBOARD: '/assets/profile/dashboard-square.svg',
   CHECKLIST: '/assets/profile/check-list.svg',
+  CHECKLIST_PEN: '/assets/profile/achievements/checklist-with-pen.svg',
   AWARD: '/assets/profile/start-award.svg',
 } as const;
 
@@ -224,3 +225,13 @@ export const SORT_OPTIONS = [
   { value: 'newest', label: 'Latest Communities', icon: '/icons/arrow-reload-vertical.svg' },
   { value: 'name', label: 'Alphabetically', icon: '/icons/arrange-by-letters-a-z.svg' },
 ];
+
+export const SOCIAL_BG: Record<SocialType, string> = {
+  EMAIL: 'bg-[#E11D48]',
+  LINKEDIN: 'bg-blue-500',
+  GITHUB: 'bg-zinc-800',
+  YOUTUBE: 'bg-red-600',
+  BEHANCE: 'bg-blue-700',
+  INSTAGRAM: 'bg-pink-500',
+  FACEBOOK: 'bg-blue-600',
+};
