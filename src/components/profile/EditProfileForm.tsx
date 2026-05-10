@@ -53,7 +53,7 @@ function hydrateSocials(links: BackendSocialLink[] | null | undefined): UiSocial
       if (!t) return null;
       return { id: crypto.randomUUID(), type: t, url: l.url };
     })
-    .filter((x): x is UiSocialLink => x !== null);
+    .filter((x) => x !== null) as UiSocialLink[];
 }
 
 function arraysEqualIgnoringOrder(a: string[], b: string[]) {

@@ -22,7 +22,7 @@ export function SettingsPage() {
   const navigate = useNavigate();
 
   const serverNotifications = meResponse?.data?.notificationPreferences ?? DEFAULT_NOTIFICATIONS;
-  const serverPrivacy = meResponse?.data?.privacySettings ?? DEFAULT_PRIVACY;
+  const serverPrivacy = meResponse?.data?.privacyPreferences ?? DEFAULT_PRIVACY;
 
   const [notifications, setNotifications] = useState<NotificationPrefs>(serverNotifications);
   const [privacy, setPrivacy] = useState<PrivacyPrefs>(serverPrivacy);
@@ -33,7 +33,7 @@ export function SettingsPage() {
   if (meResponse?.data && meResponse.data !== serverSnapshot) {
     setServerSnapshot(meResponse.data);
     setNotifications(meResponse.data.notificationPreferences ?? DEFAULT_NOTIFICATIONS);
-    setPrivacy(meResponse.data.privacySettings ?? DEFAULT_PRIVACY);
+    setPrivacy(meResponse.data.privacyPreferences ?? DEFAULT_PRIVACY);
   }
 
   if (!isAuthenticated) return <Navigate to="/login" replace />;
