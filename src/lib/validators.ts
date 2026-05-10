@@ -76,3 +76,91 @@ export const resetPasswordSchema = z
   });
 
 export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
+
+// ─── Update Profile ──────────────────────────────────────────
+const socialLinkSchema = z
+  .object({
+    provider: z.string().min(1, 'Provider is required').max(50),
+    url: z.string().url('Invalid URL format'),
+  })
+  .superRefine(({ provider, url }, ctx) => {
+    const protocol = new URL(url).protocol;
+    const isEmail = provider.toLowerCase() === 'email';
+
+    if (isEmail ? protocol !== 'mailto:' : protocol !== 'https:') {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['url'],
+        message: 'Unsupported URL scheme for this provider',
+      });
+    }
+  });
+
+const chipSchema = z
+  .string()
+  .min(1)
+  .max(50)
+  .regex(/^[a-zA-Z0-9 .+#\\-]+$/, 'Contains invalid characters');
+
+export const updateProfileSchema = z.object({
+  fullName: z.string().max(50, 'Name must be at most 50 characters').optional(),
+  bio: z.string().max(500, 'Bio must be at most 500 characters').optional(),
+  phoneNumber: z
+    .string()
+    .regex(/^\+?\d{7,15}$/, 'Invalid phone number format')
+    .or(z.literal(''))
+    .optional(),
+  location: z.string().max(100, 'Location must be at most 100 characters').optional(),
+  socialLinks: z
+    .array(socialLinkSchema)
+    .refine(
+      (links) => new Set(links.map((l) => l.provider.toLowerCase())).size === links.length,
+      'Duplicate social link providers are not allowed'
+    )
+    .optional(),
+  skills: z
+    .array(chipSchema)
+    .max(20, 'You cannot add more than 20 skills')
+    .refine(
+      (s) => new Set(s.map((v) => v.trim().toLowerCase())).size === s.length,
+      'Duplicate skills are not allowed'
+    )
+    .optional(),
+  interests: z
+    .array(chipSchema)
+    .max(20, 'You cannot add more than 20 interests')
+    .refine(
+      (s) => new Set(s.map((v) => v.trim().toLowerCase())).size === s.length,
+      'Duplicate interests are not allowed'
+    )
+    .optional(),
+});
+export type UpdateProfileFormData = z.infer<typeof updateProfileSchema>;
+
+// ─── Update Preferences ──────────────────────────────────────
+export const updatePreferencesSchema = z.object({
+  notificationPreferences: z
+    .object({
+      emailNotifications: z.boolean(),
+      pushNotifications: z.boolean(),
+      taskReminders: z.boolean(),
+      achievementAlerts: z.boolean(),
+      communityUpdates: z.boolean(),
+      weeklyDigest: z.boolean(),
+    })
+    .optional(),
+  privacySettings: z
+    .object({
+      profileVisibility: z.enum(['Public', 'FriendsOnly', 'Private']),
+      showPhoneNumber: z.boolean(),
+      showEmailAddress: z.boolean(),
+      showProjects: z.boolean(),
+    })
+    .optional(),
+});
+
+// ─── Email Change ────────────────────────────────────────────
+export const emailChangeSchema = z.object({
+  newEmail: z.string().email('Invalid email format').max(256),
+});
+export type EmailChangeFormData = z.infer<typeof emailChangeSchema>;

@@ -213,6 +213,17 @@ body {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --communities-accent: `#ba90d9`;
+  --communities-accent-foreground: `#2a1e31`;
+  --communities-text: `#f5f5f6`;
+  --communities-text-secondary: `#c9c9cf`;
+  --communities-text-muted: `#a3a3ad`;
+  --communities-text-label: `#b7b7c0`;
+  --communities-border: `#3a3a45`;
+  --communities-chip-border: `#4a4a56`;
+  --communities-placeholder: `#4f4f5a`;
+  --communities-destructive: `#ff6b7a`;
+  --communities-scrollbar: `#666674`;
 }
 
 @layer base {
