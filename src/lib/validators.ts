@@ -122,7 +122,7 @@ export const updateProfileSchema = z.object({
     .array(chipSchema)
     .max(20, 'You cannot add more than 20 skills')
     .refine(
-      (s) => new Set(s.map((v) => v.toLowerCase())).size === s.length,
+      (s) => new Set(s.map((v) => v.trim().toLowerCase())).size === s.length,
       'Duplicate skills are not allowed'
     )
     .optional(),
@@ -130,7 +130,7 @@ export const updateProfileSchema = z.object({
     .array(chipSchema)
     .max(20, 'You cannot add more than 20 interests')
     .refine(
-      (s) => new Set(s.map((v) => v.toLowerCase())).size === s.length,
+      (s) => new Set(s.map((v) => v.trim().toLowerCase())).size === s.length,
       'Duplicate interests are not allowed'
     )
     .optional(),
