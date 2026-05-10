@@ -9,9 +9,10 @@ interface RoleBadgeProps {
 export function RoleBadge({ role, className }: RoleBadgeProps) {
   const style = getRoleStyle(role);
   const { Icon } = style;
+  const label = style.suffix;
   return (
     <span
-      aria-label={`Role: ${role ?? 'Member'}`}
+      aria-label={`Role: ${label}`}
       className={cn(
         'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium',
         style.bg,
@@ -21,7 +22,7 @@ export function RoleBadge({ role, className }: RoleBadgeProps) {
       )}
     >
       <Icon className="size-3.5" aria-hidden />
-      <span>{role ?? 'Member'}</span>
+      <span>{label}</span>
     </span>
   );
 }

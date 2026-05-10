@@ -78,10 +78,23 @@ export const resetPasswordSchema = z
 export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 
 // ─── Update Profile ──────────────────────────────────────────
-const socialLinkSchema = z.object({
-  provider: z.string().min(1, 'Provider is required').max(50),
-  url: z.string().url('Invalid URL format'),
-});
+const socialLinkSchema = z
+  .object({
+    provider: z.string().min(1, 'Provider is required').max(50),
+    url: z.string().url('Invalid URL format'),
+  })
+  .superRefine(({ provider, url }, ctx) => {
+    const protocol = new URL(url).protocol;
+    const isEmail = provider.toLowerCase() === 'email';
+
+    if (isEmail ? protocol !== 'mailto:' : protocol !== 'https:') {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['url'],
+        message: 'Unsupported URL scheme for this provider',
+      });
+    }
+  });
 
 const chipSchema = z
   .string()

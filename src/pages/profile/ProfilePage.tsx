@@ -50,9 +50,23 @@ export function ProfilePage() {
       return;
     }
     try {
-      await Promise.all(tasks);
-      toast.success('Profile updated.');
-      setIsEditing(false);
+      const results = await Promise.allSettled(tasks);
+      const rejected = results.filter((result) => result.status === 'rejected');
+
+      if (rejected.length === 0) {
+        toast.success('Profile updated.');
+        setIsEditing(false);
+        return;
+      }
+
+      if (rejected.length === results.length) {
+        const reason = rejected[0]?.reason;
+        const msg = reason instanceof Error ? reason.message : 'Failed to update profile.';
+        toast.error(msg);
+        return;
+      }
+
+      toast.warning('Some changes were saved, but not all. Please review and retry.');
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Failed to update profile.';
       toast.error(msg);

@@ -27,6 +27,7 @@ export function ProfileTabs({ active, onChange }: ProfileTabsProps) {
             type="button"
             role="tab"
             id={`profile-tab-${key}`}
+            aria-label={label}
             aria-controls={`profile-panel-${key}`}
             tabIndex={active === key ? 0 : -1}
             aria-selected={active === key}
@@ -52,7 +53,9 @@ export function ProfileTabs({ active, onChange }: ProfileTabsProps) {
             )}
           >
             <img src={icon} alt="" className="size-4.5 shrink-0" />
-            <span className="hidden xs:inline">{label}</span>
+            <span className="hidden xs:inline" aria-hidden="true">
+              {label}
+            </span>
           </button>
         ))}
       </div>
