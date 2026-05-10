@@ -61,6 +61,13 @@ export function ProfileActivityCalendar({
   // Offset for first day of month (0 = Sunday)
   const firstDayOffset = new Date(month.getFullYear(), month.getMonth(), 1).getDay();
 
+  // Today's day-of-month, only if the displayed month matches the current month
+  const today = new Date();
+  const todayDay =
+    today.getFullYear() === month.getFullYear() && today.getMonth() === month.getMonth()
+      ? today.getDate()
+      : null;
+
   return (
     <section
       aria-label={PROFILE_STRINGS.SECTIONS.WEEKLY_ACTIVITY}
@@ -106,21 +113,30 @@ export function ProfileActivityCalendar({
                 <div key={`pad-${i}`} aria-hidden className="size-9" />
               ))}
 
-              {cells.map(({ day, active }) => (
-                <div
-                  key={day}
-                  role="gridcell"
-                  aria-current={active ? 'date' : undefined}
-                  className={cn(
-                    'flex size-9 items-center justify-center rounded-full text-sm font-normal',
-                    active
-                      ? 'bg-[#3EA616] text-[#F3EBF4]'
-                      : 'border border-[#F3EBF4] text-[#261A2B]'
-                  )}
-                >
-                  {day}
-                </div>
-              ))}
+              {cells.map(({ day, active }) => {
+                const isToday = day === todayDay;
+                const dateLabel = `${MONTH_NAMES[month.getMonth()]} ${day}, ${month.getFullYear()}`;
+                const stateLabel = active ? ' — has activity' : '';
+                const todayLabel = isToday ? ' — today' : '';
+                return (
+                  <div
+                    key={day}
+                    role="gridcell"
+                    aria-label={`${dateLabel}${stateLabel}${todayLabel}`}
+                    aria-current={isToday ? 'date' : undefined}
+                    data-active={active || undefined}
+                    className={cn(
+                      'flex size-9 items-center justify-center rounded-full text-sm font-normal',
+                      active
+                        ? 'bg-[#3EA616] text-[#F3EBF4]'
+                        : 'border border-[#F3EBF4] text-[#261A2B]',
+                      isToday && 'ring-2 ring-[#824892] ring-offset-1'
+                    )}
+                  >
+                    {day}
+                  </div>
+                );
+              })}
             </div>
           </div>
 

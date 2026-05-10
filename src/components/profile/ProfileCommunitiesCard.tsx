@@ -7,7 +7,7 @@ import { PROFILE_STRINGS } from '@/lib/constants';
 const MAX_VISIBLE = 5;
 
 export function ProfileCommunitiesCard() {
-  const { data, isLoading } = useMyCommunities();
+  const { data, isLoading, isError } = useMyCommunities();
   const communities = data?.data ?? [];
   const visible = communities.slice(0, MAX_VISIBLE);
   const hasOverflow = communities.length > MAX_VISIBLE;
@@ -31,6 +31,10 @@ export function ProfileCommunitiesCard() {
           {[1, 2, 3].map((i) => (
             <div key={i} className="h-20 animate-pulse rounded-[10px] bg-zinc-100" />
           ))}
+        </div>
+      ) : isError ? (
+        <div className="mt-4 flex min-h-[120px] flex-1 items-center justify-center rounded-xl bg-linear-to-br from-[#824892]/5 to-[#824892]/10 text-sm text-[#6B7280]">
+          {PROFILE_STRINGS.ERROR.LOAD_COMMUNITIES}
         </div>
       ) : (
         <>

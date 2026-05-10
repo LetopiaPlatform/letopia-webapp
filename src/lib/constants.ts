@@ -121,6 +121,9 @@ export const PROFILE_STRINGS = {
     PROJECTS_SOON: 'Projects tab coming soon.',
     ACHIEVEMENTS_SOON: 'Achievements tab coming soon.',
   },
+  ERROR: {
+    LOAD_COMMUNITIES: 'Failed to load communities. Please try again.',
+  },
 } as const;
 
 export type SocialType = keyof typeof PROFILE_STRINGS.SOCIALS;
