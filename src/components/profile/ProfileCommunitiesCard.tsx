@@ -45,7 +45,7 @@ export function ProfileCommunitiesCard() {
                   className="flex h-20 items-center gap-3 rounded-[10px] bg-zinc-100 p-3 outline-[0.8px] -outline-offset-[0.8px] outline-gray-200 transition-colors hover:bg-zinc-200/70"
                 >
                   <Avatar className="size-12 shrink-0">
-                    <AvatarImage src={community.iconUrl ?? undefined} alt={community.name} />
+                    <AvatarImage src={community.coverImageUrl ?? undefined} alt={community.name} />
                     <AvatarFallback className="bg-[#824892]/10 text-[#824892] text-xs font-semibold">
                       {getInitials(community.name)}
                     </AvatarFallback>

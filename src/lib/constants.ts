@@ -55,7 +55,7 @@ export const PROFILE_ICONS = {
   INTERESTS: '/assets/profile/favorite-circle.svg',
   DASHBOARD: '/assets/profile/dashboard-square.svg',
   CHECKLIST: '/assets/profile/check-list.svg',
-  CHECKLIST_PEN: '/assets/profile/achievements/checklist-with-pen.svg',
+  CHECKLIST_PEN: '/assets/profile/checklist-with-pen.svg',
   AWARD: '/assets/profile/start-award.svg',
 } as const;
 
