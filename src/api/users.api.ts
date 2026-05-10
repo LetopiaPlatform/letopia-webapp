@@ -1,30 +1,40 @@
 import apiClient from './client';
 import type { ApiResponse } from '@/types/api.types';
-import type { UpdateUserProfileRequest, UserProfile } from '@/types/user.types';
+import type {
+  EmailChangeRequest,
+  EmailConfirmRequest,
+  PublicUserProfile,
+  UpdateProfileRequest,
+  UserProfile,
+} from '@/types/user.types';
+import type { UpdatePreferencesRequest } from '@/types/preferences.types';
 
 export const usersApi = {
   getMe: () => apiClient.get<ApiResponse<UserProfile>>('/users/me'),
 
-  updateMe: (data: UpdateUserProfileRequest) => {
-    const formData = new FormData();
-    if (data.fullName !== undefined) formData.append('fullName', data.fullName);
-    if (data.email !== undefined) formData.append('email', data.email);
-    if (data.bio !== undefined) formData.append('bio', data.bio);
-    if (data.phoneNumber !== undefined) formData.append('phoneNumber', data.phoneNumber);
-    if (data.avatar) formData.append('avatarUrl', data.avatar);
+  getById: (id: string) => apiClient.get<ApiResponse<PublicUserProfile>>(`/users/${id}`),
 
-    return apiClient.put<ApiResponse<UserProfile>>('/users/me', formData, {
-      headers: { 'Content-Type': undefined },
-    });
-  },
+  updateProfile: (data: UpdateProfileRequest) =>
+    apiClient.put<ApiResponse<UserProfile>>('/users/me', data),
 
   updateAvatar: (file: File) => {
     const formData = new FormData();
     formData.append('file', file);
-    return apiClient.put<ApiResponse<string>>('/users/me/avatar', formData, {
-      headers: { 'Content-Type': undefined },
+    return apiClient.put<ApiResponse<UserProfile>>('/users/me/avatar', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
 
-  deleteAvatar: () => apiClient.delete<ApiResponse<null>>('/users/me/avatar'),
+  deleteAvatar: () => apiClient.delete<ApiResponse<UserProfile>>('/users/me/avatar'),
+
+  requestEmailChange: (data: EmailChangeRequest) =>
+    apiClient.post<ApiResponse<null>>('/users/me/email-change', data),
+
+  confirmEmailChange: (data: EmailConfirmRequest) =>
+    apiClient.post<ApiResponse<null>>('/users/me/email-confirm', data),
+
+  updatePreferences: (data: UpdatePreferencesRequest) =>
+    apiClient.put<ApiResponse<UserProfile>>('/users/me/preferences', data),
+
+  deleteAccount: () => apiClient.delete<ApiResponse<null>>('/users/me'),
 };
