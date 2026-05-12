@@ -17,7 +17,7 @@ export const CommunitySkeleton = ({ count = 12, className }: CommunitySkeletonPr
       )}
     >
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="w-full rounded-2xl overflow-hidden bg-muted">
+        <div key={i} className="w-full rounded-2xl overflow-hidden bg-brand-300/30 animate-pulse">
           <Skeleton className="h-25 w-full rounded-none" />
 
           <div className="p-4 space-y-3">

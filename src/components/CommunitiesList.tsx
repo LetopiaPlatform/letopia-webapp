@@ -20,6 +20,7 @@ import {
   PaginationNext,
   PaginationEllipsis,
 } from '@/components/ui/pagination';
+import { CreateCommunityDialog } from './community/CreateCommunityDialog';
 
 const PAGE_SIZE = 12;
 
@@ -76,13 +77,14 @@ export function CommunitiesList({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [page]);
 
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { isAuthenticated } = useAuthContext();
   const navigate = useNavigate();
   const handleCreateCommunity = () => {
     if (isAuthenticated) {
-      navigate('/communities/create');
+      setIsDialogOpen(true);
     } else {
-      navigate('/login', { state: { redirectTo: '/communities/create' } });
+      navigate('/login', { state: { redirectTo: '/communities' } });
     }
   };
 
@@ -90,19 +92,24 @@ export function CommunitiesList({
     if (search) {
       return (
         <EmptyState
+          image={'/assets/emptyState.svg'}
           title="No communities found"
           description={`No result for '${search}' ${category ? `in ${category.name}` : ''}`}
         />
       );
     }
     return (
-      <EmptyState
-        title="No communities yet"
-        description="Be the first to create a community and bring people together."
-        actionLabel="Create Community"
-        actionIcon={<Plus className="size-4 sm:size-5" />}
-        onAction={handleCreateCommunity}
-      />
+      <>
+        <EmptyState
+          image={'/assets/emptyState.svg'}
+          title="No communities yet"
+          description="Be the first to create a community and bring people together."
+          actionLabel="Create Community"
+          actionIcon={<Plus className="size-4 sm:size-5" />}
+          onAction={handleCreateCommunity}
+        />
+        <CreateCommunityDialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)} />
+      </>
     );
   }
 
@@ -111,35 +118,39 @@ export function CommunitiesList({
       aria-labelledby={category ? `category-heading-${category.slug}` : 'communities-heading'}
       className="w-full flex flex-col gap-5 md:gap-10"
     >
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-2 flex-wrap">
-          {selectedSubCategoryItems?.map((sub) => (
-            <button
-              key={sub.slug}
-              onClick={() => onRemoveSubCategory?.(sub.slug)}
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-communities-text-muted rounded-full border border-communities-text-muted cursor-pointer transition-colors hover:bg-accent/50"
-            >
-              <X className="size-3.5" />
-              {sub.name}
-            </button>
-          ))}
-          {hasActiveFilters && onClearFilters && (
-            <button
-              onClick={onClearFilters}
-              className="inline-flex items-center gap-1 px-4 py-2 text-base font-medium text-communities-destructive cursor-pointer transition-colors hover:text-communities-destructive/80"
-            >
-              <X className="size-3.5" />
-              Clear All
-            </button>
-          )}
-        </div>
+      <div className="flex flex-col items-center gap-4 md:justify-between">
+        {hasActiveFilters && (
+          <div className="w-full min-w-0 flex items-center gap-2 border-b border-foreground/10 pb-5 md:pb-6">
+            <div className="flex items-center gap-2  overflow-x-auto min-w-0 flex-1 scrollbar-hide">
+              {selectedSubCategoryItems?.map((sub) => (
+                <button
+                  key={sub.slug}
+                  onClick={() => onRemoveSubCategory?.(sub.slug)}
+                  className="shrink-0 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-foreground/50 rounded-full border border-foreground/20 cursor-pointer transition-colors hover:bg-accent/50"
+                >
+                  <X className="size-3.5" />
+                  {sub.name}
+                </button>
+              ))}
+            </div>
+            {onClearFilters && (
+              <button
+                onClick={onClearFilters}
+                className="shrink-0 inline-flex items-center gap-1 px-4 py-2 text-sm font-medium text-destructive cursor-pointer transition-colors hover:text-destructive/80"
+              >
+                <X className="size-3.5" />
+                Clear All
+              </button>
+            )}
+          </div>
+        )}
 
-        <div className="flex items-center gap-4 shrink-0">
+        <div className="flex items-center justify-between md:gap-4 w-full md:justify-end">
           {isLoading || isLoadingCategories ? (
             <Skeleton className="h-5 w-40" />
           ) : (
-            <span className="text-base font-medium text-communities-text-label">
-              Showing <span className="text-communities-accent">{totalItems}</span>{' '}
+            <span className="text-sm md:text-base font-medium text-foreground/70">
+              Showing <span className="text-primary">{totalItems}</span>{' '}
               {totalItems === 1 ? 'Community' : 'Communities'}
             </span>
           )}

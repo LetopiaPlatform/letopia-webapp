@@ -25,15 +25,15 @@ export const EmptyState = ({
   const hasAction = !!actionLabel && (!!actionHref || !!onAction);
 
   return (
-    <div className="flex flex-col items-center gap-4 py-16 text-center max-w-sm mx-auto">
+    <div className="flex flex-col items-center gap-3 md:gap-4 py-4 lg:py-8 text-center max-w-sm mx-auto">
       {image && <img src={image} alt="" role="presentation" className={'w-40 opacity-80'} />}
       {!image && icon && (
         <span aria-hidden="true" className="text-muted-foreground">
           {icon}
         </span>
       )}
-      <p className="text-lg font-semibold">{title}</p>
-      {description && <p className="text-sm text-muted-foreground">{description}</p>}
+      <p className="text-md lg:text-lg font-semibold text-primary">{title}</p>
+      {description && <p className="text-xs md:text-sm text-muted-foreground">{description}</p>}
       {hasAction &&
         (actionHref ? (
           <Button

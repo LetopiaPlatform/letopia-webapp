@@ -22,7 +22,9 @@ export const communitiesApi = {
         const searchParams = new URLSearchParams();
         Object.entries(p).forEach(([key, value]) => {
           if (Array.isArray(value)) {
-            value.forEach((v) => searchParams.append(key, v));
+            value
+              .filter((v) => v !== undefined && v !== null && v !== '')
+              .forEach((v) => searchParams.append(key, String(v)));
           } else if (value !== undefined && value !== null && value !== '') {
             searchParams.append(key, String(value));
           }

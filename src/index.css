@@ -276,6 +276,16 @@ body {
   background: var(--communities-scrollbar);
 }
 
+/* Hide Scrollbars */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
+  background: var(--communities-scrollbar);
+}
+
 @keyframes drift {
   0% {
     transform: translate(0, 0);

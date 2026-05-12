@@ -5,7 +5,7 @@ import { useMemo, useState } from 'react';
 import { CategoryTabs } from '@/components/CategoryTabs';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { SubCategoryFilter } from '@/components/SubCategoryFilter';
-import { CommunitiesSidebar } from '@/components/community/CommunitiesSidebar';
+import { AppSidebar } from '@/components/AppSidebar';
 
 export function CommunitiesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -42,17 +42,19 @@ export function CommunitiesPage() {
     );
   };
 
+  const handleClearSubCategories = () => {
+    setSelectedSubCategories([]);
+  };
+
   const handleSelectCommunity = (slug: string) => {
     navigate(`/communities/${slug}`, { state: { backgroundLocation: location } });
   };
   return (
-    <div className="lg:flex lg:items-stretch">
-      <aside className="hidden lg:sticky lg:top-0 lg:block lg:h-[calc(100vh-var(--navbar-height,0px))] lg:w-72 lg:shrink-0 lg:self-start">
-        <CommunitiesSidebar />
-      </aside>
+    <>
+      <AppSidebar />
       <div className="min-w-0 flex-1">
         <HeroSection isLoading={isLoading} />
-        <div className="px-5 md:px-8 2xl:px-15 mb-10">
+        <div className="px-5 md:px-8 2xl:px-15 md:ml-16 mb-10">
           <div className="flex flex-col gap-5 md:gap-8 lg:gap-10">
             <CategoryTabs
               categories={categories}
@@ -66,6 +68,7 @@ export function CommunitiesPage() {
                   subCategories={selectedCategoryObj.childCategories}
                   selected={selectedSubCategories}
                   onToggle={handleSubCategoryToggle}
+                  onClearAll={handleClearSubCategories}
                 />
               )}
             <CommunitiesList
@@ -83,6 +86,6 @@ export function CommunitiesPage() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
