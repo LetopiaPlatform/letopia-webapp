@@ -25,7 +25,7 @@ export function useCategorySelection({
   const [selectedSubCategory, setSelectedSubCategory] = useState<Category | null>(null);
 
   const effectiveMainCategory = selectedMainCategory ?? categories[0] ?? null;
-  const subCategories = selectedMainCategory?.childCategories ?? [];
+  const subCategories = effectiveMainCategory?.childCategories ?? [];
 
   const handleMainCategorySelect = useCallback(
     (cat: Category, onChange: (id: string) => void) => {

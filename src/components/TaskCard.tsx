@@ -20,7 +20,9 @@ export const TaskCard = ({ task, onToggle }: TaskCardProps) => {
       <div className="flex items-center gap-3">
         {/* Checkbox */}
         <button
+          type="button"
           onClick={() => onToggle(task.id)}
+          aria-label={task.completed ? 'Mark task as incompelete' : 'Mark task as complete'}
           className={`size-6 md:size-7 shrink-0 rounded-md md:rounded-lg border-2 flex items-center justify-center transition mt-0.5 ${
             task.completed ? 'border-[#A39BA6]' : 'border-foreground/50 hover:border-primary'
           }`}
@@ -31,7 +33,7 @@ export const TaskCard = ({ task, onToggle }: TaskCardProps) => {
         </button>
 
         {/* Content */}
-        <div className="flex-col gap-1.5 md:gap3 min-w-0">
+        <div className="flex flex-col gap-1.5 md:gap-3 min-w-0">
           <h4
             className={`font-medium ${
               task.completed ? 'line-through text-[#A39BA6]' : 'text-gray-800'

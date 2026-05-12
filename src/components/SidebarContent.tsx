@@ -82,7 +82,12 @@ interface CreateOptionCardProps {
 
 const CreateOptionCard = ({ title, description, onClick }: CreateOptionCardProps) => (
   <div
+    role="button"
+    tabIndex={0}
     onClick={onClick}
+    onKeyDown={(e) => {
+      if (e.key === 'Enter' || e.key === ' ') onClick();
+    }}
     className="w-full p-4 flex flex-col gap-1 bg-white rounded-2xl cursor-pointer shadow-md hover:scale-[1.02] transition-all duration-200"
   >
     <h3 className="font-semibold text-gray-800 capitalize">{title}</h3>
@@ -112,8 +117,15 @@ const CommunitiesSection = () => {
           {data.data.map((community) => (
             <div
               key={community.community.id}
+              role="button"
+              tabIndex={0}
               onClick={() => navigate(`/communities/${community.community.slug}`)}
-              className="w-full py-2 md:py-4 px-3 bg-white rounded-lg md:rounded-2xl cursor-pointer shadow-md hover:scale-[1.02] transition-all duration-200"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  navigate(`/communities/${community.community.slug}`);
+                }
+              }}
+              className="w-full py-2 md:py-4 px-3 bg-white rounded-lg md:rounded-2xl cursor-pointer shadow-md hover:scale-[1.02] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary"
             >
               <div className="flex items-center gap-3">
                 {/* Community Cover Image */}

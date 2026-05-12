@@ -261,7 +261,7 @@ function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<t
       }}
       {...props}
     >
-      <PanelLeftIcon className="size-9 [&_svg]:size-7 " />
+      <PanelLeftIcon className="size-7" />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );

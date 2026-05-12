@@ -30,8 +30,8 @@ export const postsApi = {
     formData.append('title', data.title);
     formData.append('content', data.content);
     formData.append('postType', data.postType);
-    data.images?.forEach((img) => formData.append('Images', img));
-    data.tags?.forEach((tag) => formData.append('Tags', tag));
+    data.images?.forEach((img) => formData.append('images', img));
+    data.tags?.forEach((tag) => formData.append('tags', tag));
 
     return apiClient.post<ApiResponse<PostDetail>>(
       `/communities/${communityId}/channels/${channelId}/posts`,
@@ -44,8 +44,8 @@ export const postsApi = {
     const formData = new FormData();
     if (data.title != null) formData.append('title', data.title);
     if (data.content != null) formData.append('content', data.content);
-    data.addImages?.forEach((img) => formData.append('AddImages', img));
-    data.removeImageUrls?.forEach((url) => formData.append('RemoveImageUrls', url));
+    data.addImages?.forEach((img) => formData.append('addImages', img));
+    data.removeImageUrls?.forEach((url) => formData.append('removeImageUrls', url));
     if (data.tags !== undefined) {
       if (data.tags === null) {
         formData.append('tags', '');

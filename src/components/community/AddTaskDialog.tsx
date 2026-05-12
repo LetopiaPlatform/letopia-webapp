@@ -12,10 +12,21 @@ export const AddTaskDialog = ({ isOpen, onClose, onAdd }: AddTaskDialogProps) =>
   const [title, setTitle] = useState('');
   const [deadline, setDeadline] = useState('');
 
+  const getLocalDateString = () => {
+    const now = new Date();
+    const tzOffsetMs = now.getTimezoneOffset() * 60_000;
+    return new Date(now.getTime() - tzOffsetMs).toISOString().slice(0, 10);
+  };
+
+  const parseLocalDate = (value: string) => {
+    const [y, m, d] = value.split('-').map(Number);
+    return new Date(y, m - 1, d);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (title.trim() && deadline) {
-      onAdd(title.trim(), new Date(deadline));
+      onAdd(title.trim(), parseLocalDate(deadline));
       setTitle('');
       setDeadline('');
       onClose();
@@ -63,7 +74,7 @@ export const AddTaskDialog = ({ isOpen, onClose, onAdd }: AddTaskDialogProps) =>
                 type="date"
                 value={deadline}
                 onChange={(e) => setDeadline(e.target.value)}
-                min={new Date().toISOString().split('T')[0]}
+                min={getLocalDateString()}
                 className={`w-full px-4 py-3 bg-white border border-foreground/10 rounded-xl focus:outline-none `}
                 required
               />

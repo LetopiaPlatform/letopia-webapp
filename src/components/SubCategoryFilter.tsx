@@ -17,6 +17,7 @@ export function SubCategoryFilter({ subCategories, selected, onToggle }: SubCate
           <button
             key={sub.id}
             onClick={() => onToggle(sub.slug)}
+            aria-pressed={isSelected}
             className={cn(
               'px-4 py-2 text-sm font-medium rounded-full border transition-colors cursor-pointer',
               isSelected

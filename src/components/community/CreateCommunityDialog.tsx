@@ -325,7 +325,10 @@ export function CreateCommunityDialog({ isOpen, onClose }: CreateCommunityProps)
                   onChange={(e) => setNewRule(e.target.value)}
                   maxLength={500}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' && newRule.trim()) addRule();
+                    if (e.key === 'Enter' && newRule.trim()) {
+                      e.preventDefault();
+                      addRule();
+                    }
                   }}
                 />
                 <button
