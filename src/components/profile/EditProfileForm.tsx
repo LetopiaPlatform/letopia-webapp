@@ -11,13 +11,23 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { getInitials, cn } from '@/lib/utils';
 import { PROFILE_ICONS, PROFILE_STRINGS, SOCIAL_OPTIONS, type SocialType } from '@/lib/constants';
-import type { UserProfile, UpdateUserProfileRequest } from '@/types/user.types';
+import type {
+  SocialLink as BackendSocialLink,
+  UpdateProfileRequest,
+  UserProfile,
+} from '@/types/user.types';
+import { updateProfileSchema } from '@/lib/validators';
 import { toast } from 'sonner';
 
-interface SocialLink {
+interface UiSocialLink {
   id: string;
   type: SocialType;
   url: string;
+}
+
+export interface EditProfilePayload {
+  profile: UpdateProfileRequest;
+  avatar?: File;
 }
 
 interface EditProfileFormProps {
@@ -25,7 +35,38 @@ interface EditProfileFormProps {
   fallbackAvatarUrl?: string;
   isSaving: boolean;
   onCancel: () => void;
-  onSave: (changes: UpdateUserProfileRequest) => void;
+  onSave: (payload: EditProfilePayload) => void;
+}
+
+function providerToType(provider: string): SocialType | null {
+  const opt = SOCIAL_OPTIONS.find(
+    (o) => (o.type as string).toLowerCase() === provider.toLowerCase()
+  );
+  return opt?.type ?? null;
+}
+
+function hydrateSocials(links: BackendSocialLink[] | null | undefined): UiSocialLink[] {
+  if (!links) return [];
+  return links
+    .map((l) => {
+      const t = providerToType(l.provider);
+      if (!t) return null;
+      return { id: crypto.randomUUID(), type: t, url: l.url };
+    })
+    .filter((x) => x !== null) as UiSocialLink[];
+}
+
+function arraysEqualIgnoringOrder(a: string[], b: string[]) {
+  if (a.length !== b.length) return false;
+  const setA = new Set(a);
+  return b.every((v) => setA.has(v));
+}
+
+function socialsEqual(a: BackendSocialLink[], b: BackendSocialLink[]) {
+  if (a.length !== b.length) return false;
+  const key = (l: BackendSocialLink) => `${l.provider.toLowerCase()}|${l.url}`;
+  const setA = new Set(a.map(key));
+  return b.every((l) => setA.has(key(l)));
 }
 
 export function EditProfileForm({
@@ -35,21 +76,18 @@ export function EditProfileForm({
   onCancel,
   onSave,
 }: EditProfileFormProps) {
-  // ── Backend-persisted fields ──────────────────────────────
   const [fullName, setFullName] = useState(user.fullName);
-  const [email, setEmail] = useState(user.email);
   const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber ?? '');
   const [bio, setBio] = useState(user.bio ?? '');
+  const [location, setLocation] = useState(user.location ?? '');
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // ── Frontend-only fields (TODO backend) ───────────────────
-  const [location, setLocation] = useState('');
-  const [socials, setSocials] = useState<SocialLink[]>([]);
-  const [skills, setSkills] = useState<string[]>([]);
+  const [socials, setSocials] = useState<UiSocialLink[]>(() => hydrateSocials(user.socialLinks));
+  const [skills, setSkills] = useState<string[]>(user.skills ?? []);
   const [skillInput, setSkillInput] = useState('');
-  const [interests, setInterests] = useState<string[]>([]);
+  const [interests, setInterests] = useState<string[]>(user.interests ?? []);
   const [interestInput, setInterestInput] = useState('');
 
   const avatarSrc = avatarPreview ?? user.avatarUrl ?? fallbackAvatarUrl;
@@ -72,14 +110,9 @@ export function EditProfileForm({
   const addSocial = (type: SocialType) => {
     setSocials((prev) => [...prev, { id: crypto.randomUUID(), type, url: '' }]);
   };
-
-  const updateSocial = (id: string, url: string) => {
+  const updateSocial = (id: string, url: string) =>
     setSocials((prev) => prev.map((s) => (s.id === id ? { ...s, url } : s)));
-  };
-
-  const removeSocial = (id: string) => {
-    setSocials((prev) => prev.filter((s) => s.id !== id));
-  };
+  const removeSocial = (id: string) => setSocials((prev) => prev.filter((s) => s.id !== id));
 
   const addChip = (
     input: string,
@@ -96,23 +129,33 @@ export function EditProfileForm({
     setList([...list, value]);
     setInput('');
   };
-
-  const removeChip = (value: string, list: string[], setList: (v: string[]) => void) => {
+  const removeChip = (value: string, list: string[], setList: (v: string[]) => void) =>
     setList(list.filter((v) => v !== value));
-  };
 
-  // ── Dirty diff: only send changed persisted fields ────────
-  const changes = useMemo<UpdateUserProfileRequest>(() => {
-    const diff: UpdateUserProfileRequest = {};
+  // Build diff vs. server state
+  const profileDiff = useMemo<UpdateProfileRequest>(() => {
+    const diff: UpdateProfileRequest = {};
     if (fullName !== user.fullName) diff.fullName = fullName;
-    if (email !== user.email) diff.email = email;
     if (bio !== (user.bio ?? '')) diff.bio = bio;
     if (phoneNumber !== (user.phoneNumber ?? '')) diff.phoneNumber = phoneNumber;
-    if (avatarFile) diff.avatar = avatarFile;
-    return diff;
-  }, [fullName, email, bio, phoneNumber, avatarFile, user]);
+    if (location !== (user.location ?? '')) diff.location = location;
 
-  const hasChanges = Object.keys(changes).length > 0;
+    const cleanSocials: BackendSocialLink[] = socials
+      .map((s) => ({ provider: s.type.toLowerCase(), url: s.url.trim() }))
+      .filter((s) => s.url.length > 0);
+    if (!socialsEqual(cleanSocials, user.socialLinks ?? [])) {
+      diff.socialLinks = cleanSocials;
+    }
+
+    if (!arraysEqualIgnoringOrder(skills, user.skills ?? [])) diff.skills = skills;
+    if (!arraysEqualIgnoringOrder(interests, user.interests ?? [])) diff.interests = interests;
+
+    return diff;
+  }, [fullName, bio, phoneNumber, location, socials, skills, interests, user]);
+
+  const hasProfileChanges = Object.keys(profileDiff).length > 0;
+  const hasAvatarChange = avatarFile !== null;
+  const hasChanges = hasProfileChanges || hasAvatarChange;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,12 +163,19 @@ export function EditProfileForm({
       toast.info('No changes to save.');
       return;
     }
-    onSave(changes);
+    if (hasProfileChanges) {
+      const result = updateProfileSchema.safeParse(profileDiff);
+      if (!result.success) {
+        const first = result.error.issues[0]?.message ?? 'Invalid input.';
+        toast.error(first);
+        return;
+      }
+    }
+    onSave({ profile: profileDiff, avatar: avatarFile ?? undefined });
   };
 
   return (
     <form onSubmit={handleSubmit} className="rounded-3xl bg-white p-6 sm:p-8 shadow-sm space-y-6">
-      {/* ── Top action bar ───────────────────────────────────── */}
       <div className="flex justify-end gap-2">
         <Button type="button" variant="outline" size="sm" onClick={onCancel} disabled={isSaving}>
           {PROFILE_STRINGS.BUTTONS.CANCEL}
@@ -141,7 +191,6 @@ export function EditProfileForm({
       </div>
 
       <div className="flex flex-col gap-6 md:flex-row md:items-start">
-        {/* ── Avatar uploader ─────────────────────────────────── */}
         <div className="shrink-0">
           <button
             type="button"
@@ -167,7 +216,6 @@ export function EditProfileForm({
           />
         </div>
 
-        {/* ── Persisted text fields ───────────────────────────── */}
         <div className="flex-1 min-w-0 space-y-4">
           <Field iconSrc={PROFILE_ICONS.USER} label={PROFILE_STRINGS.FIELDS.FULL_NAME} required>
             <Input
@@ -179,14 +227,12 @@ export function EditProfileForm({
           </Field>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field iconSrc={PROFILE_ICONS.EMAIL} label={PROFILE_STRINGS.FIELDS.EMAIL} required>
-              <Input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder={PROFILE_STRINGS.FIELD_PLACEHOLDERS.EMAIL}
-                required
-              />
+            <Field
+              iconSrc={PROFILE_ICONS.EMAIL}
+              label={PROFILE_STRINGS.FIELDS.EMAIL}
+              hint="Use email change flow"
+            >
+              <Input value={user.email} readOnly disabled />
             </Field>
             <Field
               iconSrc={PROFILE_ICONS.EMAIL}
@@ -202,11 +248,7 @@ export function EditProfileForm({
             </Field>
           </div>
 
-          <Field
-            iconSrc={PROFILE_ICONS.LOCATION}
-            label={PROFILE_STRINGS.FIELDS.LOCATION}
-            hint={PROFILE_STRINGS.NOT_SAVED_HINT}
-          >
+          <Field iconSrc={PROFILE_ICONS.LOCATION} label={PROFILE_STRINGS.FIELDS.LOCATION}>
             <Input
               value={location}
               onChange={(e) => setLocation(e.target.value)}
@@ -226,11 +268,10 @@ export function EditProfileForm({
         </div>
       </div>
 
-      {/* ── Social Links (frontend-only) ─────────────────────── */}
+      {/* Social Links */}
       <Section
         iconSrc={PROFILE_ICONS.LINK}
         title={PROFILE_STRINGS.FIELDS.SOCIAL_LINKS}
-        hint={PROFILE_STRINGS.NOT_SAVED_HINT}
         action={
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -291,12 +332,8 @@ export function EditProfileForm({
         )}
       </Section>
 
-      {/* ── Skills (frontend-only) ───────────────────────────── */}
-      <Section
-        iconSrc={PROFILE_ICONS.SKILLS}
-        title={PROFILE_STRINGS.FIELDS.SKILLS}
-        hint={PROFILE_STRINGS.NOT_SAVED_HINT}
-      >
+      {/* Skills */}
+      <Section iconSrc={PROFILE_ICONS.SKILLS} title={PROFILE_STRINGS.FIELDS.SKILLS}>
         <div className="flex gap-2">
           <Input
             value={skillInput}
@@ -326,12 +363,8 @@ export function EditProfileForm({
         />
       </Section>
 
-      {/* ── Interests (frontend-only) ────────────────────────── */}
-      <Section
-        iconSrc={PROFILE_ICONS.INTERESTS}
-        title={PROFILE_STRINGS.FIELDS.INTERESTS}
-        hint={PROFILE_STRINGS.NOT_SAVED_HINT}
-      >
+      {/* Interests */}
+      <Section iconSrc={PROFILE_ICONS.INTERESTS} title={PROFILE_STRINGS.FIELDS.INTERESTS}>
         <div className="flex gap-2">
           <Input
             value={interestInput}

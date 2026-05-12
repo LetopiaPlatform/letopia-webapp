@@ -44,7 +44,7 @@ export const NOTIFICATION_ROWS: Array<{
 ];
 
 export const VISIBILITY_OPTIONS: Array<{ value: ProfileVisibility; label: string }> = [
-  { value: 'public', label: 'Public' },
-  { value: 'friends', label: 'Only Friends' },
-  { value: 'private', label: 'Private' },
+  { value: 'Public', label: 'Public' },
+  { value: 'FriendsOnly', label: 'Only Friends' },
+  { value: 'Private', label: 'Private' },
 ];

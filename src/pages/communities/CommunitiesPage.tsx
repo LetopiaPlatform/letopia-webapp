@@ -54,26 +54,23 @@ export function CommunitiesPage() {
       <AppSidebar />
       <div className="min-w-0 flex-1">
         <HeroSection isLoading={isLoading} />
-
-        <div className="px-4 md:px-6 lg:px-10 2xl:px-15 md:ml-16 mb-10">
-          <div className="flex flex-col gap-4 ">
-            <div className="flex flex-col gap-6">
-              <CategoryTabs
-                categories={categories}
-                selected={selectedCategory}
-                onSelect={handleCategorySelect}
-                isLoading={isLoading}
-              />
-              {selectedCategoryObj?.childCategories &&
-                selectedCategoryObj.childCategories.length > 0 && (
-                  <SubCategoryFilter
-                    subCategories={selectedCategoryObj.childCategories}
-                    selected={selectedSubCategories}
-                    onToggle={handleSubCategoryToggle}
-                    onClearAll={handleClearSubCategories}
-                  />
-                )}
-            </div>
+        <div className="px-5 md:px-8 2xl:px-15 md:ml-16 mb-10">
+          <div className="flex flex-col gap-5 md:gap-8 lg:gap-10">
+            <CategoryTabs
+              categories={categories}
+              selected={selectedCategory}
+              onSelect={handleCategorySelect}
+              isLoading={isLoading}
+            />
+            {selectedCategoryObj?.childCategories &&
+              selectedCategoryObj.childCategories.length > 0 && (
+                <SubCategoryFilter
+                  subCategories={selectedCategoryObj.childCategories}
+                  selected={selectedSubCategories}
+                  onToggle={handleSubCategoryToggle}
+                  onClearAll={handleClearSubCategories}
+                />
+              )}
             <CommunitiesList
               search={search}
               subCategorySlugs={selectedSubCategories}
