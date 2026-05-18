@@ -275,3 +275,48 @@ export const CREATE_OPTIONS = [
   },
 ] as const;
 export type CreateOptionId = (typeof CREATE_OPTIONS)[number]['id'];
+
+export const COMMUNITY_LINKS = [
+  {
+    key: 'announcements',
+    label: 'Announcements',
+    icon: '/icons/announcements.svg',
+    activeIcon: '/icons/announcements-active.svg',
+  },
+  {
+    key: 'discussions',
+    label: 'Discussions',
+    icon: '/icons/discussions.svg',
+    activeIcon: '/icons/discussions-active.svg',
+  },
+  {
+    key: 'tasks',
+    label: 'Tasks',
+    icon: '/icons/tasks.svg',
+    activeIcon: '/icons/tasks-active.svg',
+  },
+  {
+    key: 'resources',
+    label: 'Resources',
+    icon: '/icons/resources.svg',
+    activeIcon: '/icons/resources-active.svg',
+  },
+] as const;
+
+export const TAG_COLORS = [
+  { text: '#5071AA', bg: '#5071AA1A' },
+  { text: '#824892', bg: '#8248921A' },
+  { text: '#2E7D6B', bg: '#2E7D6B1A' },
+  { text: '#B45309', bg: '#B453091A' },
+  { text: '#1565C0', bg: '#1565C01A' },
+  { text: '#6A1B9A', bg: '#6A1B9A1A' },
+  { text: '#C62828', bg: '#C628281A' },
+  { text: '#2E7D32', bg: '#2E7D321A' },
+] as const;
+
+export const POST_GUIDELINES = [
+  'Be respectful and constructive in your posts',
+  'Use relevant tags to categorize your content',
+  'No spam, self-promotion, or offensive content',
+  'Search before posting to avoid duplicates',
+] as const;

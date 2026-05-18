@@ -120,3 +120,55 @@ export const createCommunitySchema = z.object({
 export type CreateCommunityFormData = z.input<typeof createCommunitySchema>;
 
 export type CreateCommunitySubmitData = z.infer<typeof createCommunitySchema>;
+
+// ─── Create Post ─────────────────────────────────────────────
+export const MAX_IMAGES = 10;
+export const MAX_IMAGE_SIZE_MB = 5;
+export const MAX_TAGS = 10;
+export const ALLOWED_IMAGE_TYPES = [
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/gif',
+  'image/jfif',
+];
+
+const imageSchema = z
+  .instanceof(File)
+  .refine(
+    (file) => ALLOWED_IMAGE_TYPES.includes(file.type),
+    'Each image must be JPEG, PNG, WEBP, GIF, or JFIF.'
+  )
+  .refine(
+    (file) => file.size <= MAX_IMAGE_SIZE_MB * 1024 * 1024,
+    `Each image must be at most ${MAX_IMAGE_SIZE_MB} MB.`
+  );
+
+export const createPostSchema = z.object({
+  title: z.string().min(1, 'Title is required').max(200, 'Title cannot exceed 200 characters'),
+
+  content: z
+    .string()
+    .min(1, 'Content is required')
+    .max(10000, 'Content cannot exceed 10,000 characters'),
+
+  postType: z.enum(['Discussion', 'Announcement']),
+
+  images: z
+    .array(imageSchema)
+    .max(MAX_IMAGES, `You can upload up to ${MAX_IMAGES} images only.`)
+    .optional(),
+
+  tags: z
+    .array(
+      z
+        .string()
+        .min(1, 'Tags cannot be empty.')
+        .max(30, 'Tag cannot exceed 30 characters.')
+        .regex(/^[a-zA-Z0-9\-_]+$/, "Tags can contain only letters, numbers, '-' and '_'.")
+    )
+    .max(MAX_TAGS, `Maximum ${MAX_TAGS} tags allowed.`)
+    .optional(),
+});
+
+export type CreatePostFormValues = z.infer<typeof createPostSchema>;
