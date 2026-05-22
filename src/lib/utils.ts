@@ -1,3 +1,4 @@
+import type { SocialLink } from '@/types/user.types';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -55,4 +56,8 @@ export function formatRelativeTime(dateStr: string): string {
     }
   }
   return relativeDateFormat.format(Math.trunc(diff / 1000), 'second');
+}
+
+export function getSocialUrl(socialLinks: SocialLink[], provider: string): string | null {
+  return socialLinks.find((s) => s.provider.toLowerCase() === provider)?.url ?? null;
 }

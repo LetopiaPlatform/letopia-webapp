@@ -144,6 +144,68 @@ export const PROFILE_PLACEHOLDERS = {
   },
 } as const;
 
+// Member Profile contact buttons ──────────────────────────────────────
+export const MEMBER_CONTACT_BUTTONS = [
+  {
+    provider: 'email' as const,
+    label: 'Email',
+    bg: 'bg-[#D91122]',
+    icon: '/icons/social/mail-01.svg',
+    isEmail: true,
+  },
+  {
+    provider: 'linkedin' as const,
+    label: 'LinkedIn',
+    bg: 'bg-[#447DBE]',
+    icon: '/icons/social/linkedin-02.svg',
+    isEmail: false,
+  },
+  {
+    provider: 'github' as const,
+    label: 'GitHub',
+    bg: 'bg-[#2A2B34]',
+    icon: '/icons/social/github-01.svg',
+    isEmail: false,
+  },
+  {
+    provider: 'facebook' as const,
+    label: 'Facebook',
+    bg: 'bg-[#1877F2]',
+    icon: '/icons/social/facebook.svg',
+    isEmail: false,
+  },
+  {
+    provider: 'whatsapp' as const,
+    label: 'WhatsApp',
+    bg: 'bg-[#3EA616]',
+    icon: '/icons/social/whatsapp.svg',
+    isEmail: false,
+  },
+  {
+    provider: 'telegram' as const,
+    label: 'Telegram',
+    bg: 'bg-[#58A5D5]',
+    icon: '/icons/social/telegram.svg',
+    isEmail: false,
+  },
+  {
+    provider: 'x' as const,
+    label: 'X',
+    bg: 'bg-[#2A2B34]',
+    icon: '/icons/social/Twitter-X.svg',
+    isEmail: false,
+  },
+  {
+    provider: 'discord' as const,
+    label: 'Discord',
+    bg: 'bg-primary',
+    icon: '/icons/social/discord.svg',
+    isEmail: false,
+  },
+] as const;
+
+export type MemberContactProvider = (typeof MEMBER_CONTACT_BUTTONS)[number]['provider'];
+
 // ── Auth pages ─────────────────────────────────────────────────
 export const AUTH_ASSETS = {
   REGISTER_ILLUSTRATION: '/assets/auth-illustration.svg',
