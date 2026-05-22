@@ -1,4 +1,4 @@
-import { cn, formatNumberCount, formatRelativeTime } from '@/lib/utils';
+import { cn, formatNumberCount, formatRelativeTime, getInitials } from '@/lib/utils';
 import {
   Heart,
   Share2,
@@ -12,11 +12,11 @@ import {
 import type { PostSummary, ReactionType } from '@/types/post.types';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { TAG_COLORS } from '@/lib/constants';
-import { MemberAvatar } from './MemberAvatar';
 import type { CommunityRole } from '@/types/community.types';
 import { ImageGallery } from './ImageGallery';
 import { UpdatePostDialog } from './UpdatePostDialog';
 import { SharePostDialog } from './SharePostDialog';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 interface PostCardProps {
   post: PostSummary;
@@ -277,10 +277,14 @@ export const PostCard = ({
         ) : (
           /* Discussion header: avatar + name + role + timestamp */
           <div className="flex items-center gap-2 sm:gap-3">
-            <MemberAvatar
-              avatarUrl={post.authorInfo.avatarUrl}
-              fullName={post.authorInfo.fullName}
-            />
+            <Avatar size="lg">
+              <AvatarImage
+                src={post.authorInfo.avatarUrl ?? undefined}
+                alt={post.authorInfo.fullName}
+                className="object-cover"
+              />
+              <AvatarFallback className="">{getInitials(post.authorInfo.fullName)}</AvatarFallback>
+            </Avatar>
             <div className="flex flex-col gap-0.5">
               <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                 <span className="text-sm sm:text-base font-semibold text-[#261A2B] leading-tight">

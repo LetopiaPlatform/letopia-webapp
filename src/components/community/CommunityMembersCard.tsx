@@ -1,13 +1,13 @@
 import { Eye, UserPlus2 } from 'lucide-react';
 import type { Member, CommunityRole } from '@/types/community.types';
-import { cn, formatCount, formatRelativeTime } from '@/lib/utils';
+import { cn, formatCount, formatRelativeTime, getInitials } from '@/lib/utils';
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCurrentUser } from '@/hooks/useUser';
 import { useChangeMemberRole, useLeaveCommunity } from '@/hooks/useCommunities';
 import { LeaveCommunityDialog } from './LeaveCommunityDialog';
 import { MemberMenu } from './MemberMenu';
-import { MemberAvatar } from './MemberAvatar';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 const ROLE_BADGE_STYLES: Record<CommunityRole, string> = {
   Owner: 'bg-[#D5C7E2] text-[#6A0DAD]',
@@ -100,7 +100,14 @@ export function CommunityMembersCard({
         {displayed.map((member) => (
           <li key={member.userId} className="flex items-center justify-between pt-2">
             <div className="flex gap-2">
-              <MemberAvatar avatarUrl={member.avatarUrl} fullName={member.fullName} />
+              <Avatar size="lg" className="ring-2 ring-primary/20">
+                <AvatarImage
+                  src={member.avatarUrl ?? undefined}
+                  alt={member.fullName}
+                  className="object-cover"
+                />
+                <AvatarFallback className="">{getInitials(member.fullName)}</AvatarFallback>
+              </Avatar>
 
               <div className="flex flex-col gap-1">
                 <div className="flex gap-2 max-w-35">

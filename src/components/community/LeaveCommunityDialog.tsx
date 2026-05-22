@@ -8,9 +8,10 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { MemberAvatar } from './MemberAvatar';
 import { useCurrentUser } from '@/hooks/useUser';
 import type { Member } from '@/types/community.types';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { getInitials } from '@/lib/utils';
 
 type DialogStep = 'confirm' | 'transfer' | 'invite';
 
@@ -147,7 +148,14 @@ export function LeaveCommunityDialog({
                     disabled={isTransferring}
                     className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition-colors text-left disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <MemberAvatar avatarUrl={member.avatarUrl} fullName={member.fullName} />
+                    <Avatar size="lg">
+                      <AvatarImage
+                        src={member.avatarUrl ?? undefined}
+                        alt={member.fullName}
+                        className="object-cover"
+                      />
+                      <AvatarFallback className="">{getInitials(member.fullName)}</AvatarFallback>
+                    </Avatar>
                     <div className="flex-1">
                       <p className="font-medium text-gray-900">{member.fullName}</p>
                       <p className="text-xs text-gray-500 capitalize">{member.role}</p>
