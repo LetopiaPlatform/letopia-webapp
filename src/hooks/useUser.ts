@@ -24,3 +24,12 @@ export function useUpdateProfile() {
     },
   });
 }
+
+export function useUserById(id: string) {
+  return useQuery({
+    queryKey: ['users', id],
+    queryFn: () => usersApi.getUserById(id).then((res) => res.data),
+    enabled: !!id,
+    staleTime: 60_000,
+  });
+}

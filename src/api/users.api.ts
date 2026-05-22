@@ -1,6 +1,6 @@
 import apiClient from './client';
 import type { ApiResponse } from '@/types/api.types';
-import type { UpdateUserProfileRequest, UserProfile } from '@/types/user.types';
+import type { UpdateUserProfileRequest, UserProfile, PublicUserProfile } from '@/types/user.types';
 
 export const usersApi = {
   getMe: () => apiClient.get<ApiResponse<UserProfile>>('/users/me'),
@@ -27,4 +27,6 @@ export const usersApi = {
   },
 
   deleteAvatar: () => apiClient.delete<ApiResponse<null>>('/users/me/avatar'),
+
+  getUserById: (id: string) => apiClient.get<ApiResponse<PublicUserProfile>>(`/users/${id}`),
 };
