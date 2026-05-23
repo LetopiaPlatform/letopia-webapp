@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { COMMUNITY_LINKS } from '@/lib/constants';
 import { PanelCard } from '../PanelCard';
-import { LogOut, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import type { CommunityRole, Member } from '@/types/community.types';
 import { LeaveCommunityDialog } from './LeaveCommunityDialog';
 import { useState } from 'react';
@@ -128,7 +128,7 @@ export function CommunityNav({
           leavePending && 'opacity-50 cursor-not-allowed'
         )}
       >
-        <LogOut className="size-4 xl:size-5 stroke-3" />
+        <img src="/icons/logout.svg" alt="" aria-hidden="true" />
         {leavePending ? 'Leaving...' : 'leave community'}
       </button>
 

@@ -202,6 +202,13 @@ export const MEMBER_CONTACT_BUTTONS = [
     icon: '/icons/social/discord.svg',
     isEmail: false,
   },
+  {
+    provider: 'behance' as const,
+    label: 'Behance',
+    bg: 'bg-[#053eff]',
+    icon: '/icons/social/behance.svg',
+    isEmail: false,
+  },
 ] as const;
 
 export type MemberContactProvider = (typeof MEMBER_CONTACT_BUTTONS)[number]['provider'];
