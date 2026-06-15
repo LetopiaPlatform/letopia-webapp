@@ -49,8 +49,8 @@ export function CommunityDetailPage() {
   return (
     <>
       <AppSidebar />
-      <div className="min-h-screen pt-18 md:ml-16 lg:ml-22 px-4 xl:px-6 flex flex-col gap-2 md:gap-4 bg-[#FAF9FB]">
-        <div className="w-full h-[15vh] sm:h-[20vh] md:h-[25vh] xl:h-[30vh] overflow-hidden relative rounded-3xl md:rounded-4xl">
+      <div className="min-h-screen pt-18 md:ml-16 lg:ml-22 px-3 sm:px-4 2xl:px-6 flex flex-col gap-2 md:gap-4 bg-[#FAF9FB]">
+        <div className="w-full h-[15vh] xl:h-[30vh] overflow-hidden relative rounded-3xl md:rounded-4xl">
           {community.coverImageUrl ? (
             <img
               src={community.coverImageUrl}
@@ -75,7 +75,7 @@ export function CommunityDetailPage() {
         </div>
 
         {community.isMember ? (
-          <div className="lg:hidden px-4">
+          <div className="xl:hidden px-4">
             <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
               {COMMUNITY_LINKS.map(({ key, label, icon, activeIcon }) => {
                 const href = `/communities/${community.slug}/${key}`;
@@ -102,7 +102,7 @@ export function CommunityDetailPage() {
             </div>
           </div>
         ) : (
-          <div className="lg:hidden">
+          <div className="xl:hidden">
             <button
               onClick={handleJoin}
               disabled={joinPending}
@@ -117,9 +117,9 @@ export function CommunityDetailPage() {
           </div>
         )}
 
-        <div className="flex flex-col md:flex-row gap-4 xl:gap-6">
+        <div className="flex flex-col md:flex-row gap-4">
           {/* Left nav */}
-          <aside className="hidden lg:block">
+          <aside className="hidden xl:block">
             <div className="sticky top-6">
               <CommunityNav
                 communitySlug={community.slug}
