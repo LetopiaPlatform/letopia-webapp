@@ -41,7 +41,7 @@ export function DiscussionsPage() {
       ?.id ?? '';
 
   const { data, isLoading, error } = useChannelPosts(community?.id ?? '', channelId);
-  const posts = Array.isArray(data?.data?.items) ? data.data.items : [];
+  const posts = Array.isArray(data?.items) ? data.items : [];
 
   const {
     data: membersData,

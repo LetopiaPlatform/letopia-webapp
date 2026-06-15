@@ -17,8 +17,8 @@ export function PostCommentsPage() {
   const { data: commentsData, isLoading: commentsLoading } = usePostComments(postId ?? '');
   const { mutate: addComment, isPending: isSubmitting } = useAddComment(postId ?? '');
 
-  const post = postData?.data;
-  const comments = commentsData?.data?.items ?? [];
+  const post = postData;
+  const comments = commentsData?.items ?? [];
 
   useEffect(() => {
     const el = textareaRef.current;

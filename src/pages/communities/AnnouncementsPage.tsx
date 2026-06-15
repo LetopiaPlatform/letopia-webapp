@@ -92,14 +92,11 @@ export function AnnouncementsPage() {
     [addReaction]
   );
 
-  const pinnedPosts = useMemo(
-    () => (Array.isArray(pinnedData?.data) ? pinnedData.data : []),
-    [pinnedData]
-  );
+  const pinnedPosts = useMemo(() => (Array.isArray(pinnedData) ? pinnedData : []), [pinnedData]);
   const hasPinned = pinnedPosts.length > 0;
 
   const posts = useMemo(() => {
-    const items = Array.isArray(data?.data?.items) ? data.data.items : [];
+    const items = Array.isArray(data?.items) ? data.items : [];
     const pinnedNotInFeed = pinnedPosts.filter(
       (pinned) => !items.some((item) => item.id === pinned.id)
     );
