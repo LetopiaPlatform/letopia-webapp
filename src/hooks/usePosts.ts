@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 import type { AxiosError } from 'axios';
 import type { ApiResponse, PaginatedQuery, PaginatedResult } from '@/types/api.types';
 import type { Comment } from '@/types/comment.types';
-import { useAuthContext } from '@/context/AuthContext';
+import { extractData } from '@/lib/api-utils';
 
 export const postKeys = {
   channel: (communityId: string, channelId: string, params?: ChannelPostsParams) =>
@@ -30,7 +30,7 @@ export function useChannelPosts(
 ) {
   return useQuery({
     queryKey: postKeys.channel(communityId, channelId, params),
-    queryFn: () => postsApi.getChannelPosts(communityId, channelId, params).then((res) => res.data),
+    queryFn: () => postsApi.getChannelPosts(communityId, channelId, params).then(extractData),
     enabled: !!communityId && !!channelId,
     placeholderData: keepPreviousData,
   });
@@ -39,7 +39,7 @@ export function useChannelPosts(
 export function usePinnedPosts(communityId: string, channelId: string) {
   return useQuery({
     queryKey: postKeys.pinned(communityId, channelId),
-    queryFn: () => postsApi.getPinnedPosts(communityId, channelId).then((res) => res.data),
+    queryFn: () => postsApi.getPinnedPosts(communityId, channelId).then(extractData),
     enabled: !!communityId && !!channelId,
   });
 }
@@ -47,7 +47,7 @@ export function usePinnedPosts(communityId: string, channelId: string) {
 export function usePostById(postId: string) {
   return useQuery({
     queryKey: postKeys.detail(postId),
-    queryFn: () => postsApi.getById(postId).then((res) => res.data),
+    queryFn: () => postsApi.getById(postId).then(extractData),
     enabled: !!postId,
   });
 }
@@ -55,7 +55,7 @@ export function usePostById(postId: string) {
 export function usePostComments(postId: string, params?: PaginatedQuery) {
   return useQuery({
     queryKey: postKeys.comments(postId, params),
-    queryFn: () => postsApi.getComments(postId, params).then((res) => res.data),
+    queryFn: () => postsApi.getComments(postId, params).then(extractData),
     enabled: !!postId,
   });
 }
@@ -64,7 +64,7 @@ export function useCreatePost(communityId: string, channelId: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: CreatePostRequest) =>
-      postsApi.create(communityId, channelId, data).then((res) => res.data),
+      postsApi.create(communityId, channelId, data).then(extractData),
     onSuccess: () => {
       toast.success('Post created successfully!');
       queryClient.invalidateQueries({ queryKey: postKeys.channel(communityId, channelId) });
@@ -80,7 +80,7 @@ export function useUpdatePost(communityId: string, channelId: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ postId, data }: { postId: string; data: UpdatePostRequest }) =>
-      postsApi.update(postId, data).then((res) => res.data),
+      postsApi.update(postId, data).then(extractData),
     onSuccess: (_, { postId }) => {
       toast.success('Post updated successfully!');
       queryClient.invalidateQueries({ queryKey: postKeys.channel(communityId, channelId) });
@@ -108,7 +108,7 @@ export function useDeletePost(communityId: string, channelId: string) {
 export function useTogglePin(communityId: string, channelId: string) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ postId }: { postId: string; isPinned: boolean }) => postsApi.togglePin(postId),
+    mutationFn: (vars: { postId: string; isPinned: boolean }) => postsApi.togglePin(vars.postId),
     onSuccess: (_, { isPinned }) => {
       toast.success(isPinned ? 'Post unpinned.' : 'Post pinned.');
       queryClient.invalidateQueries({ queryKey: postKeys.channel(communityId, channelId) });
@@ -121,7 +121,7 @@ export function useAddReaction() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ postId, reactionType }: { postId: string; reactionType: ReactionType }) =>
-      postsApi.addReaction(postId, reactionType).then((res) => res.data),
+      postsApi.addReaction(postId, reactionType).then(extractData),
     onMutate: async ({ postId, reactionType }) => {
       const partialKey = ['posts', 'channel'];
 
@@ -161,9 +161,8 @@ export function useAddReaction() {
 
       return { previousEntries };
     },
-    onSuccess: (response, { postId }) => {
-      if (!response.data) return;
-      const { upvotes } = response.data;
+    onSuccess: (postReaction, { postId }) => {
+      const { upvotes } = postReaction;
       queryClient.setQueriesData<ApiResponse<PaginatedResult<PostSummary>>>(
         { queryKey: ['posts', 'channel'], exact: false },
         (old) => {
@@ -191,37 +190,19 @@ export function useAddReaction() {
 
 export function useAddComment(postId: string) {
   const queryClient = useQueryClient();
-  const { user } = useAuthContext();
 
   return useMutation({
-    mutationFn: (content: string) => postsApi.addComment(postId, content).then((res) => res.data),
-    onSuccess: (response) => {
-      const newComment = response.data;
+    mutationFn: (content: string) => postsApi.addComment(postId, content).then(extractData),
+    onSuccess: (newComment) => {
       if (newComment) {
-        const patchedComment = {
-          ...newComment,
-          author: newComment.author ?? {
-            id: user?.id,
-            fullName: user?.fullName,
-            avatarUrl: user?.avatarUrl,
-            communityRole: 'Member',
-          },
-        };
-
-        queryClient.setQueryData<ApiResponse<PaginatedResult<Comment>>>(
-          postKeys.comments(postId),
-          (old) => {
-            if (!old?.data?.items) return old;
-            return {
-              ...old,
-              data: {
-                ...old.data,
-                items: [...old.data.items, patchedComment],
-                totalItems: (old.data.totalItems ?? 0) + 1,
-              },
-            };
-          }
-        );
+        queryClient.setQueryData<PaginatedResult<Comment>>(postKeys.comments(postId), (old) => {
+          if (!old?.items) return old;
+          return {
+            ...old,
+            items: [...old.items, newComment],
+            totalItems: (old.totalItems ?? 0) + 1,
+          };
+        });
       }
     },
   });

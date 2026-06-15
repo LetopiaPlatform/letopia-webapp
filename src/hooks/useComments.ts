@@ -6,12 +6,13 @@ import type { AxiosError } from 'axios';
 import type { ApiResponse } from '@/types/api.types';
 import { toast } from 'sonner';
 import { postKeys } from './usePosts';
+import { extractData } from '@/lib/api-utils';
 
 export function useUpdateComment(postId: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ commentId, data }: { commentId: string; data: UpdateCommentRequest }) =>
-      commentsApi.update(commentId, data).then((res) => res.data),
+      commentsApi.update(commentId, data).then(extractData),
     onSuccess: () => {
       toast.success('Comment updated!');
       queryClient.invalidateQueries({ queryKey: postKeys.comments(postId) });
@@ -39,7 +40,7 @@ export function useAddCommentReaction(postId: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ commentId, reactionType }: { commentId: string; reactionType: ReactionType }) =>
-      commentsApi.addReaction(commentId, reactionType).then((res) => res.data),
+      commentsApi.addReaction(commentId, reactionType).then(extractData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: postKeys.comments(postId) });
     },

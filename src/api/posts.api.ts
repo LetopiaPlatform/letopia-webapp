@@ -55,7 +55,7 @@ export const postsApi = {
     }
 
     return apiClient.put<ApiResponse<PostDetail>>(`/posts/${postId}`, formData, {
-      headers: { 'Content-Type': null },
+      headers: { 'Content-Type': undefined },
     });
   },
 
