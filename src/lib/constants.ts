@@ -389,3 +389,37 @@ export const POST_GUIDELINES = [
   'No spam, self-promotion, or offensive content',
   'Search before posting to avoid duplicates',
 ] as const;
+
+// Community Tasks
+export const STATUS_STYLES = {
+  active: {
+    card: 'bg-white border',
+    descriptionColor: 'text-[#938A97]',
+    deadlineColor: 'text-[#FF9142]',
+    textColor: 'text-[#261A2B]',
+    iconColor: 'text-[#524B56]',
+  },
+  completed: {
+    card: 'bg-white border',
+    descriptionColor: 'text-[#938A97]',
+    deadlineColor: 'text-[#22C55E]',
+    textColor: 'text-[#261A2B]',
+    iconColor: 'text-[#524B56]',
+  },
+  missed: {
+    card: 'bg-[#DBD5DE] border-0',
+    descriptionColor: 'line-through text-[#938A97]',
+    deadlineColor: 'text-[#938A97]',
+    textColor: 'line-through text-[#261A2B]',
+    iconColor: 'text-[#938A97]',
+  },
+} as const satisfies Record<string, Record<string, string>>;
+
+export type TaskStatusKey = keyof typeof STATUS_STYLES;
+
+export const COLOR_ROWS: string[][] = [
+  ['#EF4444', '#FF9142', '#58CB24', '#D946EF', '#3B82F6', '#6B6B6B'],
+  ['#C77D02', '#EE53A5', '#883DBD', '#40DAD7', '#24252C', '#D3766A'],
+];
+
+export const DEFAULT_ICON_COLOR = '#824892';

@@ -172,3 +172,23 @@ export const createPostSchema = z.object({
 });
 
 export type CreatePostFormValues = z.infer<typeof createPostSchema>;
+
+// ─── Create / Update Task Category ───────────────────────────
+export const categorySchema = z.object({
+  name: z
+    .string()
+    .min(1, 'Category name is required')
+    .max(50, 'Max 50 characters')
+    .transform((val) => val.trim()),
+});
+
+export type CategoryFormData = z.infer<typeof categorySchema>;
+
+export const taskSchema = z.object({
+  title: z.string().min(1, 'Task title is required').max(200, 'Title cannot exceed 200 characters'),
+  description: z.string().max(2000, 'Description cannot exceed 2000 characters').optional(),
+  deadline: z.string().optional(),
+  categoryId: z.string().optional(),
+});
+
+export type TaskFormValues = z.infer<typeof taskSchema>;

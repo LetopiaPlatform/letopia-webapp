@@ -61,3 +61,11 @@ export function formatRelativeTime(dateStr: string): string {
 export function getSocialUrl(socialLinks: SocialLink[], provider: string): string | null {
   return socialLinks.find((s) => s.provider.toLowerCase() === provider)?.url ?? null;
 }
+
+export function formatDeadline(iso: string): string {
+  return new Date(iso).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
