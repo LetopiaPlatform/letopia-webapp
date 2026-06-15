@@ -1,6 +1,6 @@
 import { useTodayProgress } from '@/hooks/useCommunityTasks';
 import { ArrowRight } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface TasksProgressProps {
   communityId: string;
@@ -9,7 +9,6 @@ interface TasksProgressProps {
 export const TasksProgress = ({ communityId }: TasksProgressProps) => {
   const { data: progress, isLoading } = useTodayProgress(communityId);
   const navigate = useNavigate();
-  const { slug } = useParams<{ slug: string }>();
 
   if (isLoading || !progress) return null;
 
@@ -24,7 +23,7 @@ export const TasksProgress = ({ communityId }: TasksProgressProps) => {
           </h3>
           <p className="text-xs sm:text-sm text-[#938A97]">{progressMessage}</p>
           <button
-            onClick={() => navigate(`/communities/${slug}/focus`)}
+            onClick={() => navigate(`/focus`)}
             className="self-start py-2 sm:py-2.5 px-3 sm:px-4 flex items-center gap-2 sm:gap-3 rounded-xl text-white text-xs sm:text-base md:text-[17px] font-normal capitalize bg-primary"
           >
             start focus session
