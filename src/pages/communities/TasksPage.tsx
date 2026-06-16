@@ -10,6 +10,7 @@ import { EmptyState } from '@/components/EmptyState';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { useTaskCategories } from '@/hooks/useCommunityTaskCategories';
 import { useCommunityTasks, useDeleteTask, useToggleTask } from '@/hooks/useCommunityTasks';
+import { fireConfettiFromElement } from '@/lib/confetti';
 import { cn } from '@/lib/utils';
 import type { CommunityTask, TaskStatus } from '@/types/community-task.types';
 import type { CommunityDetail } from '@/types/community.types';
@@ -40,8 +41,15 @@ export const TasksPage = () => {
     );
   }
 
-  function handleToggle(id: string) {
-    toggleTask(id);
+  function handleToggle(id: string, e: React.MouseEvent<HTMLButtonElement>) {
+    const element = e.currentTarget;
+    toggleTask(id, {
+      onSuccess: (isCompleted) => {
+        if (isCompleted) {
+          fireConfettiFromElement(element);
+        }
+      },
+    });
   }
 
   function handleDelete(id: string) {

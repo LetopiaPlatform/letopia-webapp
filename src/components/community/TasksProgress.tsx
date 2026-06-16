@@ -1,5 +1,7 @@
 import { useTodayProgress } from '@/hooks/useCommunityTasks';
+import { fireAllTasksCompleteConfetti } from '@/lib/confetti';
 import { ArrowRight } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface TasksProgressProps {
@@ -9,6 +11,18 @@ interface TasksProgressProps {
 export const TasksProgress = ({ communityId }: TasksProgressProps) => {
   const { data: progress, isLoading } = useTodayProgress(communityId);
   const navigate = useNavigate();
+
+  const firedRef = useRef(false);
+
+  useEffect(() => {
+    if (!progress) return;
+    if (progress.progressPercentage === 100 && !firedRef.current) {
+      firedRef.current = true;
+      fireAllTasksCompleteConfetti();
+    } else if (progress.progressPercentage < 100) {
+      firedRef.current = false;
+    }
+  }, [progress]);
 
   if (isLoading || !progress) return null;
 

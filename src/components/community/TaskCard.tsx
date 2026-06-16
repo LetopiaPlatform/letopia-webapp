@@ -8,7 +8,7 @@ import { TaskCheckbox } from './TaskCheckbox';
 
 interface TaskCardProps {
   task: CommunityTask;
-  onToggle: (id: string) => void;
+  onToggle: (id: string, e: React.MouseEvent<HTMLButtonElement>) => void;
   onEdit: (task: CommunityTask) => void;
   onDelete: (id: string) => void;
   isOwner?: boolean;
@@ -66,7 +66,7 @@ export const TaskCard = ({ task, onToggle, onEdit, onDelete, isOwner = false }: 
         <p className={cn('text-xs', styles.descriptionColor)}>{task.description}</p>
       </div>
 
-      <TaskCheckbox isCompleted={task.isCompleted} onToggle={() => onToggle(task.id)} />
+      <TaskCheckbox isCompleted={task.isCompleted} onToggle={(e) => onToggle(task.id, e)} />
     </div>
   );
 };

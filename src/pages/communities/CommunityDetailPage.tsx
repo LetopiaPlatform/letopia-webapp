@@ -4,6 +4,7 @@ import { AppSidebar } from '@/components/AppSidebar';
 import { CommunityNav } from '@/components/community/Communitynav';
 import { COMMUNITY_LINKS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
+import { fireFullScreenConfetti } from '@/lib/confetti';
 import { Plus } from 'lucide-react';
 
 export function CommunityDetailPage() {
@@ -25,6 +26,7 @@ export function CommunityDetailPage() {
     if (!community) return;
     joinCommunity(community.id, {
       onSuccess: () => {
+        fireFullScreenConfetti();
         navigate(`/communities/${community.slug}/announcements`);
       },
     });
