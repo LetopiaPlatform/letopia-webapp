@@ -7,7 +7,7 @@ import type {
 import { extractData, getErrorMessage } from '@/lib/api-utils';
 import { toast } from 'sonner';
 
-const categoryKeys = {
+export const categoryKeys = {
   all: (communityId: string) => ['taskCategories', communityId] as const,
   detail: (communityId: string, categoryId: string) =>
     ['taskCategories', communityId, categoryId] as const,

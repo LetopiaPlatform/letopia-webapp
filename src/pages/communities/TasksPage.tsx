@@ -27,8 +27,16 @@ export const TasksPage = () => {
   const { mutate: deleteTask, isPending: isDeleting } = useDeleteTask(community?.id ?? '');
 
   const [status, setStatus] = useState<TaskStatus>('All');
-  const { data, isLoading, error } = useCommunityTasks(community?.id ?? '', { status });
-  const tasks = Array.isArray(data) ? data : [];
+  const {
+    data: filteredTaskData,
+    isLoading,
+    error,
+  } = useCommunityTasks(community?.id ?? '', { status });
+  const tasks = Array.isArray(filteredTaskData) ? filteredTaskData : [];
+
+  const { data: allTasksData } = useCommunityTasks(community?.id ?? '', { status: 'All' });
+
+  const allTasks = Array.isArray(allTasksData) ? allTasksData : [];
 
   const { data: categoriesData } = useTaskCategories(community?.id ?? '');
   const categories = (categoriesData ?? []).filter((cat) => cat.totalTasksCount > 0);
@@ -85,7 +93,12 @@ export const TasksPage = () => {
           <div className="w-full flex items-center gap-4 overflow-x-auto scrollbar-hide">
             {categories.map((category) => (
               <div key={category.id} className="shrink-0 w-64">
-                <CategoryCard key={category.id} category={category} communityId={community.id} />
+                <CategoryCard
+                  key={category.id}
+                  category={category}
+                  communityId={community.id}
+                  tasks={allTasks}
+                />
               </div>
             ))}
           </div>

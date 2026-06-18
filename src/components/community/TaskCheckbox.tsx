@@ -14,8 +14,8 @@ export const TaskCheckbox = ({ isCompleted, onToggle }: TaskCheckboxProps) => (
       'size-6 sm:size-7 shrink-0 rounded-md sm:rounded-lg border-2',
       'flex items-center justify-center transition-all duration-200 mt-0.5',
       isCompleted
-        ? 'border-primary bg-primary/10 scale-105'
-        : 'border-[#A39BA6] hover:border-primary hover:scale-105'
+        ? 'border-[#A39BA6] scale-105'
+        : 'border-gray-300 hover:border-[#A39BA6] hover:scale-105'
     )}
     aria-label={isCompleted ? 'Mark as incomplete' : 'Mark as complete'}
     aria-pressed={isCompleted}
@@ -24,7 +24,7 @@ export const TaskCheckbox = ({ isCompleted, onToggle }: TaskCheckboxProps) => (
       <HugeiconsIcon
         icon={Tick01Icon}
         size={16}
-        color="#824892"
+        color="#A39BA6"
         strokeWidth={2.5}
         className="animate-in zoom-in-50 duration-150"
       />

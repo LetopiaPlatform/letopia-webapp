@@ -7,6 +7,7 @@ import type {
 } from '@/types/community-task.types';
 import { extractData, getErrorMessage } from '@/lib/api-utils';
 import { toast } from 'sonner';
+import { categoryKeys } from './useCommunityTaskCategories';
 
 const taskKeys = {
   all: (communityId: string, params?: GetAllTasksParams) =>
@@ -38,6 +39,7 @@ export function useCreateTask(communityId: string) {
       communityTaskApi.create(communityId, data).then(extractData),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['communityTasks', communityId] });
+      qc.invalidateQueries({ queryKey: categoryKeys.all(communityId) });
     },
     onError: (error) => {
       toast.error(getErrorMessage(error) || 'Failed to create task. Please try again.');
@@ -53,6 +55,7 @@ export function useUpdateTask(communityId: string) {
       communityTaskApi.update(taskId, data).then(extractData),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['communityTasks', communityId] });
+      qc.invalidateQueries({ queryKey: categoryKeys.all(communityId) });
     },
     onError: (error) => {
       toast.error(getErrorMessage(error) || 'Failed to update task. Please try again.');
@@ -67,6 +70,7 @@ export function useDeleteTask(communityId: string) {
     mutationFn: (taskId: string) => communityTaskApi.delete(taskId).then(extractData),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['communityTasks', communityId] });
+      qc.invalidateQueries({ queryKey: categoryKeys.all(communityId) });
     },
     onError: (error) => {
       toast.error(getErrorMessage(error) || 'Failed to delete task. Please try again.');
@@ -82,6 +86,7 @@ export function useToggleTask(communityId: string) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['communityTasks', communityId] });
       qc.invalidateQueries({ queryKey: taskKeys.progress(communityId) });
+      qc.invalidateQueries({ queryKey: categoryKeys.all(communityId) });
     },
     onError: (error) => {
       toast.error(getErrorMessage(error) || 'Failed to toggle task. Please try again.');
