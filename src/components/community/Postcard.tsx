@@ -253,6 +253,7 @@ export const PostCard = ({
 
   return (
     <article
+      id={`post-${post.id}`}
       className="px-4 py-4 sm:px-6 sm:py-5 md:px-8 md:py-6 group flex flex-col gap-3 sm:gap-4 rounded-2xl border-2 border-border bg-white w-full min-w-xs max-w-4xl"
       role="article"
       aria-label={`${post.postType}: ${post.title}`}

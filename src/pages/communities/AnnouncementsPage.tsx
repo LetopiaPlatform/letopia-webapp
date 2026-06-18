@@ -9,7 +9,7 @@ import { PostCard } from '../../components/community/Postcard';
 import { EmptyState } from '@/components/EmptyState';
 import { GradientContainer } from '@/components/Gradientcontainer';
 import { PanelCard } from '@/components/PanelCard';
-import { useCallback, useState, useMemo } from 'react';
+import { useCallback, useState, useMemo, useRef } from 'react';
 import { PostSkeleton } from '@/components/community/PostSkeleton';
 import { CreatePostDialog } from '@/components/community/CreatePostDialog';
 import { DeleteConfirmDialog } from '@/components/DeleteConfirmDialog';
@@ -19,6 +19,8 @@ import type { ReactionType, PostSummary } from '@/types/post.types';
 import { useJoinCommunity } from '@/hooks/useCommunities';
 import { JoinToAccessDialog } from '@/components/community/JoinToAccessDialog';
 import { SharePostDialog } from '@/components/community/SharePostDialog';
+import { useCommunityTasks } from '@/hooks/useCommunityTasks';
+import { isTaskStillOpen } from '@/lib/community-task-utils';
 
 export function AnnouncementsPage() {
   const navigate = useNavigate();
@@ -51,6 +53,10 @@ export function AnnouncementsPage() {
     community?.id ?? '',
     channelId
   );
+
+  const { data: tasksData } = useCommunityTasks(community?.id ?? '', { status: 'All' });
+  const tasks = useMemo(() => (Array.isArray(tasksData) ? tasksData : []), [tasksData]);
+  const activeTaskCount = useMemo(() => tasks.filter(isTaskStillOpen).length, [tasks]);
 
   const isMember = community?.isMember;
 
@@ -132,6 +138,19 @@ export function AnnouncementsPage() {
     [pinnedPosts, posts, togglePin]
   );
 
+  const postRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  const handlePinnedPostClick = (postId: string) => {
+    setIsPinnedDialogOpen(false);
+
+    setTimeout(() => {
+      postRefs.current[postId]?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }, 200);
+  };
+
   if (!community) {
     return (
       <EmptyState title="Community not found" description="Unable to load community information." />
@@ -192,25 +211,32 @@ export function AnnouncementsPage() {
 
           {!isLoading &&
             posts.map((post) => (
-              <PostCard
+              <div
                 key={post.id}
-                post={post}
-                currentUserId={currentUserId}
-                viewerRole={viewerRole}
-                communityId={community?.id}
-                channelId={channelId}
-                communitySlug={community?.slug}
-                onEdit={() => {}}
-                onDelete={() => handleDeletePost(post.id)}
-                onShare={() => handleSharePost(post.id)}
-                onReact={(reactionType) => handleReactToPost(post.id, reactionType)}
-                onTogglePin={() => handleTogglePin(post.id)}
-              />
+                ref={(el) => {
+                  postRefs.current[post.id] = el;
+                }}
+                className="w-full"
+              >
+                <PostCard
+                  post={post}
+                  currentUserId={currentUserId}
+                  viewerRole={viewerRole}
+                  communityId={community?.id}
+                  channelId={channelId}
+                  communitySlug={community?.slug}
+                  onEdit={() => {}}
+                  onDelete={() => handleDeletePost(post.id)}
+                  onShare={() => handleSharePost(post.id)}
+                  onReact={(reactionType) => handleReactToPost(post.id, reactionType)}
+                  onTogglePin={() => handleTogglePin(post.id)}
+                />
+              </div>
             ))}
         </div>
 
         <aside className="hidden lg:flex flex-col gap-4 w-80 shrink-0">
-          <CommunityStats memberCount={community.memberCount} />
+          <CommunityStats memberCount={community.memberCount} activeTaskCount={activeTaskCount} />
           <PanelCard>
             <div className="flex flex-col gap-3">
               <h3 className="text-base font-bold text-[#261A2B]">Top Contributors</h3>
@@ -258,15 +284,7 @@ export function AnnouncementsPage() {
         onOpenChange={setIsPinnedDialogOpen}
         pinnedPosts={pinnedPosts}
         isLoading={pinnedLoading}
-        currentUserId={currentUserId}
-        viewerRole={viewerRole}
-        communityId={community?.id}
-        channelId={channelId}
-        communitySlug={community?.slug}
-        onDelete={handleDeletePost}
-        onShare={handleSharePost}
-        onReact={handleReactToPost}
-        onTogglePin={handleTogglePin}
+        onPostClick={handlePinnedPostClick}
       />
 
       <DeleteConfirmDialog

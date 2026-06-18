@@ -4,7 +4,7 @@ import { PanelCard } from '../PanelCard';
 interface CommunityStatsProps {
   onlineCount?: number;
   memberCount: number;
-  activeTaskCount?: number;
+  activeTaskCount: number;
 }
 
 export function CommunityStats({ onlineCount, memberCount, activeTaskCount }: CommunityStatsProps) {
@@ -29,7 +29,9 @@ export function CommunityStats({ onlineCount, memberCount, activeTaskCount }: Co
 
       <div className="flex items-center justify-between">
         <span className="text-sm text-[#6F6673]">Active Tasks</span>
-        <span className="text-sm font-bold text-[#261A2B]">{activeTaskCount ?? 0}</span>
+        <span className="text-sm font-bold text-[#261A2B]">
+          {formatNumberCount(activeTaskCount)}
+        </span>
       </div>
     </PanelCard>
   );

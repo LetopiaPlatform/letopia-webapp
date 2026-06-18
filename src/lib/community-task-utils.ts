@@ -11,6 +11,14 @@ export function getTaskStatus(task: CommunityTask): TaskStatusKey {
   return 'active';
 }
 
+export function isTaskStillOpen(task: CommunityTask) {
+  const hasDeadline = task.deadline && !task.deadline.startsWith('0001');
+
+  if (!hasDeadline) return true;
+
+  return new Date(task.deadline) >= new Date();
+}
+
 export function hexToRgba(hex: string, alpha: number): string {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);

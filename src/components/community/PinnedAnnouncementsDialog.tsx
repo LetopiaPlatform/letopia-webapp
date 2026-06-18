@@ -1,24 +1,15 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { PostCard } from '@/components/community/Postcard';
 import { EmptyState } from '@/components/EmptyState';
 import { PostSkeleton } from '@/components/community/PostSkeleton';
-import type { PostSummary, ReactionType } from '@/types/post.types';
-import type { CommunityRole } from '@/types/community.types';
+import type { PostSummary } from '@/types/post.types';
+import { PinnedAnnouncementCard } from './PinnedAnnouncementCard';
 
 interface PinnedAnnouncementsDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   pinnedPosts: PostSummary[];
   isLoading: boolean;
-  currentUserId?: string;
-  viewerRole?: CommunityRole;
-  communityId?: string;
-  channelId?: string;
-  communitySlug?: string;
-  onDelete: (postId: string) => void;
-  onShare: (postId: string) => void;
-  onReact: (postId: string, reactionType: ReactionType) => void;
-  onTogglePin: (postId: string) => void;
+  onPostClick: (postId: string) => void;
 }
 
 export function PinnedAnnouncementsDialog({
@@ -26,15 +17,7 @@ export function PinnedAnnouncementsDialog({
   onOpenChange,
   pinnedPosts,
   isLoading,
-  currentUserId,
-  viewerRole,
-  communityId,
-  channelId,
-  communitySlug,
-  onDelete,
-  onShare,
-  onReact,
-  onTogglePin,
+  onPostClick,
 }: PinnedAnnouncementsDialogProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -58,19 +41,10 @@ export function PinnedAnnouncementsDialog({
             />
           ) : (
             pinnedPosts.map((post) => (
-              <PostCard
+              <PinnedAnnouncementCard
                 key={post.id}
                 post={post}
-                currentUserId={currentUserId}
-                viewerRole={viewerRole}
-                communityId={communityId}
-                channelId={channelId}
-                communitySlug={communitySlug}
-                onEdit={() => {}}
-                onDelete={() => onDelete(post.id)}
-                onShare={() => onShare(post.id)}
-                onReact={(reactionType) => onReact(post.id, reactionType)}
-                onTogglePin={() => onTogglePin(post.id)}
+                onClick={() => onPostClick(post.id)}
               />
             ))
           )}
