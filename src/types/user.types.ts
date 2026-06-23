@@ -4,6 +4,7 @@ export interface SocialLink {
   provider: SocialProvider;
   url: string;
 }
+import type { NotificationPrefs, PrivacyPrefs } from './preferences.types';
 
 // Mirrors backend UserProfileResponse DTO
 export interface UserProfile {
@@ -25,19 +26,44 @@ export interface UserProfile {
   interests: string[];
 }
 
-export interface PublicUserProfile extends Omit<
-  UserProfile,
-  'email' | 'lastLoginAt' | 'createdAt'
-> {
+export interface PublicUserProfile {
+  id: string;
+  fullName: string;
   email: string | null;
+  role: string;
+  phoneNumber: string | null;
+  bio: string | null;
+  avatarUrl: string | null;
+  location: string | null;
+  totalPoints: number;
+  currentStreak: number;
+  skills: string[];
+  interests: string[];
   joinedAt: string;
+  notificationPreferences: NotificationPrefs;
+  privacyPreferences: PrivacyPrefs;
+  socialLinks: SocialLink[];
 }
 
-// Mirrors backend UpdateUserProfileDto (multipart/form-data)
-export interface UpdateUserProfileRequest {
+export interface UpdateProfileRequest {
   fullName?: string;
-  email?: string;
   bio?: string;
   phoneNumber?: string;
-  avatar?: File;
+  location?: string;
+  socialLinks?: SocialLink[];
+  interests?: string[];
+  skills?: string[];
+}
+
+export interface SocialLink {
+  provider: string;
+  url: string;
+}
+
+export interface EmailChangeRequest {
+  newEmail: string;
+}
+export interface EmailConfirmRequest {
+  userId: string;
+  token: string;
 }

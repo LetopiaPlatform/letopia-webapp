@@ -32,11 +32,7 @@ export const TaskCard = ({ task, onToggle }: TaskCardProps) => {
 
         {/* Content */}
         <div className="flex-col gap-1.5 md:gap3 min-w-0">
-          <h4
-            className={`font-medium ${
-              task.completed ? 'line-through text-[#A39BA6]' : 'text-gray-800'
-            }`}
-          >
+          <h4 className={task.completed ? 'line-through text-[#A39BA6]' : 'text-gray-800'}>
             {task.title}
           </h4>
 

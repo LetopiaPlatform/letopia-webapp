@@ -41,10 +41,12 @@ export function useCoverImage({ setValue }: UseCoverImageProps): UseCoverImageRe
   );
   const clearCoverImage = useCallback(() => {
     setCoverImagePreview(null);
+    setUploadCoverImage(false);
+    setValue('coverImage', undefined);
     if (coverImageInputRef.current) {
       coverImageInputRef.current.value = '';
     }
-  }, []);
+  }, [setValue]);
 
   return {
     coverImageInputRef,

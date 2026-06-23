@@ -1,4 +1,4 @@
-export type ProfileVisibility = 'public' | 'friends' | 'private';
+export type ProfileVisibility = 'Public' | 'FriendsOnly' | 'Private';
 
 export type NotificationPrefs = {
   emailNotifications: boolean;
@@ -16,23 +16,23 @@ export type PrivacyPrefs = {
   showProjects: boolean;
 };
 
-export type UserPreferences = {
-  notifications: NotificationPrefs;
-  privacy: PrivacyPrefs;
+export type UpdatePreferencesRequest = {
+  notificationPreferences?: NotificationPrefs;
+  privacySettings?: PrivacyPrefs;
 };
 
 export const DEFAULT_NOTIFICATIONS: NotificationPrefs = {
   emailNotifications: true,
-  pushNotifications: false,
+  pushNotifications: true,
   taskReminders: true,
   achievementAlerts: true,
-  communityUpdates: false,
+  communityUpdates: true,
   weeklyDigest: true,
 };
 
 export const DEFAULT_PRIVACY: PrivacyPrefs = {
-  profileVisibility: 'public',
+  profileVisibility: 'Public',
   showPhoneNumber: false,
-  showEmailAddress: true,
+  showEmailAddress: false,
   showProjects: true,
 };
