@@ -8,13 +8,9 @@ import { useState } from 'react';
 import { CreateCommunityDialog } from './community/CreateCommunityDialog';
 
 const ELLIPSES = [
-  { size: 100, initialX: 10, initialY: 20, animation: 'drift 60s ease infinite' },
-  { size: 50, initialX: 60, initialY: 50, animation: 'drift-2 50s ease infinite' },
-  { size: 40, initialX: 0, initialY: 60, animation: 'drift 60s ease infinite' },
-  { size: 60, initialX: 40, initialY: 30, animation: 'drift-3 40s ease infinite' },
-  { size: 30, initialX: 40, initialY: 70, animation: 'drift 60s ease infinite' },
-  { size: 80, initialX: 80, initialY: 0, animation: 'drift-2 50s ease infinite' },
-  { size: 50, initialX: 95, initialY: 70, animation: 'drift 60s ease infinite' },
+  { size: 150, initialX: 0, initialY: 5, animation: 'drift 200s ease infinite' },
+  { size: 100, initialX: 95, initialY: -10, animation: 'drift-2 200s ease infinite' },
+  { size: 70, initialX: 70, initialY: 80, animation: 'drift 200s ease infinite' },
 ];
 
 type HeroSectionProps = {
@@ -62,9 +58,9 @@ export function HeroSection({ isLoading }: HeroSectionProps) {
 
   return (
     <>
-      <div className="relative w-full xl:h-110 mt-18 py-6 px-2 md:py-3 lg:py-4 md:px-25 shadow-md mb-5">
+      <div className="relative w-full xl:h-110 mt-18 py-6 px-2 md:py-3 lg:py-4 md:px-25 mb-5">
         {/* background */}
-        <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0">
           {ELLIPSES.map((ellipse, index) => (
             <Ellipse key={index} {...ellipse} />
           ))}

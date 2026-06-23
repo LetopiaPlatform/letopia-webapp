@@ -10,7 +10,7 @@ export const Ellipse = ({
   animation: string;
 }) => (
   <div
-    className="absolute rounded-full bg-linear-to-l from-[#814698] to-[#4C88C1] blur-2xl"
+    className="absolute rounded-full bg-linear-to-l from-[#814698] to-[#4C88C1]"
     style={{
       width: size,
       height: size,

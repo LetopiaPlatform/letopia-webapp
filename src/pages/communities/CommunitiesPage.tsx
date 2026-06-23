@@ -52,7 +52,7 @@ export function CommunitiesPage() {
   return (
     <>
       <AppSidebar />
-      <div className="min-w-0 flex-1">
+      <div className="min-w-0 flex-1 overflow-y-hidden">
         <HeroSection isLoading={isLoading} />
         <div className="px-5 md:px-8 2xl:px-15 md:ml-16 mb-10">
           <div className="flex flex-col gap-5 md:gap-8 lg:gap-10">

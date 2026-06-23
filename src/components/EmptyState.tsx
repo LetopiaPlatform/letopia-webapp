@@ -50,7 +50,7 @@ export const EmptyState = ({
           <Button
             onClick={onAction}
             variant="default"
-            className="has-[>svg]:px-5 sm:has-[>svg]:px-7  py-5 md:py-6 rounded-xl text-white text-base sm:text-lg font-normal cursor-pointer"
+            className="has-[>svg]:px-4 sm:has-[>svg]:px-6 py-3 md:py-5 rounded-[12px] text-white text-[12px] sm:text-[16px] font-light tracking-wide cursor-pointer"
           >
             {actionIcon}
             {actionLabel}

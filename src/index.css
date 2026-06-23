@@ -64,6 +64,24 @@
   --communities-placeholder: #d9d9d9;
   --communities-destructive: #d91122;
   --communities-scrollbar: #d4d4d4;
+
+  /* Roadmap feature palette */
+  --roadmap-primary: #824892;
+  --roadmap-primary-dark: #5e3469;
+  --roadmap-accent: #652fe7;
+  --roadmap-success: #3ea616;
+  --roadmap-warning: #d4a006;
+
+  --roadmap-text: #261a2b;
+  --roadmap-text-secondary: #524b56;
+  --roadmap-text-muted: #6f6673;
+  --roadmap-text-faint: #a39ba6;
+
+  --roadmap-border: #dbd5de;
+  --roadmap-surface: #faf9fb;
+  --roadmap-surface-alt: #f6f5f6;
+  --roadmap-surface-tint: #f3ebf4;
+  --roadmap-tag-bg: #bba4d2;
 }
 
 body {
@@ -172,6 +190,21 @@ body {
   --color-communities-placeholder: var(--communities-placeholder);
   --color-communities-destructive: var(--communities-destructive);
   --color-communities-scrollbar: var(--communities-scrollbar);
+
+  --color-roadmap-primary: var(--roadmap-primary);
+  --color-roadmap-primary-dark: var(--roadmap-primary-dark);
+  --color-roadmap-accent: var(--roadmap-accent);
+  --color-roadmap-success: var(--roadmap-success);
+  --color-roadmap-warning: var(--roadmap-warning);
+  --color-roadmap-text: var(--roadmap-text);
+  --color-roadmap-text-secondary: var(--roadmap-text-secondary);
+  --color-roadmap-text-muted: var(--roadmap-text-muted);
+  --color-roadmap-text-faint: var(--roadmap-text-faint);
+  --color-roadmap-border: var(--roadmap-border);
+  --color-roadmap-surface: var(--roadmap-surface);
+  --color-roadmap-surface-alt: var(--roadmap-surface-alt);
+  --color-roadmap-surface-tint: var(--roadmap-surface-tint);
+  --color-roadmap-tag-bg: var(--roadmap-tag-bg);
 
   --font-size-display: 44px;
   --font-size-h1: 33px;
