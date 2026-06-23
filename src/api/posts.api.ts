@@ -8,7 +8,7 @@ import type {
   UpdatePostRequest,
   ReactionType,
   ChannelPostsParams,
-  PostReactionResponse,
+  PostReaction,
 } from '@/types/post.types';
 
 export const postsApi = {
@@ -36,7 +36,7 @@ export const postsApi = {
     return apiClient.post<ApiResponse<PostDetail>>(
       `/communities/${communityId}/channels/${channelId}/posts`,
       formData,
-      { headers: { 'Content-Type': null } }
+      { headers: { 'Content-Type': undefined } }
     );
   },
 
@@ -55,7 +55,7 @@ export const postsApi = {
     }
 
     return apiClient.put<ApiResponse<PostDetail>>(`/posts/${postId}`, formData, {
-      headers: { 'Content-Type': null },
+      headers: { 'Content-Type': undefined },
     });
   },
 
@@ -64,7 +64,7 @@ export const postsApi = {
   togglePin: (postId: string) => apiClient.patch<ApiResponse<null>>(`/posts/${postId}/pin`),
 
   addReaction: (postId: string, reactionType: ReactionType) =>
-    apiClient.post<ApiResponse<PostReactionResponse>>(`/posts/${postId}/react`, { reactionType }),
+    apiClient.post<ApiResponse<PostReaction>>(`/posts/${postId}/react`, { reactionType }),
 
   addComment: (postId: string, content: string) =>
     apiClient.post<ApiResponse<Comment>>(`/posts/${postId}/comments`, { content }),

@@ -1,14 +1,9 @@
-import type { ReactionType } from './post.types';
-
-export interface AuthorDto {
-  id: string;
-  fullName: string;
-}
+import type { AuthorInfo, ReactionType } from './post.types';
 
 export interface Comment {
   id: string;
   postId: string;
-  author: AuthorDto;
+  author: AuthorInfo;
   content: string;
   upvotes: number;
   createdAt: string;

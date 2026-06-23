@@ -6,6 +6,7 @@ import {
   useNavigate,
   useParams,
   type Location,
+  Navigate,
 } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -25,9 +26,13 @@ import { ProfilePage } from '@/pages/profile/ProfilePage';
 import { SettingsPage } from './pages/profile/SettingsPage';
 import { CommunitiesPage } from './pages/communities/CommunitiesPage';
 import { CommunityDetailPage } from './pages/communities/CommunityDetailPage';
-import { CreateCommunityPage } from './pages/communities/CreateCommunityPage';
-import { ProtectedRoute } from './components/shared/ProtectedRoute';
 import { CommunityDetailDialog } from '@/components/community/CommunityDetailDialog';
+import { AnnouncementsPage } from './pages/communities/AnnouncementsPage';
+import { DiscussionsPage } from './pages/communities/DiscussionsPage';
+import { TasksPage } from './pages/communities/TasksPage';
+import { ResourcesPage } from './pages/communities/ResourcesPage';
+import { MemberProfilePage } from './pages/communities/MemberProfilePage';
+import { PostCommentsPage } from './pages/communities/PostCommentsPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -64,22 +69,28 @@ function AppRoutes() {
             }
           />
           <Route
-            element={
-              <FeatureGate feature="communitiesPage">
-                <ProtectedRoute />
-              </FeatureGate>
-            }
-          >
-            <Route path="communities/create" element={<CreateCommunityPage />} />
-          </Route>
-          <Route
             path="communities/:slug"
             element={
               <FeatureGate feature="communitiesPage">
                 <CommunityDetailPage />
               </FeatureGate>
             }
-          />
+          >
+            <Route index element={<Navigate to="announcements" replace />} />
+            <Route path="announcements" element={<AnnouncementsPage />} />
+            <Route path="discussions" element={<DiscussionsPage />} />
+            <Route path="discussions/:postId/comments" element={<PostCommentsPage />} />
+            <Route path="tasks" element={<TasksPage />} />
+            <Route path="resources" element={<ResourcesPage />} />
+            <Route
+              path="members/:userId"
+              element={
+                <FeatureGate feature="communitiesPage">
+                  <MemberProfilePage />
+                </FeatureGate>
+              }
+            />
+          </Route>
           <Route
             path="projects"
             element={

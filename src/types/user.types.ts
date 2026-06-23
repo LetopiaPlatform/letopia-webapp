@@ -1,5 +1,12 @@
 import type { NotificationPrefs, PrivacyPrefs } from './preferences.types';
 
+export type SocialProvider = 'facebook' | 'linkedin' | 'github' | 'twitter' | 'instagram' | string;
+
+export interface SocialLink {
+  provider: SocialProvider;
+  url: string;
+}
+
 // Mirrors backend UserProfileResponse DTO
 export interface UserProfile {
   id: string;
@@ -15,10 +22,10 @@ export interface UserProfile {
   currentStreak: number;
   lastLoginAt: string | null;
   createdAt: string;
-  notificationPreferences: NotificationPrefs;
   socialLinks: SocialLink[];
   skills: string[];
   interests: string[];
+  notificationPreferences: NotificationPrefs;
   privacyPreferences: PrivacyPrefs;
 }
 
@@ -36,7 +43,9 @@ export interface PublicUserProfile {
   skills: string[];
   interests: string[];
   joinedAt: string;
-  socialLinks: SocialLink[] | null;
+  notificationPreferences: NotificationPrefs;
+  privacyPreferences: PrivacyPrefs;
+  socialLinks: SocialLink[];
 }
 
 export interface UpdateProfileRequest {
@@ -47,11 +56,6 @@ export interface UpdateProfileRequest {
   socialLinks?: SocialLink[];
   interests?: string[];
   skills?: string[];
-}
-
-export interface SocialLink {
-  provider: string;
-  url: string;
 }
 
 export interface EmailChangeRequest {

@@ -2,6 +2,7 @@ import { communitiesApi } from '@/api/communities.api';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type {
   CommunityListParams,
+  CommunityRole,
   CreateCommunityRequest,
   UpdateCommunityRequest,
 } from '@/types/community.types';
@@ -33,10 +34,15 @@ export function useMyCommunities(options?: { enabled?: boolean }) {
   });
 }
 
-export function useCommunityMembers(id: string, params: PaginatedQuery) {
+export function useCommunityMembers(
+  id: string,
+  params: PaginatedQuery,
+  options?: { enabled?: boolean }
+) {
   return useQuery({
     queryKey: ['communities', id, 'members', params],
     queryFn: () => communitiesApi.getMembers(id, params).then((res) => res.data),
+    enabled: options?.enabled ?? true,
   });
 }
 
@@ -53,14 +59,12 @@ export function useJoinCommunity() {
 
 export function useLeaveCommunity() {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: (id: string) => communitiesApi.leave(id),
     onSuccess: () => {
       toast.success('Left community successfully');
       queryClient.invalidateQueries({ queryKey: ['communities'] });
-      navigate('/communities');
     },
   });
 }
@@ -93,6 +97,45 @@ export function useUpdateCommunity() {
         queryClient.invalidateQueries({ queryKey: ['communities'] });
         navigate(`/communities/${response.data.slug}`);
       }
+    },
+  });
+}
+
+export function useChangeMemberRole() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      communityId,
+      userId,
+      role,
+    }: {
+      communityId: string;
+      userId: string;
+      role: CommunityRole;
+    }) => communitiesApi.changeRole(communityId, userId, role),
+    onSuccess: (_, { communityId }) => {
+      toast.success('Role updated successfully');
+      queryClient.invalidateQueries({ queryKey: ['communities', communityId, 'members'] });
+    },
+    onError: () => {
+      toast.error('Failed to update role');
+    },
+  });
+}
+
+export function useRemoveMember() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ communityId, userId }: { communityId: string; userId: string }) =>
+      communitiesApi.removeMember(communityId, userId),
+    onSuccess: (_, { communityId }) => {
+      toast.success('Member removed successfully');
+      queryClient.invalidateQueries({ queryKey: ['communities', communityId, 'members'] });
+    },
+    onError: () => {
+      toast.error('Failed to remove member');
     },
   });
 }

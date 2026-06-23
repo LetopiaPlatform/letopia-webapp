@@ -3,12 +3,15 @@ import { postsApi } from '@/api/posts.api';
 import type {
   ChannelPostsParams,
   CreatePostRequest,
+  PostSummary,
   ReactionType,
   UpdatePostRequest,
 } from '@/types/post.types';
 import { toast } from 'sonner';
 import type { AxiosError } from 'axios';
-import type { ApiResponse, PaginatedQuery } from '@/types/api.types';
+import type { ApiResponse, PaginatedQuery, PaginatedResult } from '@/types/api.types';
+import type { Comment } from '@/types/comment.types';
+import { extractData } from '@/lib/api-utils';
 
 export const postKeys = {
   channel: (communityId: string, channelId: string, params?: ChannelPostsParams) =>
@@ -17,7 +20,7 @@ export const postKeys = {
     ['posts', 'pinned', communityId, channelId] as const,
   detail: (postId: string) => ['posts', postId] as const,
   comments: (postId: string, params?: PaginatedQuery) =>
-    ['posts', postId, 'comments', params] as const,
+    ['posts', postId, 'comments', params ?? null] as const,
 };
 
 export function useChannelPosts(
@@ -27,7 +30,7 @@ export function useChannelPosts(
 ) {
   return useQuery({
     queryKey: postKeys.channel(communityId, channelId, params),
-    queryFn: () => postsApi.getChannelPosts(communityId, channelId, params).then((res) => res.data),
+    queryFn: () => postsApi.getChannelPosts(communityId, channelId, params).then(extractData),
     enabled: !!communityId && !!channelId,
     placeholderData: keepPreviousData,
   });
@@ -36,7 +39,7 @@ export function useChannelPosts(
 export function usePinnedPosts(communityId: string, channelId: string) {
   return useQuery({
     queryKey: postKeys.pinned(communityId, channelId),
-    queryFn: () => postsApi.getPinnedPosts(communityId, channelId).then((res) => res.data),
+    queryFn: () => postsApi.getPinnedPosts(communityId, channelId).then(extractData),
     enabled: !!communityId && !!channelId,
   });
 }
@@ -44,7 +47,7 @@ export function usePinnedPosts(communityId: string, channelId: string) {
 export function usePostById(postId: string) {
   return useQuery({
     queryKey: postKeys.detail(postId),
-    queryFn: () => postsApi.getById(postId).then((res) => res.data),
+    queryFn: () => postsApi.getById(postId).then(extractData),
     enabled: !!postId,
   });
 }
@@ -52,7 +55,7 @@ export function usePostById(postId: string) {
 export function usePostComments(postId: string, params?: PaginatedQuery) {
   return useQuery({
     queryKey: postKeys.comments(postId, params),
-    queryFn: () => postsApi.getComments(postId, params).then((res) => res.data),
+    queryFn: () => postsApi.getComments(postId, params).then(extractData),
     enabled: !!postId,
   });
 }
@@ -61,10 +64,14 @@ export function useCreatePost(communityId: string, channelId: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: CreatePostRequest) =>
-      postsApi.create(communityId, channelId, data).then((res) => res.data),
+      postsApi.create(communityId, channelId, data).then(extractData),
     onSuccess: () => {
       toast.success('Post created successfully!');
       queryClient.invalidateQueries({ queryKey: postKeys.channel(communityId, channelId) });
+    },
+    onError: (error: AxiosError<ApiResponse<null>>) => {
+      const errorMessage = error.response?.data?.errors?.[0] || 'Something went wrong!';
+      toast.error(errorMessage);
     },
   });
 }
@@ -73,7 +80,7 @@ export function useUpdatePost(communityId: string, channelId: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ postId, data }: { postId: string; data: UpdatePostRequest }) =>
-      postsApi.update(postId, data).then((res) => res.data),
+      postsApi.update(postId, data).then(extractData),
     onSuccess: (_, { postId }) => {
       toast.success('Post updated successfully!');
       queryClient.invalidateQueries({ queryKey: postKeys.channel(communityId, channelId) });
@@ -101,7 +108,7 @@ export function useDeletePost(communityId: string, channelId: string) {
 export function useTogglePin(communityId: string, channelId: string) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ postId }: { postId: string; isPinned: boolean }) => postsApi.togglePin(postId),
+    mutationFn: (vars: { postId: string; isPinned: boolean }) => postsApi.togglePin(vars.postId),
     onSuccess: (_, { isPinned }) => {
       toast.success(isPinned ? 'Post unpinned.' : 'Post pinned.');
       queryClient.invalidateQueries({ queryKey: postKeys.channel(communityId, channelId) });
@@ -110,25 +117,93 @@ export function useTogglePin(communityId: string, channelId: string) {
   });
 }
 
-export function useAddReaction(communityId: string, channelId: string) {
+export function useAddReaction() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ postId, reactionType }: { postId: string; reactionType: ReactionType }) =>
-      postsApi.addReaction(postId, reactionType).then((res) => res.data),
-    onSuccess: (_, { postId }) => {
-      queryClient.invalidateQueries({ queryKey: postKeys.channel(communityId, channelId) });
+      postsApi.addReaction(postId, reactionType).then(extractData),
+    onMutate: async ({ postId, reactionType }) => {
+      const partialKey = ['posts', 'channel'];
+
+      await queryClient.cancelQueries({ queryKey: partialKey, exact: false });
+
+      const previousEntries = queryClient.getQueriesData<ApiResponse<PaginatedResult<PostSummary>>>(
+        {
+          queryKey: partialKey,
+          exact: false,
+        }
+      );
+
+      const cachedPost = previousEntries
+        .flatMap(([, data]) => data?.data?.items ?? [])
+        .find((p) => p.id === postId);
+      const wasAlreadyReacted = cachedPost?.currentUserReaction === reactionType;
+      const nextReaction: ReactionType | null = wasAlreadyReacted ? null : reactionType;
+      const nextUpvotes = (cachedPost?.upvotes ?? 0) + (wasAlreadyReacted ? -1 : 1);
+
+      queryClient.setQueriesData<ApiResponse<PaginatedResult<PostSummary>>>(
+        { queryKey: partialKey, exact: false },
+        (old) => {
+          if (!old?.data?.items) return old;
+          return {
+            ...old,
+            data: {
+              ...old.data,
+              items: old.data.items.map((post) =>
+                post.id === postId
+                  ? { ...post, upvotes: nextUpvotes, currentUserReaction: nextReaction }
+                  : post
+              ),
+            },
+          };
+        }
+      );
+
+      return { previousEntries };
+    },
+    onSuccess: (postReaction, { postId }) => {
+      const { upvotes } = postReaction;
+      queryClient.setQueriesData<ApiResponse<PaginatedResult<PostSummary>>>(
+        { queryKey: ['posts', 'channel'], exact: false },
+        (old) => {
+          if (!old?.data?.items) return old;
+          return {
+            ...old,
+            data: {
+              ...old.data,
+              items: old.data.items.map((post) =>
+                post.id === postId ? { ...post, upvotes } : post
+              ),
+            },
+          };
+        }
+      );
       queryClient.invalidateQueries({ queryKey: postKeys.detail(postId) });
+    },
+    onError: (_err, _vars, context) => {
+      context?.previousEntries.forEach(([key, data]) => {
+        queryClient.setQueryData(key, data);
+      });
     },
   });
 }
 
 export function useAddComment(postId: string) {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: (content: string) => postsApi.addComment(postId, content).then((res) => res.data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: postKeys.comments(postId) });
-      queryClient.invalidateQueries({ queryKey: postKeys.detail(postId) });
+    mutationFn: (content: string) => postsApi.addComment(postId, content).then(extractData),
+    onSuccess: (newComment) => {
+      if (newComment) {
+        queryClient.setQueryData<PaginatedResult<Comment>>(postKeys.comments(postId), (old) => {
+          if (!old?.items) return old;
+          return {
+            ...old,
+            items: [...old.items, newComment],
+            totalItems: (old.totalItems ?? 0) + 1,
+          };
+        });
+      }
     },
   });
 }

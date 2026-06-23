@@ -148,6 +148,75 @@ export const PROFILE_PLACEHOLDERS = {
   },
 } as const;
 
+// Member Profile contact buttons ──────────────────────────────────────
+export const MEMBER_CONTACT_BUTTONS = [
+  {
+    provider: 'email' as const,
+    label: 'Email',
+    bg: 'bg-[#D91122]',
+    icon: '/icons/social/mail-01.svg',
+    isEmail: true,
+  },
+  {
+    provider: 'linkedin' as const,
+    label: 'LinkedIn',
+    bg: 'bg-[#447DBE]',
+    icon: '/icons/social/linkedin-02.svg',
+    isEmail: false,
+  },
+  {
+    provider: 'github' as const,
+    label: 'GitHub',
+    bg: 'bg-[#2A2B34]',
+    icon: '/icons/social/github-01.svg',
+    isEmail: false,
+  },
+  {
+    provider: 'facebook' as const,
+    label: 'Facebook',
+    bg: 'bg-[#1877F2]',
+    icon: '/icons/social/facebook.svg',
+    isEmail: false,
+  },
+  {
+    provider: 'whatsapp' as const,
+    label: 'WhatsApp',
+    bg: 'bg-[#3EA616]',
+    icon: '/icons/social/whatsapp.svg',
+    isEmail: false,
+  },
+  {
+    provider: 'telegram' as const,
+    label: 'Telegram',
+    bg: 'bg-[#58A5D5]',
+    icon: '/icons/social/telegram.svg',
+    isEmail: false,
+  },
+  {
+    provider: 'x' as const,
+    label: 'X',
+    bg: 'bg-[#2A2B34]',
+    icon: '/icons/social/Twitter-X.svg',
+    isEmail: false,
+  },
+  {
+    provider: 'discord' as const,
+    label: 'Discord',
+    bg: 'bg-primary',
+    icon: '/icons/social/discord.svg',
+    isEmail: false,
+  },
+  {
+    provider: 'behance' as const,
+    label: 'Behance',
+    bg: 'bg-[#053eff]',
+    icon: '/icons/social/behance.svg',
+    isEmail: false,
+  },
+] as const;
+
+export type MemberContactProvider = (typeof MEMBER_CONTACT_BUTTONS)[number]['provider'];
+
 // ── Auth pages ─────────────────────────────────────────────────
 export const AUTH_ASSETS = {
   REGISTER_ILLUSTRATION: '/assets/auth-illustration.svg',
@@ -279,6 +348,85 @@ export const CREATE_OPTIONS = [
   },
 ] as const;
 export type CreateOptionId = (typeof CREATE_OPTIONS)[number]['id'];
+
+export const COMMUNITY_LINKS = [
+  {
+    key: 'announcements',
+    label: 'Announcements',
+    icon: '/icons/announcements.svg',
+    activeIcon: '/icons/announcements-active.svg',
+  },
+  {
+    key: 'discussions',
+    label: 'Discussions',
+    icon: '/icons/discussions.svg',
+    activeIcon: '/icons/discussions-active.svg',
+  },
+  {
+    key: 'tasks',
+    label: 'Tasks',
+    icon: '/icons/tasks.svg',
+    activeIcon: '/icons/tasks-active.svg',
+  },
+  {
+    key: 'resources',
+    label: 'Resources',
+    icon: '/icons/resources.svg',
+    activeIcon: '/icons/resources-active.svg',
+  },
+] as const;
+
+export const TAG_COLORS = [
+  { text: '#5071AA', bg: '#5071AA1A' },
+  { text: '#824892', bg: '#8248921A' },
+  { text: '#2E7D6B', bg: '#2E7D6B1A' },
+  { text: '#B45309', bg: '#B453091A' },
+  { text: '#1565C0', bg: '#1565C01A' },
+  { text: '#6A1B9A', bg: '#6A1B9A1A' },
+  { text: '#C62828', bg: '#C628281A' },
+  { text: '#2E7D32', bg: '#2E7D321A' },
+] as const;
+
+export const POST_GUIDELINES = [
+  'Be respectful and constructive in your posts',
+  'Use relevant tags to categorize your content',
+  'No spam, self-promotion, or offensive content',
+  'Search before posting to avoid duplicates',
+] as const;
+
+// Community Tasks
+export const STATUS_STYLES = {
+  active: {
+    card: 'bg-white border',
+    descriptionColor: 'text-[#938A97]',
+    deadlineColor: 'text-[#FF9142]',
+    textColor: 'text-[#261A2B]',
+    iconColor: 'text-[#524B56]',
+  },
+  completed: {
+    card: 'bg-white border',
+    descriptionColor: 'text-[#938A97]',
+    deadlineColor: 'text-[#22C55E]',
+    textColor: 'text-[#261A2B]',
+    iconColor: 'text-[#524B56]',
+  },
+  missed: {
+    card: 'bg-[#DBD5DE] border-0',
+    descriptionColor: 'line-through text-[#938A97]',
+    deadlineColor: 'text-[#938A97]',
+    textColor: 'line-through text-[#261A2B]',
+    iconColor: 'text-[#938A97]',
+  },
+} as const satisfies Record<string, Record<string, string>>;
+
+export type TaskStatusKey = keyof typeof STATUS_STYLES;
+
+export const COLOR_ROWS: string[][] = [
+  ['#EF4444', '#FF9142', '#58CB24', '#D946EF', '#3B82F6', '#6B6B6B'],
+  ['#C77D02', '#EE53A5', '#883DBD', '#40DAD7', '#24252C', '#D3766A'],
+];
+
+export const DEFAULT_ICON_COLOR = '#824892';
 export const SOCIAL_BG: Record<SocialType, string> = {
   EMAIL: 'bg-[#E11D48]',
   LINKEDIN: 'bg-blue-500',

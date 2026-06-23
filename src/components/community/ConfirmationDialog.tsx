@@ -1,6 +1,7 @@
+import { useEffect } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '../ui/dialog';
 import { Button } from '../ui/button';
-import { LucideArrowBigLeft } from 'lucide-react';
+import { fireFullScreenConfetti } from '@/lib/confetti';
 
 interface ConfirmationDialogProps {
   isOpen: boolean;
@@ -15,6 +16,10 @@ export function ConfirmationDialog({
   onNavigate,
   onClose,
 }: ConfirmationDialogProps) {
+  useEffect(() => {
+    if (isOpen) fireFullScreenConfetti();
+  }, [isOpen]);
+
   return (
     <Dialog
       open={isOpen}
@@ -51,8 +56,7 @@ export function ConfirmationDialog({
               variant="ghost"
               className="w-full h-11  text-[#6B7280] hover:text-[#1A1A1A] hover:bg-[#f9fafb] font-medium transition-colors cursor-pointer"
             >
-              <LucideArrowBigLeft />
-              Back to Communities
+              Stay Here
             </Button>
           </div>
         </div>

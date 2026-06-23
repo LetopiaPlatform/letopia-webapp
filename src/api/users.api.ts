@@ -25,6 +25,7 @@ export const usersApi = {
     });
   },
 
+  getUserById: (id: string) => apiClient.get<ApiResponse<PublicUserProfile>>(`/users/${id}`),
   deleteAvatar: () => apiClient.delete<ApiResponse<UserProfile>>('/users/me/avatar'),
 
   requestEmailChange: (data: EmailChangeRequest) =>

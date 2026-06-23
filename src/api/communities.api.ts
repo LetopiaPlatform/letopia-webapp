@@ -8,6 +8,7 @@ import type {
   JoinedCommunitySummary,
   Member,
   CommunityListParams,
+  CommunityRole,
 } from '@/types/community.types';
 
 export const communitiesApi = {
@@ -68,4 +69,10 @@ export const communitiesApi = {
       headers: { 'Content-Type': undefined },
     });
   },
+
+  changeRole: (communityId: string, userId: string, role: CommunityRole) =>
+    apiClient.put(`/communities/${communityId}/members/${userId}/role`, { role }),
+
+  removeMember: (communityId: string, userId: string) =>
+    apiClient.delete(`/communities/${communityId}/members/${userId}`),
 };

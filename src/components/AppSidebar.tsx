@@ -24,8 +24,6 @@ const IconList = ({ direction, activeId, onItemClick, small }: IconListProps) =>
     {SIDEBAR_ITEMS.map((item) => (
       <button
         key={item.id}
-        type="button"
-        aria-label={item.id}
         className="flex items-center justify-center cursor-pointer"
         onClick={() => onItemClick(item.id)}
       >
@@ -51,10 +49,8 @@ const Avatar = ({ isAuthenticated, user, small }: AvatarProps) => {
   if (!isAuthenticated || !user) return null;
   const size = small ? 'size-8' : 'size-10 md:size-12';
   return (
-    <button
-      type="button"
+    <div
       onClick={() => navigate('/profile')}
-      aria-label="Go to profile"
       className={`${size} shrink-0 rounded-full p-0.5 bg-linear-to-tl from-primary to-[#4C88C1] cursor-pointer`}
     >
       <div className="size-full shrink-0 overflow-hidden rounded-full flex items-center justify-center">
@@ -69,11 +65,11 @@ const Avatar = ({ isAuthenticated, user, small }: AvatarProps) => {
           />
         ) : (
           <span className={`text-white font-agbalumo ${small ? 'text-sm' : 'text-lg'}`}>
-            {user.fullName?.charAt(0).toUpperCase() ?? '?'}
+            {user.fullName?.charAt(0).toUpperCase()}
           </span>
         )}
       </div>
-    </button>
+    </div>
   );
 };
 

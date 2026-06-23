@@ -10,9 +10,10 @@ import { useState } from 'react';
 type CommunityCardProps = {
   community: CommunitySummary;
   onSelect?: (slug: string) => void;
+  onJoinSuccess?: (community: CommunitySummary) => void;
 };
 
-function CommunityCard({ community, onSelect }: CommunityCardProps) {
+function CommunityCard({ community, onSelect, onJoinSuccess }: CommunityCardProps) {
   const { mutate: join, isPending } = useJoinCommunity();
   const [imgError, setImgError] = useState(false);
 
@@ -88,7 +89,7 @@ function CommunityCard({ community, onSelect }: CommunityCardProps) {
             className="text-md font-medium text-foreground shadow-none rounded-lg border-stone-300 has-[>svg]:px-6 h-9 cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
-              join(community.id);
+              join(community.id, { onSuccess: () => onJoinSuccess?.(community) });
             }}
           >
             {isPending ? (

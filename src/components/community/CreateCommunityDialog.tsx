@@ -71,7 +71,7 @@ function FormField({
 
 function DescriptionLength({ control }: { control: Control<CreateCommunityFormData> }) {
   const value = useWatch({ control, name: 'description' });
-  return <span className="text-xs text-muted-foreground">{value?.length || 0}/2000</span>;
+  return <span className="ml-2 text-xs text-muted-foreground">{value?.length || 0}/2000</span>;
 }
 
 // Main component
@@ -298,16 +298,15 @@ export function CreateCommunityDialog({ isOpen, onClose }: CreateCommunityProps)
 
             {/* ==================== DESCRIPTION ==================== */}
             <FormField error={errors.description?.message}>
-              <label className="text-muted-foreground text-sm font-medium">Description *</label>
+              <label className="text-muted-foreground text-sm font-medium">
+                Description * <DescriptionLength control={control} />
+              </label>
               <textarea
                 placeholder="e.g., A community for data science enthusiasts"
                 className="w-full border-none shadow-none focus-visible:ring-0 focus:outline-0 p-0 resize-none min-h-20 mt-1 placeholder:text-sm placeholder:text-neutral-400"
                 {...register('description')}
                 aria-invalid={!!errors.description}
               />
-              <div className="flex justify-end pt-1">
-                <DescriptionLength control={control} />
-              </div>
             </FormField>
 
             {/* ==================== RULES ==================== */}
@@ -325,10 +324,7 @@ export function CreateCommunityDialog({ isOpen, onClose }: CreateCommunityProps)
                   onChange={(e) => setNewRule(e.target.value)}
                   maxLength={500}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' && newRule.trim()) {
-                      e.preventDefault();
-                      addRule();
-                    }
+                    if (e.key === 'Enter' && newRule.trim()) addRule();
                   }}
                 />
                 <button
